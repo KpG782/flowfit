@@ -1,0 +1,32 @@
+name: flowfit
+description: A health and fitness tracking application
+
+environment:
+  sdk: '^3.10.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Backend (The Pacebeats Influence)
+  supabase_flutter: ^2.0.0
+  
+  # Device Features
+  google_maps_flutter: ^2.5.0  # For Runs
+  geolocator: ^10.1.0          # For GPS
+  sensors_plus: ^4.0.2         # For Pokémon Sleep
+  wakelock_plus: ^1.1.0        # Keep screen on during Sleep Mode
+  permission_handler: ^11.0.0  # Handle Android permissions
+  wear_plus: ^1.2.0            # Wear OS support
+  
+  # UI & Utils
+  fl_chart: ^0.65.0            # Analytics Graphs
+  intl: ^0.18.0
+  provider: ^6.0.0
+  wear: ^1.1.0
+  wearable_rotary: ^2.0.3
+  logger: ^2.0.0               # Logging for debugging
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter

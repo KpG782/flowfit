@@ -1,0 +1,458 @@
+# FlowFit
+
+A comprehensive health and fitness tracking application for Wear OS (Galaxy Watch) with companion phone app support. Built with Flutter and integrated with Samsung Health Sensor SDK.
+
+flutter run -d adb-RFAX21TD0NA-FFYRNh._adb-tls-connect._tcp -t lib/main_wear.dart
+flutter run -d 6ece264d -t lib/main.dart
+
+
+
+> 📁 **Project recently reorganized!** All documentation is now in [`docs/`](docs/) and scripts in [`scripts/`](scripts/). See [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) for details.
+
+## 🎯 Overview
+
+FlowFit is a dual-platform fitness app that runs on:
+- **Galaxy Watch (Wear OS)** - Primary device for real-time health tracking
+- **Android Phone** - Companion app for data visualization and management
+
+### Key Features
+
+- ✅ **Real-time Heart Rate Monitoring** - Continuous HR tracking with Samsung Health Sensor SDK
+- ✅ **Inter-Beat Interval (IBI) Data** - Advanced HRV analysis
+- ✅ **Activity Tracking** - Workout logging and exercise monitoring
+- ✅ **Sleep Tracking** - Sleep mode with sensor integration
+- ✅ **Nutrition Logging** - Food diary and calorie tracking
+- ✅ **Mood Tracking** - Mental wellness monitoring
+- ✅ **Data Synchronization** - Watch ↔ Phone data transfer
+- ✅ **Supabase Backend** - Cloud storage and sync
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────┐
+│     Galaxy Watch (Wear OS)          │
+│  - Heart rate monitoring            │
+│  - Activity tracking                │
+│  - Sleep tracking                   │
+│  - Real-time sensor data            │
+└──────────────┬──────────────────────┘
+               │ Wearable Data Layer
+               │ (MessageClient/DataClient)
+┌──────────────▼──────────────────────┐
+│     Android Phone (Companion)       │
+│  - Data visualization               │
+│  - Historical analysis              │
+│  - Detailed reports                 │
+│  - Settings management              │
+└──────────────┬──────────────────────┘
+               │ Supabase API
+┌──────────────▼──────────────────────┐
+│     Supabase Backend                │
+│  - PostgreSQL database              │
+│  - Real-time subscriptions          │
+│  - Authentication                   │
+│  - Cloud storage                    │
+└─────────────────────────────────────┘
+```
+
+## 📱 Devices
+
+### Watch Device (SM_R930)
+- **Model**: Galaxy Watch (SM_R930)
+- **Device ID**: `adb-RFAX21TD0NA-FFYRNh._adb-tls-connect._tcp`
+- **Platform**: Wear OS powered by Samsung
+- **Purpose**: Primary health tracking device
+- **Run Command**: `flutter run -d adb-RFAX21TD0NA-FFYRNh._adb-tls-connect._tcp -t lib/main_wear.dart`
+
+### Phone Device (22101320G)
+- **Model**: Android Phone (22101320G)
+- **Device ID**: `6ece264d`
+- **Purpose**: Companion app for data visualization
+- **Run Command**: `flutter run -d 6ece264d -t lib/main.dart`
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+**Hardware:**
+- Galaxy Watch4 or higher (Wear OS 3.0+)
+- Android phone (API 23+)
+- Both devices paired via Galaxy Wearable app
+
+**Software:**
+- Flutter SDK (3.10.0+)
+- Android Studio with Kotlin support
+- Samsung Health app installed on watch
+- Supabase account (for backend)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd flowfit
+   ```
+
+2. **Install dependencies**
+   ```bash
+   flutter pub get
+   ```
+
+3. **Configure Supabase**
+   - Copy `lib/secrets.dart.example` to `lib/secrets.dart`
+   - Add your Supabase URL and anon key
+
+4. **Build for Watch**
+   ```bash
+   flutter run -d 6ece264d
+   ```
+
+5. **Build for Phone**
+   ```bash
+   flutter run -d adb-RFAX21TD0NA-FFYRNh._adb-tls-connect._tcp
+   ```
+
+## 🔧 Samsung Health Sensor Integration
+
+### Setup
+
+The app uses Samsung Health Sensor SDK for real-time heart rate monitoring. See detailed setup guides:
+
+- **[QUICK_START.md](docs/QUICK_START.md)** - 5-minute quick start
+- **[SAMSUNG_HEALTH_SETUP_GUIDE.md](docs/SAMSUNG_HEALTH_SETUP_GUIDE.md)** - Complete setup guide
+- **[IMPLEMENTATION_CHECKLIST.md](docs/IMPLEMENTATION_CHECKLIST.md)** - Testing checklist
+
+### Usage Example
+
+```dart
+import 'package:flowfit/services/watch_bridge.dart';
+
+final watchBridge = WatchBridgeService();
+
+// 1. Request permission
+await watchBridge.requestBodySensorPermission();
+
+// 2. Connect to Samsung Health
+await watchBridge.connectToWatch();
+
+// 3. Start tracking
+await watchBridge.startHeartRateTracking();
+
+// 4. Listen to heart rate data
+watchBridge.heartRateStream.listen((data) {
+  print('Heart Rate: ${data.bpm} BPM');
+  print('IBI Values: ${data.ibiValues}');
+});
+
+// 5. Stop tracking
+await watchBridge.stopHeartRateTracking();
+```
+
+### Heart Rate Data Structure
+
+```dart
+HeartRateData {
+  bpm: 72,                    // Heart rate in beats per minute
+  ibiValues: [850, 845, 855], // Inter-beat intervals (ms)
+  timestamp: DateTime.now(),   // When reading was taken
+  status: SensorStatus.active  // active, inactive, error
+}
+```
+
+## 📊 Features
+
+### Watch App Features
+
+1. **Dashboard** (`lib/screens/wear/wear_dashboard.dart`)
+   - Real-time heart rate display
+   - Activity summary
+   - Quick action buttons
+
+2. **Activity Tracker** (`lib/screens/workout/activity_tracker.dart`)
+   - Workout tracking with HR monitoring
+   - Exercise type selection
+   - Duration and calorie tracking
+
+3. **Sleep Mode** (`lib/screens/sleep/sleep_mode.dart`)
+   - Sleep tracking with sensors
+   - Sleep quality analysis
+   - Wake-up detection
+
+4. **Heart Rate Monitor** (`lib/screens/heart_rate_monitor_screen.dart`)
+   - Continuous HR monitoring
+   - Real-time graph
+   - IBI data visualization
+
+### Phone App Features
+
+1. **Dashboard** (`lib/screens/dashboard.dart`)
+   - Overview of all health metrics
+   - Historical data charts
+   - Sync status
+
+2. **Workout Library** (`lib/screens/workout/workout_library.dart`)
+   - Exercise database
+   - Workout history
+   - Performance analytics
+
+3. **Nutrition Logger** (`lib/screens/nutrition/food_logger.dart`)
+   - Food diary
+   - Calorie tracking
+   - Nutritional analysis
+
+## 🔌 Data Synchronization
+
+### Watch → Phone Transfer
+
+The app uses Wearable Data Layer API for real-time data transfer:
+
+```dart
+// On Watch: Send heart rate data
+messageClient.sendMessage(
+  nodeId,
+  "/heart_rate",
+  jsonEncode(heartRateData)
+);
+
+// On Phone: Receive data
+class DataListenerService extends WearableListenerService {
+  @override
+  void onMessageReceived(MessageEvent messageEvent) {
+    final data = jsonDecode(messageEvent.data);
+    // Process and display data
+  }
+}
+```
+
+### Supabase Sync
+
+Both devices sync to Supabase for persistent storage:
+
+```dart
+// Save heart rate to Supabase
+await supabase.from('heart_rates').insert({
+  'user_id': userId,
+  'bpm': heartRateData.bpm,
+  'timestamp': heartRateData.timestamp.toIso8601String(),
+  'ibi_values': heartRateData.ibiValues,
+});
+```
+
+## 🗂️ Project Structure
+
+```
+flowfit/
+├── android/
+│   ├── app/
+│   │   ├── libs/
+│   │   │   └── samsung-health-sensor-api-1.4.1.aar
+│   │   └── src/main/kotlin/com/example/flowfit/
+│   │       ├── MainActivity.kt
+│   │       └── HealthTrackingManager.kt
+│   └── build.gradle.kts
+├── lib/
+│   ├── main.dart                    # Phone app entry
+│   ├── main_wear.dart               # Watch app entry
+│   ├── models/
+│   │   ├── heart_rate_data.dart
+│   │   ├── activity.dart
+│   │   ├── sleep_session.dart
+│   │   └── mood_log.dart
+│   ├── services/
+│   │   ├── watch_bridge.dart        # Samsung Health SDK bridge
+│   │   ├── supabase_service.dart    # Backend service
+│   │   └── sleep_service.dart
+│   ├── screens/
+│   │   ├── wear/                    # Watch-specific screens
+│   │   ├── workout/
+│   │   ├── sleep/
+│   │   └── nutrition/
+│   └── examples/
+│       └── heart_rate_example.dart
+├── docs/                            # Documentation
+│   ├── QUICK_START.md
+│   ├── SAMSUNG_HEALTH_SETUP_GUIDE.md
+│   ├── IMPLEMENTATION_CHECKLIST.md
+│   ├── INSTALLATION_TROUBLESHOOTING.md
+│   ├── BUILD_FIXES_APPLIED.md
+│   ├── HEART_RATE_DATA_FLOW.md
+│   ├── WEAR_OS_SETUP.md
+│   ├── RUN_INSTRUCTIONS.md
+│   ├── VGV_IMPROVEMENTS.md
+│   └── WEAR_OS_IMPROVEMENTS.md
+├── scripts/                         # Build and run scripts
+│   ├── build_and_install.bat
+│   ├── run_watch.bat
+│   └── run_phone.bat
+├── pubspec.yaml
+└── README.md
+```
+
+## 🐛 Troubleshooting
+
+### Build Issues
+
+**"Unresolved reference: ConnectionListener"**
+```bash
+# Clean and rebuild
+flutter clean
+flutter pub get
+flutter run -d <device-id>
+```
+
+**"JVM-target compatibility detected"**
+- Check `android/app/build.gradle.kts`
+- Ensure `jvmTarget = "17"` is set
+
+### Runtime Issues
+
+**"Connection Failed" on Watch**
+- Ensure Samsung Health is installed
+- Check watch supports Samsung Health Sensor SDK
+- Restart watch and try again
+
+**"Permission Denied"**
+- Go to Settings → Apps → FlowFit → Permissions
+- Enable "Body sensors" permission
+
+**No Heart Rate Data**
+- Wear watch on wrist (sensor needs skin contact)
+- Tighten watch band
+- Clean sensor on back of watch
+
+### Data Sync Issues
+
+**Watch not sending data to phone**
+- Check both devices are paired
+- Verify Galaxy Wearable app is running
+- Check network connectivity
+
+**Supabase sync failing**
+- Verify `secrets.dart` configuration
+- Check internet connection
+- Review Supabase logs
+
+## 📚 Documentation
+
+### Setup & Quick Start
+- **[QUICK_START.md](docs/QUICK_START.md)** - Get started in 5 minutes
+- **[SAMSUNG_HEALTH_SETUP_GUIDE.md](docs/SAMSUNG_HEALTH_SETUP_GUIDE.md)** - Complete Samsung Health integration guide
+- **[IMPLEMENTATION_CHECKLIST.md](docs/IMPLEMENTATION_CHECKLIST.md)** - Step-by-step testing guide
+
+### Architecture & Development
+- **[HEART_RATE_DATA_FLOW.md](docs/HEART_RATE_DATA_FLOW.md)** - Data flow architecture
+- **[WEAR_OS_SETUP.md](docs/WEAR_OS_SETUP.md)** - Wear OS development setup
+- **[BUILD_FIXES_APPLIED.md](docs/BUILD_FIXES_APPLIED.md)** - Recent build fixes
+
+### Troubleshooting
+- **[INSTALLATION_TROUBLESHOOTING.md](docs/INSTALLATION_TROUBLESHOOTING.md)** - Installation issues and solutions
+- **[RUN_INSTRUCTIONS.md](docs/RUN_INSTRUCTIONS.md)** - Device-specific run commands
+
+### Improvements & Notes
+- **[VGV_IMPROVEMENTS.md](docs/VGV_IMPROVEMENTS.md)** - VGV best practices applied
+- **[WEAR_OS_IMPROVEMENTS.md](docs/WEAR_OS_IMPROVEMENTS.md)** - Wear OS optimizations
+
+## 🔐 Permissions
+
+### Watch App Permissions
+- `BODY_SENSORS` - Heart rate and health sensors
+- `FOREGROUND_SERVICE` - Background tracking
+- `FOREGROUND_SERVICE_HEALTH` - Health-specific services
+- `WAKE_LOCK` - Keep device awake during tracking
+- `ACTIVITY_RECOGNITION` - Activity detection
+
+### Phone App Permissions
+- `INTERNET` - Supabase sync
+- `ACCESS_NETWORK_STATE` - Network status
+- `WAKE_LOCK` - Background sync
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Flutter 3.10.0+
+- **Language**: Dart
+- **Backend**: Supabase (PostgreSQL)
+- **Watch SDK**: Samsung Health Sensor SDK 1.4.1
+- **Wearable**: Wear OS 3.0+
+- **Communication**: Wearable Data Layer API
+- **State Management**: Provider
+- **Charts**: fl_chart
+- **Location**: geolocator, google_maps_flutter
+- **Sensors**: sensors_plus, wear_plus
+
+## 📈 Roadmap
+
+- [ ] Complete watch-to-phone data transfer implementation
+- [ ] Add workout heart rate zones
+- [ ] Implement HRV analysis and trends
+- [ ] Add resting heart rate calculation
+- [ ] Background heart rate monitoring
+- [ ] Heart rate alerts (too high/low)
+- [ ] Sleep quality scoring
+- [ ] Nutrition recommendations
+- [ ] Social features and challenges
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read the contributing guidelines before submitting PRs.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🙏 Acknowledgments
+
+- Samsung Health Sensor SDK
+- Flutter team
+- Supabase team
+- VGV (Very Good Ventures) for Wear OS best practices
+
+## 📞 Support
+
+For issues and questions:
+1. Check the troubleshooting section above
+2. Review the documentation files
+3. Check logcat: `adb logcat | grep -i health`
+4. Open an issue on GitHub
+
+---
+
+## 🚀 Quick Commands
+
+### Build & Install
+```bash
+# Automated build and install on watch
+scripts\build_and_install.bat
+
+# Run on watch
+scripts\run_watch.bat
+
+# Run on phone
+scripts\run_phone.bat
+```
+
+### Manual Commands
+```bash
+# Watch (SM_R930 - Galaxy Watch)
+flutter run -d adb-RFAX21TD0NA-FFYRNh._adb-tls-connect._tcp -t lib/main_wear.dart
+
+# Phone (22101320G)
+flutter run -d 6ece264d -t lib/main.dart
+```
+
+> ⚠️ **Important**: Always use `-t lib/main_wear.dart` for watch to get Wear OS UI, not phone UI!
+
+### Troubleshooting
+```bash
+# View logs
+adb -s 6ece264d logcat | findstr "FlowFit"
+
+# Check devices
+adb devices
+
+# Uninstall
+adb -s 6ece264d uninstall com.example.flowfit
+```
+
+---
+
+**For detailed documentation, see the [docs/](docs/) folder.**
