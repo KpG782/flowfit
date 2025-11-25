@@ -165,14 +165,17 @@ class WatchSensorService(
         )
 
         synchronized(accelBuffer) {
-            accelBuffer.add(reading)
-            
-            // Log sensor collection event with timestamp (Requirements 8.1)
-            Log.d(TAG, "📊 Sensor collected at ${reading.timestamp}: " +
-                "X=${String.format("%.3f", reading.accX)}, " +
-                "Y=${String.format("%.3f", reading.accY)}, " +
-                "Z=${String.format("%.3f", reading.accZ)}, " +
-                "buffer=${accelBuffer.size}/$BUFFER_SIZE")
+            // Only add if buffer not full, otherwise drop samples
+            if (accelBuffer.size < BUFFER_SIZE) {
+                accelBuffer.add(reading)
+                
+                // Log sensor collection event with timestamp (Requirements 8.1)
+                Log.d(TAG, "📊 Sensor collected at ${reading.timestamp}: " +
+                    "X=${String.format("%.3f", reading.accX)}, " +
+                    "Y=${String.format("%.3f", reading.accY)}, " +
+                    "Z=${String.format("%.3f", reading.accZ)}, " +
+                    "buffer=${accelBuffer.size}/$BUFFER_SIZE")
+            }
 
             // Check if we have enough samples and enough time has passed
             if (accelBuffer.size >= BUFFER_SIZE) {
@@ -182,9 +185,6 @@ class WatchSensorService(
                 if (timeSinceLastSend >= MIN_TRANSMISSION_INTERVAL_MS) {
                     sendBatchToPhone()
                     lastSendTime = currentTime
-                } else {
-                    Log.d(TAG, "⏱️ Buffer full but waiting for timing constraint: " +
-                        "${timeSinceLastSend}ms elapsed, need ${MIN_TRANSMISSION_INTERVAL_MS}ms")
                 }
             }
         }

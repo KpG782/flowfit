@@ -32,8 +32,8 @@ class _LoginScreenState extends State<LoginScreen> {
       
       if (mounted) {
         setState(() => _isLoading = false);
-        // Bypass authentication - go directly to home
-        Navigator.pushReplacementNamed(context, '/home');
+        // Go directly to dashboard
+        Navigator.pushReplacementNamed(context, '/dashboard');
       }
     }
   }
@@ -272,8 +272,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 56,
                   child: OutlinedButton.icon(
                     onPressed: () {
-                      // Bypass - go directly to home
-                      Navigator.pushReplacementNamed(context, '/home');
+                      // Go directly to dashboard
+                      Navigator.pushReplacementNamed(context, '/dashboard');
                     },
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.black87,
@@ -307,8 +307,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 56,
                   child: OutlinedButton.icon(
                     onPressed: () {
-                      // Bypass - go directly to home
-                      Navigator.pushReplacementNamed(context, '/home');
+                      // Go directly to dashboard
+                      Navigator.pushReplacementNamed(context, '/dashboard');
                     },
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.black87,

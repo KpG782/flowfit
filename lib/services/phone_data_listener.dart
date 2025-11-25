@@ -347,17 +347,22 @@ class PhoneDataListener {
   /// - type (string)
   /// - timestamp (integer)
   /// - bpm (integer)
-  /// - sample_rate (integer)
+  /// - sampleRate or sample_rate (integer)
   /// - count (integer)
   /// - accelerometer (array)
   void _validateSensorBatchFields(Map<String, dynamic> json) {
-    final requiredFields = ['type', 'timestamp', 'bpm', 'sample_rate', 'count', 'accelerometer'];
+    final requiredFields = ['type', 'timestamp', 'bpm', 'count', 'accelerometer'];
     final missingFields = <String>[];
 
     for (final field in requiredFields) {
       if (!json.containsKey(field)) {
         missingFields.add(field);
       }
+    }
+    
+    // Check for sample_rate (snake_case) or sampleRate (camelCase)
+    if (!json.containsKey('sample_rate') && !json.containsKey('sampleRate')) {
+      missingFields.add('sample_rate/sampleRate');
     }
 
     if (missingFields.isNotEmpty) {
@@ -412,15 +417,17 @@ class PhoneDataListener {
       );
     }
 
-    if (json['sample_rate'] is! int) {
+    // Validate sample_rate or sampleRate (accept both formats)
+    final sampleRate = json['sample_rate'] ?? json['sampleRate'];
+    if (sampleRate is! int) {
       // Log parsing error (Requirements 8.3)
       _logger.e(
-        '❌ Invalid sample_rate field: expected int but got ${json['sample_rate'].runtimeType}'
+        '❌ Invalid sample_rate/sampleRate field: expected int but got ${sampleRate.runtimeType}'
       );
       throw SensorError(
         code: SensorErrorCode.unknown,
         message: 'Invalid sample_rate field type',
-        details: 'Expected int but got ${json['sample_rate'].runtimeType}',
+        details: 'Expected int but got ${sampleRate.runtimeType}',
       );
     }
 
@@ -475,11 +482,11 @@ class PhoneDataListener {
       // Validate all required fields are present
       _validateSensorBatchFields(json);
       
-      // Extract fields
+      // Extract fields (handle both snake_case and camelCase)
       final bpm = json['bpm'] as int;
       final timestamp = json['timestamp'] as int;
       final count = json['count'] as int;
-      final sampleRate = json['sample_rate'] as int;
+      final sampleRate = (json['sample_rate'] ?? json['sampleRate']) as int;
       final accelData = json['accelerometer'] as List;
       
       // Log received sensor batch with sample count and heart rate (Requirements 8.3)

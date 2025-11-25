@@ -20,12 +20,12 @@ class SensorBatch {
 
   /// Create SensorBatch from JSON received from watch
   /// 
-  /// Expected JSON format:
+  /// Expected JSON format (accepts both snake_case and camelCase):
   /// {
   ///   "type": "sensor_batch",
   ///   "timestamp": 1234567890,
   ///   "bpm": 75,
-  ///   "sample_rate": 32,
+  ///   "sampleRate": 32,  // or "sample_rate": 32
   ///   "count": 32,
   ///   "accelerometer": [[0.12, -0.45, 9.81], [0.15, -0.42, 9.79], ...]
   /// }

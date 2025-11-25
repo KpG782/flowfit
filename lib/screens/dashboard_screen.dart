@@ -14,10 +14,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   final List<Widget> _screens = [
     const HomeTab(),
-    const ActivityTab(),
+    const MealsTab(),
     const TrackTab(),
-    const ProgressTab(),
-    const ProfileTab(),
+    const ActiveTab(),
+    const AnalyticsTab(),
   ];
 
   @override
@@ -51,24 +51,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(SolarIconsOutline.heartPulse),
-              activeIcon: Icon(SolarIconsBold.heartPulse),
-              label: 'Activity',
+              icon: Icon(SolarIconsOutline.hamburgerMenu),
+              activeIcon: Icon(SolarIconsBold.hamburgerMenu),
+              label: 'Meals',
             ),
             BottomNavigationBarItem(
-              icon: Icon(SolarIconsOutline.target),
-              activeIcon: Icon(SolarIconsBold.target),
+              icon: Icon(SolarIconsOutline.addCircle),
+              activeIcon: Icon(SolarIconsBold.addCircle),
               label: 'Track',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(SolarIconsOutline.running),
+              activeIcon: Icon(SolarIconsBold.running),
+              label: 'Active',
             ),
             BottomNavigationBarItem(
               icon: Icon(SolarIconsOutline.chartSquare),
               activeIcon: Icon(SolarIconsBold.chartSquare),
-              label: 'Progress',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(SolarIconsOutline.user),
-              activeIcon: Icon(SolarIconsBold.user),
-              label: 'Profile',
+              label: 'Analytics',
             ),
           ],
         ),
@@ -81,6 +81,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
 class HomeTab extends StatelessWidget {
   const HomeTab({super.key});
 
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return 'Good Morning';
+    if (hour < 17) return 'Good Afternoon';
+    return 'Good Evening';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,46 +99,109 @@ class HomeTab extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header
+                // Header with Profile Avatar
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Good Morning, Jim!',
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${_getGreeting()}, Jim! ☀️',
+                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
                           ),
+                          const SizedBox(height: 4),
+                          Text(
+                            "Let's make today a great day.",
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Stack(
+                          children: [
+                            IconButton(
+                              icon: const Icon(SolarIconsOutline.bellBing),
+                              onPressed: () {},
+                            ),
+                            Positioned(
+                              right: 8,
+                              top: 8,
+                              child: Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                constraints: const BoxConstraints(
+                                  minWidth: 16,
+                                  minHeight: 16,
+                                ),
+                                child: const Text(
+                                  '3',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          "Let's make today a great day.",
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.grey[600],
+                        const SizedBox(width: 8),
+                        GestureDetector(
+                          onTap: () {
+                            // TODO: Navigate to profile screen
+                          },
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundColor: AppTheme.primaryBlue,
+                            child: const Text(
+                              'JM',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
                           ),
                         ),
                       ],
-                    ),
-                    IconButton(
-                      icon: const Icon(SolarIconsOutline.bellBing),
-                      onPressed: () {},
                     ),
                   ],
                 ),
                 
                 const SizedBox(height: 24),
                 
-                // Stats Cards
+                // Today's Summary Section
+                Text(
+                  "📊 Today's Summary",
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                
+                const SizedBox(height: 12),
+                
+                // Stats Cards Row
                 Row(
                   children: [
                     Expanded(
                       child: _buildStatCard(
                         context,
                         'Steps',
-                        '6504',
+                        '6,504',
                         SolarIconsBold.running,
                         Colors.blue,
                       ),
@@ -141,23 +211,22 @@ class HomeTab extends StatelessWidget {
                       child: _buildStatCard(
                         context,
                         'Calories',
-                        '6504',
+                        '387',
                         SolarIconsBold.fire,
                         Colors.orange,
                       ),
                     ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildStatCard(
+                        context,
+                        'Active',
+                        '45 min',
+                        SolarIconsOutline.clockCircle,
+                        Colors.purple,
+                      ),
+                    ),
                   ],
-                ),
-                
-                const SizedBox(height: 12),
-                
-                _buildStatCard(
-                  context,
-                  'Minutes',
-                  '45',
-                  Icons.access_time,
-                  Colors.purple,
-                  isWide: true,
                 ),
                 
                 const SizedBox(height: 20),
@@ -173,23 +242,42 @@ class HomeTab extends StatelessWidget {
                       ],
                     ),
                     borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
                   child: Row(
                     children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Text(
+                          '🔥',
+                          style: TextStyle(fontSize: 32),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '5-Day Streak',
+                              '5-Day Streak!',
                               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
                               ),
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: 4),
                             Text(
-                              "You're on fire!\nKeep the momentum going.",
+                              "You're on fire! Keep the momentum going. 🔥",
                               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                 color: Colors.grey[700],
                               ),
@@ -197,20 +285,15 @@ class HomeTab extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Icon(
-                        SolarIconsBold.fire,
-                        size: 48,
-                        color: Colors.orange[400],
-                      ),
                     ],
                   ),
                 ),
                 
                 const SizedBox(height: 24),
                 
-                // Quick Track Section
+                // Quick Actions Section
                 Text(
-                  'Quick Track',
+                  '⚡ Quick Actions',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
@@ -219,24 +302,23 @@ class HomeTab extends StatelessWidget {
                 
                 const SizedBox(height: 16),
                 
-                // Quick Track Grid
+                // Quick Actions Grid (2x3)
                 GridView.count(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: 2,
+                  crossAxisCount: 3,
                   crossAxisSpacing: 12,
                   mainAxisSpacing: 12,
-                  childAspectRatio: 1.3,
+                  childAspectRatio: 0.85,
                   children: [
                     GestureDetector(
                       onTap: () {
                         Navigator.pushNamed(context, '/home');
                       },
-                      child: _buildQuickTrackCard(
+                      child: _buildQuickActionCard(
                         context,
-                        'Live Heart Rate',
-                        'Monitor from watch',
-                        SolarIconsBold.heartPulse,
+                        'Heart Rate',
+                        '💓',
                         Colors.red,
                       ),
                     ),
@@ -244,44 +326,78 @@ class HomeTab extends StatelessWidget {
                       onTap: () {
                         Navigator.pushNamed(context, '/trackertest');
                       },
-                      child: _buildQuickTrackCard(
+                      child: _buildQuickActionCard(
                         context,
-                        'Activity AI',
-                        'Test TFLite model',
-                        SolarIconsBold.cpu,
+                        'AI Activity',
+                        '🤖',
                         Colors.deepPurple,
                       ),
                     ),
-                    _buildQuickTrackCard(
+                    _buildQuickActionCard(
                       context,
-                      'Log Water',
-                      'Stay Hydrated',
-                      SolarIconsBold.cupHot,
+                      'Water',
+                      '💧',
                       Colors.cyan,
                     ),
-                    _buildQuickTrackCard(
+                    _buildQuickActionCard(
                       context,
-                      'Add Meal',
-                      'Record your intake',
-                      Icons.restaurant,
+                      'Meal Scanner',
+                      '🍽️',
                       Colors.orange,
                     ),
-                    _buildQuickTrackCard(
+                    _buildQuickActionCard(
                       context,
-                      'Log Sleep',
-                      'Track your rest',
-                      SolarIconsBold.moon,
+                      'Sleep',
+                      '😴',
                       Colors.purple,
                     ),
-                    _buildQuickTrackCard(
+                    _buildQuickActionCard(
                       context,
-                      'Track Workout',
-                      'Start a new session',
-                      SolarIconsBold.running,
+                      'Run',
+                      '🏃',
                       Colors.blue,
                     ),
                   ],
                 ),
+                
+                const SizedBox(height: 24),
+                
+                // Recent Activity Section
+                Text(
+                  '📅 Recent Activity',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                
+                const SizedBox(height: 12),
+                
+                _buildRecentActivityItem(
+                  context,
+                  '🏃',
+                  'Morning Run',
+                  '387 cal',
+                  '8:30 AM',
+                ),
+                const SizedBox(height: 8),
+                _buildRecentActivityItem(
+                  context,
+                  '🍽️',
+                  'Lunch logged',
+                  '520 cal',
+                  '12:45 PM',
+                ),
+                const SizedBox(height: 8),
+                _buildRecentActivityItem(
+                  context,
+                  '💧',
+                  'Water intake',
+                  '1.2L',
+                  '2:15 PM',
+                ),
+                
+                const SizedBox(height: 20),
               ],
             ),
           ),
@@ -294,62 +410,6 @@ class HomeTab extends StatelessWidget {
     BuildContext context,
     String label,
     String value,
-    IconData icon,
-    Color color, {
-    bool isWide = false,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(icon, size: 20, color: color),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                label,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey[600],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQuickTrackCard(
-    BuildContext context,
-    String title,
-    String subtitle,
     IconData icon,
     Color color,
   ) {
@@ -367,35 +427,136 @@ class HomeTab extends StatelessWidget {
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(icon, size: 28, color: color),
+            child: Icon(icon, size: 24, color: color),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Colors.grey[600],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickActionCard(
+    BuildContext context,
+    String title,
+    String emoji,
+    Color color,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              emoji,
+              style: const TextStyle(fontSize: 28),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRecentActivityItem(
+    BuildContext context,
+    String emoji,
+    String title,
+    String value,
+    String time,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Text(
+            emoji,
+            style: const TextStyle(fontSize: 24),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                subtitle,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.grey[600],
+                Text(
+                  time,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Colors.grey[600],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
+          ),
+          Text(
+            value,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: AppTheme.primaryBlue,
+            ),
           ),
         ],
       ),
@@ -403,15 +564,15 @@ class HomeTab extends StatelessWidget {
   }
 }
 
-// Activity Tab
-class ActivityTab extends StatelessWidget {
-  const ActivityTab({super.key});
+// Meals Tab
+class MealsTab extends StatelessWidget {
+  const MealsTab({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Activity'),
+        title: const Text('Meals'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
@@ -421,13 +582,13 @@ class ActivityTab extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              SolarIconsBold.heartPulse,
+              SolarIconsBold.hamburgerMenu,
               size: 64,
               color: Colors.grey[400],
             ),
             const SizedBox(height: 16),
             Text(
-              'Activity Tracking',
+              'Meal Tracking',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 8),
@@ -485,15 +646,15 @@ class TrackTab extends StatelessWidget {
   }
 }
 
-// Progress Tab
-class ProgressTab extends StatelessWidget {
-  const ProgressTab({super.key});
+// Active Tab
+class ActiveTab extends StatelessWidget {
+  const ActiveTab({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Progress'),
+        title: const Text('Active'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
@@ -503,13 +664,13 @@ class ProgressTab extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              SolarIconsBold.chartSquare,
+              SolarIconsBold.running,
               size: 64,
               color: Colors.grey[400],
             ),
             const SizedBox(height: 16),
             Text(
-              'Your Progress',
+              'Workout Tracking',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 8),
@@ -526,15 +687,15 @@ class ProgressTab extends StatelessWidget {
   }
 }
 
-// Profile Tab
-class ProfileTab extends StatelessWidget {
-  const ProfileTab({super.key});
+// Analytics Tab
+class AnalyticsTab extends StatelessWidget {
+  const AnalyticsTab({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: const Text('Analytics'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
@@ -544,13 +705,13 @@ class ProfileTab extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              SolarIconsBold.user,
+              SolarIconsBold.chartSquare,
               size: 64,
               color: Colors.grey[400],
             ),
             const SizedBox(height: 16),
             Text(
-              'Your Profile',
+              'Your Analytics',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 8),

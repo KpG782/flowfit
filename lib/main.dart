@@ -18,6 +18,11 @@ import 'screens/phone/phone_heart_rate_screen.dart';
 import 'screens/onboarding/survey_screen_1.dart';
 import 'screens/onboarding/survey_screen_2.dart';
 import 'screens/onboarding/survey_screen_3.dart';
+import 'screens/onboarding/survey_intro_screen.dart';
+import 'screens/onboarding/survey_basic_info_screen.dart';
+import 'screens/onboarding/survey_body_measurements_screen.dart';
+import 'screens/onboarding/survey_activity_goals_screen.dart';
+import 'screens/onboarding/survey_daily_targets_screen.dart';
 import 'screens/onboarding/onboarding_screen.dart';
 import 'screens/dashboard_screen.dart';
 
@@ -76,9 +81,16 @@ class FlowFitPhoneApp extends StatelessWidget {
           '/welcome': (context) => const WelcomeScreen(),
           '/login': (context) => const LoginScreen(),
           '/signup': (context) => const SignUpScreen(),
+          // Old survey screens (kept for backward compatibility)
           '/survey1': (context) => const SurveyScreen1(),
           '/survey2': (context) => const SurveyScreen2(),
           '/survey3': (context) => const SurveyScreen3(),
+          // New optimized survey flow
+          '/survey_intro': (context) => const SurveyIntroScreen(),
+          '/survey_basic_info': (context) => const SurveyBasicInfoScreen(),
+          '/survey_body_measurements': (context) => const SurveyBodyMeasurementsScreen(),
+          '/survey_activity_goals': (context) => const SurveyActivityGoalsScreen(),
+          '/survey_daily_targets': (context) => const SurveyDailyTargetsScreen(),
           '/onboarding1': (context) => const OnboardingScreen(),
           '/dashboard': (context) => const DashboardScreen(),
           '/trackertest': (context) => const TrackerPage(),

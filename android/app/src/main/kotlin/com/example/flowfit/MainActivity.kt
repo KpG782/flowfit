@@ -224,6 +224,21 @@ class MainActivity: FlutterActivity() {
                 }
             }
         )
+        
+        // Sensor batch event channel (phone side - receives accelerometer + HR batches from watch)
+        EventChannel(flutterEngine.dartExecutor.binaryMessenger, "com.flowfit.phone/sensor_data").setStreamHandler(
+            object : EventChannel.StreamHandler {
+                override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+                    PhoneDataListenerService.sensorBatchEventSink = events
+                    Log.i(TAG, "Sensor batch event sink registered")
+                }
+                
+                override fun onCancel(arguments: Any?) {
+                    PhoneDataListenerService.sensorBatchEventSink = null
+                    Log.i(TAG, "Sensor batch event sink cancelled")
+                }
+            }
+        )
     }
 
     /**
