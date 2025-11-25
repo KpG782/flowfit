@@ -1,5 +1,13 @@
+import 'package:flowfit/features/activity_classifier/data/tflite_activity_repository.dart';
+import 'package:flowfit/features/activity_classifier/domain/classify_activity_usecase.dart';
+import 'package:flowfit/features/activity_classifier/platform/tflite_activity_classifier.dart';
+import 'package:flowfit/features/activity_classifier/platform/heart_bpm_adapter.dart';
+import 'package:flowfit/features/activity_classifier/presentation/tracker_page.dart';
+import 'package:flowfit/services/phone_data_listener.dart';
+import 'package:flowfit/features/activity_classifier/presentation/providers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' hide Provider;
 import 'theme/app_theme.dart';
 import 'screens/loading_screen.dart';
 import 'screens/auth/welcome_screen.dart';
@@ -14,11 +22,7 @@ import 'screens/dashboard_screen.dart';
 import 'screens/phone/profile_screen.dart';
 
 void main() {
-  runApp(
-    const ProviderScope(
-      child: FlowFitPhoneApp(),
-    ),
-  );
+  runApp(const ProviderScope(child: FlowFitPhoneApp()));
 }
 
 class FlowFitPhoneApp extends StatelessWidget {
@@ -44,7 +48,6 @@ class FlowFitPhoneApp extends StatelessWidget {
         '/onboarding1': (context) => const OnboardingScreen(),
         '/dashboard': (context) => const DashboardScreen(),
         '/home': (context) => const PhoneHomePage(),
-        '/profile': (context) => const ProfileScreen(),
       },
     );
   }
