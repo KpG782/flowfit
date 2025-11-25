@@ -789,6 +789,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+  ultralytics_yolo:
+    dependency: "direct main"
+    description:
+      name: ultralytics_yolo
+      sha256: "4dcd9cf42f3a7655a7d382309daee131f37d8086b4f379e27ccf6580f674a838"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.40"
   url_launcher:
     dependency: transitive
     description:

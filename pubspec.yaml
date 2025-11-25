@@ -26,6 +26,7 @@ dependencies:
   wear: ^1.1.0
   wearable_rotary: ^2.0.3
   logger: ^2.0.0               # Logging for debugging
+  ultralytics_yolo: ^0.1.40
 
 dev_dependencies:
   flutter_test:
