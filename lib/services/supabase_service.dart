@@ -1,0 +1,26 @@
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+/// Service for managing Supabase backend operations
+class SupabaseService {
+  final SupabaseClient _client = Supabase.instance.client;
+
+  /// Save heart rate data to Supabase
+  Future<void> saveHeartRateData(Map<String, dynamic> data) async {
+    await _client.from('heart_rate').insert(data);
+  }
+
+  /// Get heart rate data for a date range
+  Future<List<Map<String, dynamic>>> getHeartRateData({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) async {
+    final response = await _client
+        .from('heart_rate')
+        .select()
+        .gte('timestamp', startDate.millisecondsSinceEpoch)
+        .lte('timestamp', endDate.millisecondsSinceEpoch)
+        .order('timestamp', ascending: false);
+
+    return List<Map<String, dynamic>>.from(response);
+  }
+}

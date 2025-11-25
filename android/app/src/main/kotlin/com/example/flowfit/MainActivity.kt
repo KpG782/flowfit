@@ -5,8 +5,10 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.PowerManager
 import android.util.Log
 import android.view.MotionEvent
+import android.view.WindowManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import io.flutter.embedding.android.FlutterActivity
@@ -38,14 +40,72 @@ class MainActivity: FlutterActivity() {
     private val scope = CoroutineScope(Dispatchers.Main)
     
     private var lastHeartRateData: Map<String, Any?>? = null
+    
+    // Wake lock to keep tracking when screen is off
+    private var wakeLock: PowerManager.WakeLock? = null
+    private var isTrackingActive = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Make background transparent for round screens (VGV best practice)
         intent.putExtra("background_mode", "transparent")
         super.onCreate(savedInstanceState)
         
+        // Keep screen on during tracking (will be managed by start/stop)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        
+        // Initialize wake lock
+        initializeWakeLock()
+        
         // Initialize health tracking manager
         initializeHealthTracking()
+    }
+    
+    /**
+     * Initialize wake lock to keep CPU running when screen is off
+     * This ensures heart rate tracking continues even when screen turns off
+     */
+    private fun initializeWakeLock() {
+        try {
+            val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+            wakeLock = powerManager.newWakeLock(
+                PowerManager.PARTIAL_WAKE_LOCK,
+                "FlowFit::HeartRateTracking"
+            ).apply {
+                // Set reference counted to false so we can manually control it
+                setReferenceCounted(false)
+            }
+            Log.i(TAG, "Wake lock initialized")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize wake lock", e)
+        }
+    }
+    
+    /**
+     * Acquire wake lock to keep tracking active
+     */
+    private fun acquireWakeLock() {
+        try {
+            if (wakeLock?.isHeld == false) {
+                wakeLock?.acquire(10*60*1000L /*10 minutes*/)
+                Log.i(TAG, "Wake lock acquired - tracking will continue with screen off")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to acquire wake lock", e)
+        }
+    }
+    
+    /**
+     * Release wake lock when tracking stops
+     */
+    private fun releaseWakeLock() {
+        try {
+            if (wakeLock?.isHeld == true) {
+                wakeLock?.release()
+                Log.i(TAG, "Wake lock released")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to release wake lock", e)
+        }
     }
     
     private fun initializeHealthTracking() {
@@ -295,6 +355,7 @@ class MainActivity: FlutterActivity() {
 
     /**
      * Start heart rate tracking
+     * Acquires wake lock to keep tracking active even when screen is off
      */
     private fun startHeartRate(result: MethodChannel.Result) {
         val manager = healthTrackingManager
@@ -318,6 +379,12 @@ class MainActivity: FlutterActivity() {
         
         try {
             val started = manager.startTracking()
+            if (started) {
+                isTrackingActive = true
+                // Acquire wake lock to keep tracking when screen is off
+                acquireWakeLock()
+                Log.i(TAG, "Heart rate tracking started with wake lock")
+            }
             result.success(started)
         } catch (e: Exception) {
             Log.e(TAG, "Error starting heart rate tracking", e)
@@ -331,10 +398,15 @@ class MainActivity: FlutterActivity() {
 
     /**
      * Stop heart rate tracking
+     * Releases wake lock to save battery
      */
     private fun stopHeartRate(result: MethodChannel.Result) {
         try {
             healthTrackingManager?.stopTracking()
+            isTrackingActive = false
+            // Release wake lock when tracking stops
+            releaseWakeLock()
+            Log.i(TAG, "Heart rate tracking stopped, wake lock released")
             result.success(null)
         } catch (e: Exception) {
             Log.e(TAG, "Error stopping heart rate tracking", e)
@@ -505,11 +577,37 @@ class MainActivity: FlutterActivity() {
     }
 
     /**
+     * Handle onPause lifecycle event
+     * Keep tracking active but log the state
+     */
+    override fun onPause() {
+        super.onPause()
+        if (isTrackingActive) {
+            Log.i(TAG, "Activity paused but tracking continues with wake lock")
+        }
+    }
+    
+    /**
+     * Handle onResume lifecycle event
+     * Refresh wake lock if tracking is active
+     */
+    override fun onResume() {
+        super.onResume()
+        if (isTrackingActive) {
+            // Refresh wake lock to ensure it's still held
+            acquireWakeLock()
+            Log.i(TAG, "Activity resumed, wake lock refreshed")
+        }
+    }
+    
+    /**
      * Handle onDestroy lifecycle event
      * Complete cleanup of resources
      */
     override fun onDestroy() {
         super.onDestroy()
+        // Release wake lock
+        releaseWakeLock()
         // Clean up health tracking
         healthTrackingManager?.disconnect()
         healthTrackingManager = null
@@ -517,5 +615,6 @@ class MainActivity: FlutterActivity() {
         watchToPhoneSyncManager = null
         // Clean up event sink
         heartRateEventSink = null
+        Log.i(TAG, "Activity destroyed, all resources cleaned up")
     }
 }
