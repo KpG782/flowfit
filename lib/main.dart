@@ -11,6 +11,7 @@ import 'screens/onboarding/survey_screen_2.dart';
 import 'screens/onboarding/survey_screen_3.dart';
 import 'screens/onboarding/onboarding_screen.dart';
 import 'screens/dashboard_screen.dart';
+import 'screens/phone/profile_screen.dart';
 
 void main() {
   runApp(
@@ -43,6 +44,7 @@ class FlowFitPhoneApp extends StatelessWidget {
         '/onboarding1': (context) => const OnboardingScreen(),
         '/dashboard': (context) => const DashboardScreen(),
         '/home': (context) => const PhoneHomePage(),
+        '/profile': (context) => const ProfileScreen(),
       },
     );
   }

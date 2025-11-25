@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:solar_icons/solar_icons.dart';
 import '../theme/app_theme.dart';
+import 'phone_home.dart';
+import 'phone/profile_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -15,9 +17,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final List<Widget> _screens = [
     const HomeTab(),
     const ActivityTab(),
-    const TrackTab(),
     const ProgressTab(),
-    const ProfileTab(),
+    const ProfileScreen(),
   ];
 
   @override
@@ -54,11 +55,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
               icon: Icon(SolarIconsOutline.heartPulse),
               activeIcon: Icon(SolarIconsBold.heartPulse),
               label: 'Activity',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(SolarIconsOutline.target),
-              activeIcon: Icon(SolarIconsBold.target),
-              label: 'Track',
             ),
             BottomNavigationBarItem(
               icon: Icon(SolarIconsOutline.chartSquare),
@@ -116,7 +112,7 @@ class HomeTab extends StatelessWidget {
                       ],
                     ),
                     IconButton(
-                      icon: const Icon(SolarIconsOutline.bellBing),
+                      icon: const Icon(SolarIconsOutline.bell),
                       onPressed: () {},
                     ),
                   ],
@@ -258,7 +254,7 @@ class HomeTab extends StatelessWidget {
                       context,
                       'Add Meal',
                       'Record your intake',
-                      Icons.restaurant,
+                      SolarIconsBold.cup,
                       Colors.orange,
                     ),
                     _buildQuickTrackCard(
@@ -391,85 +387,13 @@ class HomeTab extends StatelessWidget {
   }
 }
 
-// Activity Tab
+// Activity Tab - Heart Rate Monitoring
 class ActivityTab extends StatelessWidget {
   const ActivityTab({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Activity'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 0,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              SolarIconsBold.heartPulse,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Activity Tracking',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Coming soon',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// Track Tab
-class TrackTab extends StatelessWidget {
-  const TrackTab({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Track'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 0,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              SolarIconsBold.target,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Track Your Goals',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Coming soon',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    return const PhoneHomePage();
   }
 }
 
@@ -480,76 +404,238 @@ class ProgressTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Progress'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 0,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              SolarIconsBold.chartSquare,
-              size: 64,
-              color: Colors.grey[400],
+      backgroundColor: Colors.grey[50],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header
+                Text(
+                  'Your Progress',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Track your fitness journey',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.grey[600],
+                  ),
+                ),
+                
+                const SizedBox(height: 24),
+                
+                // Weekly Summary Card
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'This Week',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      _buildProgressItem(context, 'Workouts', '5', '7', SolarIconsBold.dumbbell, Colors.blue),
+                      const SizedBox(height: 16),
+                      _buildProgressItem(context, 'Active Days', '5', '7', SolarIconsBold.calendar, Colors.green),
+                      const SizedBox(height: 16),
+                      _buildProgressItem(context, 'Total Minutes', '225', '300', Icons.timer, Colors.orange),
+                    ],
+                  ),
+                ),
+                
+                const SizedBox(height: 20),
+                
+                // Goals Card
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Monthly Goals',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      _buildGoalItem(context, 'Steps Goal', '150,000', '200,000', 0.75, Colors.blue),
+                      const SizedBox(height: 16),
+                      _buildGoalItem(context, 'Calories Burned', '8,500', '12,000', 0.71, Colors.orange),
+                      const SizedBox(height: 16),
+                      _buildGoalItem(context, 'Active Minutes', '900', '1,200', 0.75, Colors.green),
+                    ],
+                  ),
+                ),
+                
+                const SizedBox(height: 20),
+                
+                // Achievements
+                Text(
+                  'Recent Achievements',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildAchievementCard(context, '5-Day Streak', SolarIconsBold.fire, Colors.orange),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildAchievementCard(context, 'First 10K', Icons.emoji_events, Colors.amber),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            Text(
-              'Your Progress',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Coming soon',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
-}
-
-// Profile Tab
-class ProfileTab extends StatelessWidget {
-  const ProfileTab({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 0,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+  
+  Widget _buildProgressItem(BuildContext context, String label, String current, String goal, IconData icon, Color color) {
+    final progress = double.parse(current) / double.parse(goal);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
           children: [
-            Icon(
-              SolarIconsBold.user,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
+            Icon(icon, size: 20, color: color),
+            const SizedBox(width: 8),
             Text(
-              'Your Profile',
-              style: Theme.of(context).textTheme.titleLarge,
+              label,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
-            const SizedBox(height: 8),
+            const Spacer(),
             Text(
-              'Coming soon',
+              '$current / $goal',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Colors.grey[600],
               ),
             ),
           ],
         ),
+        const SizedBox(height: 8),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: LinearProgressIndicator(
+            value: progress,
+            backgroundColor: Colors.grey[200],
+            valueColor: AlwaysStoppedAnimation<Color>(color),
+            minHeight: 8,
+          ),
+        ),
+      ],
+    );
+  }
+  
+  Widget _buildGoalItem(BuildContext context, String label, String current, String goal, double progress, Color color) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              label,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const Spacer(),
+            Text(
+              '${(progress * 100).toInt()}%',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: color,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(
+          '$current / $goal',
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: Colors.grey[600],
+          ),
+        ),
+        const SizedBox(height: 8),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: LinearProgressIndicator(
+            value: progress,
+            backgroundColor: Colors.grey[200],
+            valueColor: AlwaysStoppedAnimation<Color>(color),
+            minHeight: 8,
+          ),
+        ),
+      ],
+    );
+  }
+  
+  Widget _buildAchievementCard(BuildContext context, String title, IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, size: 32, color: color),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            title,
+            style: Theme.of(context).textTheme.titleSmall,
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }
