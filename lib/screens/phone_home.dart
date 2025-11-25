@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:solar_icons/solar_icons.dart';
 import '../models/heart_rate_data.dart';
+import '../models/tracked_data.dart';
 import '../services/phone_data_listener.dart';
+import '../services/heart_rate_data_manager.dart';
+import '../services/database_service.dart';
+import 'package:logger/logger.dart';
 
 class PhoneHomePage extends StatefulWidget {
   const PhoneHomePage({super.key});
@@ -12,42 +17,81 @@ class PhoneHomePage extends StatefulWidget {
 
 class _PhoneHomePageState extends State<PhoneHomePage> {
   final PhoneDataListener _dataListener = PhoneDataListener();
+  late final HeartRateDataManager _dataManager;
+  late final DataSyncManager _syncManager;
+  final Logger _logger = Logger();
   
-  List<HeartRateData> _heartRateHistory = [];
-  HeartRateData? _latestHeartRate;
+  List<TrackedData> _heartRateHistory = [];
+  TrackedData? _latestHeartRate;
   bool _isConnected = false;
   String _statusMessage = 'Waiting for watch data...';
+  Map<String, dynamic> _statistics = {};
   
   StreamSubscription? _heartRateSubscription;
+  StreamSubscription? _dataManagerSubscription;
   
   @override
   void initState() {
     super.initState();
-    _initializeDataListener();
+    _initializeServices();
   }
   
-  void _initializeDataListener() {
-    // Listen for heart rate data from watch
-    _heartRateSubscription = _dataListener.heartRateStream.listen(
-      (heartRateData) {
-        // Data comes as HeartRateData from the stream
+  void _initializeServices() {
+    // Initialize data manager
+    _dataManager = HeartRateDataManager(
+      maxBufferSize: 100,
+      maxDatabaseRecords: 10000,
+      ibiHistorySize: 10,
+    );
+    
+    // Initialize sync manager
+    _syncManager = DataSyncManager();
+    _syncManager.startPeriodicSync(interval: const Duration(minutes: 15));
+    
+    // Listen to data manager stream
+    _dataManagerSubscription = _dataManager.dataStream.listen(
+      (trackedData) {
         setState(() {
-          _latestHeartRate = heartRateData;
-          _heartRateHistory.insert(0, heartRateData);
+          _latestHeartRate = trackedData;
+          _statistics = _dataManager.getStatistics();
           
-          // Keep only last 50 readings
+          // Update history list in real-time
+          _heartRateHistory.insert(0, trackedData);
+          
+          // Keep only last 50 readings in UI
           if (_heartRateHistory.length > 50) {
             _heartRateHistory = _heartRateHistory.sublist(0, 50);
           }
-          
+        });
+      },
+    );
+    
+    // Listen for heart rate data from watch
+    _heartRateSubscription = _dataListener.heartRateStream.listen(
+      (heartRateData) async {
+        // Convert HeartRateData to TrackedData
+        final trackedData = TrackedData(
+          hr: heartRateData.bpm ?? 0,
+          ibiValues: heartRateData.ibiValues,
+          hrv: TrackedData.calculateHRV(heartRateData.ibiValues),
+          spo2: 0, // Not available yet
+          timestamp: heartRateData.timestamp,
+          status: heartRateData.status,
+        );
+        
+        // Add to data manager (handles buffer and database)
+        await _dataManager.addData(trackedData);
+        
+        // Update UI
+        setState(() {
           _isConnected = true;
           _statusMessage = 'Received from watch';
         });
         
-        print('✅ Heart rate received: ${heartRateData.bpm} BPM');
+        _logger.i('✅ Heart rate received: ${trackedData.hr} BPM, IBI: ${trackedData.ibiValues.length}, HRV: ${trackedData.hrv.toStringAsFixed(1)}');
       },
       onError: (error) {
-        print('❌ Stream error: $error');
+        _logger.e('❌ Stream error: $error');
         setState(() {
           _statusMessage = 'Error: $error';
           _isConnected = false;
@@ -57,11 +101,38 @@ class _PhoneHomePageState extends State<PhoneHomePage> {
     
     // Start listening for watch data
     _dataListener.startListening();
+    
+    // Load recent history
+    _loadRecentHistory();
+  }
+  
+  Future<void> _loadRecentHistory() async {
+    try {
+      // Get data from buffer and database
+      final recentData = await _dataManager.getRecentData(limit: 50);
+      
+      if (mounted) {
+        setState(() {
+          _heartRateHistory = recentData;
+        });
+        _logger.d('Loaded ${recentData.length} recent readings');
+      }
+    } catch (e) {
+      _logger.e('Error loading history: $e');
+    }
+  }
+  
+  /// Refresh history from data manager
+  Future<void> _refreshHistory() async {
+    await _loadRecentHistory();
   }
   
   @override
   void dispose() {
     _heartRateSubscription?.cancel();
+    _dataManagerSubscription?.cancel();
+    _dataManager.dispose();
+    _syncManager.dispose();
     _dataListener.dispose();
     super.dispose();
   }
@@ -71,73 +142,150 @@ class _PhoneHomePageState extends State<PhoneHomePage> {
     final colorScheme = Theme.of(context).colorScheme;
     
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          // App Bar
-          SliverAppBar.large(
-            title: const Text('FlowFit'),
-            actions: [
-              IconButton(
-                icon: Icon(
-                  _isConnected ? Icons.watch : Icons.watch_off_outlined,
-                  color: _isConnected ? Colors.green : Colors.grey,
+      body: RefreshIndicator(
+        onRefresh: _refreshHistory,
+        child: CustomScrollView(
+          slivers: [
+            // App Bar
+            SliverAppBar.large(
+              title: const Text('FlowFit'),
+              actions: [
+                // Statistics badge
+                if (_statistics.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: colorScheme.primaryContainer,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          '${_statistics['buffer_size'] ?? 0} buffered',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: colorScheme.onPrimaryContainer,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                IconButton(
+                  icon: Icon(
+                    _isConnected ? Icons.watch : Icons.watch_outlined,
+                    color: _isConnected ? Colors.green : Colors.grey,
+                  ),
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(_isConnected 
+                          ? 'Connected to Galaxy Watch' 
+                          : 'Watch not connected'),
+                      ),
+                    );
+                  },
                 ),
-                onPressed: () {
+              ],
+            ),
+          
+            // Content
+            SliverPadding(
+              padding: const EdgeInsets.all(16),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate([
+                  // Current Heart Rate Card
+                  _buildCurrentHeartRateCard(colorScheme),
+                  
+                  const SizedBox(height: 16),
+                  
+                  // Stats Row
+                  _buildStatsRow(colorScheme),
+                  
+                  const SizedBox(height: 16),
+                  
+                  // Status Card
+                  _buildStatusCard(colorScheme),
+                  
+                  const SizedBox(height: 16),
+                  
+                  // Recent Readings
+                  _buildRecentReadingsCard(colorScheme),
+                  
+                  const SizedBox(height: 80), // Space for FAB
+                ]),
+              ),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Flush buffer button
+          if (_statistics['buffer_size'] != null && _statistics['buffer_size'] > 0)
+            FloatingActionButton.extended(
+              onPressed: () async {
+                await _dataManager.forceFlush();
+                await _refreshHistory();
+                if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(_isConnected 
-                        ? 'Connected to Galaxy Watch' 
-                        : 'Watch not connected'),
+                      content: Text('Flushed ${_statistics['buffer_size']} records to database'),
                     ),
                   );
-                },
-              ),
-            ],
-          ),
-          
-          // Content
-          SliverPadding(
-            padding: const EdgeInsets.all(16),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate([
-                // Current Heart Rate Card
-                _buildCurrentHeartRateCard(colorScheme),
-                
-                const SizedBox(height: 16),
-                
-                // Stats Row
-                _buildStatsRow(colorScheme),
-                
-                const SizedBox(height: 16),
-                
-                // Status Card
-                _buildStatusCard(colorScheme),
-                
-                const SizedBox(height: 16),
-                
-                // Recent Readings
-                _buildRecentReadingsCard(colorScheme),
-              ]),
+                }
+              },
+              heroTag: 'flush',
+              icon: const Icon(SolarIconsBold.diskette),
+              label: Text('Save ${_statistics['buffer_size']}'),
+              backgroundColor: colorScheme.secondary,
             ),
+          const SizedBox(height: 8),
+          // Clear button
+          FloatingActionButton.extended(
+            onPressed: () async {
+              final confirm = await showDialog<bool>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Clear All Data'),
+                  content: const Text('This will clear all heart rate data. Continue?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: const Text('Clear'),
+                    ),
+                  ],
+                ),
+              );
+              
+              if (confirm == true) {
+                await _dataManager.clearAllData();
+                setState(() {
+                  _heartRateHistory.clear();
+                  _latestHeartRate = null;
+                  _statusMessage = 'Cleared all data';
+                });
+              }
+            },
+            heroTag: 'clear',
+            icon: const Icon(SolarIconsBold.trashBinMinimalistic),
+            label: const Text('Clear'),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          setState(() {
-            _heartRateHistory.clear();
-            _latestHeartRate = null;
-            _statusMessage = 'Cleared history';
-          });
-        },
-        icon: const Icon(Icons.clear_all),
-        label: const Text('Clear'),
       ),
     );
   }
   
   Widget _buildCurrentHeartRateCard(ColorScheme colorScheme) {
-    final bpm = _latestHeartRate?.bpm;
+    final bpm = _latestHeartRate?.hr;
+    final hrv = _latestHeartRate?.hrv;
+    final ibiValues = _latestHeartRate?.ibiValues ?? [];
     
     return Card(
       child: Padding(
@@ -147,7 +295,7 @@ class _PhoneHomePageState extends State<PhoneHomePage> {
             Row(
               children: [
                 Icon(
-                  Icons.favorite,
+                  SolarIconsBold.heartPulse,
                   color: colorScheme.primary,
                   size: 32,
                 ),
@@ -159,7 +307,7 @@ class _PhoneHomePageState extends State<PhoneHomePage> {
               ],
             ),
             const SizedBox(height: 24),
-            if (bpm != null) ...[
+            if (bpm != null && bpm > 0) ...[
               Text(
                 '$bpm',
                 style: Theme.of(context).textTheme.displayLarge?.copyWith(
@@ -175,9 +323,51 @@ class _PhoneHomePageState extends State<PhoneHomePage> {
               ),
               const SizedBox(height: 16),
               _buildHeartRateZone(bpm, colorScheme),
+              
+              // HRV Display
+              if (hrv != null && hrv > 0) ...[
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: colorScheme.secondaryContainer,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        SolarIconsBold.pulse,
+                        size: 20,
+                        color: colorScheme.onSecondaryContainer,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'HRV: ${hrv.toStringAsFixed(1)} ms',
+                        style: TextStyle(
+                          color: colorScheme.onSecondaryContainer,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              
+              // IBI Display
+              if (ibiValues.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Text(
+                  'IBI: ${ibiValues.take(5).join(", ")} ms',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ] else ...[
               Icon(
-                Icons.heart_broken_outlined,
+                SolarIconsOutline.heartBroken,
                 size: 64,
                 color: colorScheme.onSurfaceVariant.withOpacity(0.3),
               ),
@@ -234,40 +424,32 @@ class _PhoneHomePageState extends State<PhoneHomePage> {
   }
   
   Widget _buildStatsRow(ColorScheme colorScheme) {
-    final avgBpm = _heartRateHistory.isNotEmpty
-        ? _heartRateHistory
-            .where((d) => d.bpm != null)
-            .map((d) => d.bpm!)
-            .reduce((a, b) => a + b) ~/
-            _heartRateHistory.where((d) => d.bpm != null).length
+    final validData = _heartRateHistory.where((d) => d.hr > 0).toList();
+    
+    final avgBpm = validData.isNotEmpty
+        ? validData.map((d) => d.hr).reduce((a, b) => a + b) ~/ validData.length
         : 0;
     
-    final maxBpm = _heartRateHistory.isNotEmpty
-        ? _heartRateHistory
-            .where((d) => d.bpm != null)
-            .map((d) => d.bpm!)
-            .reduce((a, b) => a > b ? a : b)
+    final maxBpm = validData.isNotEmpty
+        ? validData.map((d) => d.hr).reduce((a, b) => a > b ? a : b)
         : 0;
     
-    final minBpm = _heartRateHistory.isNotEmpty
-        ? _heartRateHistory
-            .where((d) => d.bpm != null)
-            .map((d) => d.bpm!)
-            .reduce((a, b) => a < b ? a : b)
+    final minBpm = validData.isNotEmpty
+        ? validData.map((d) => d.hr).reduce((a, b) => a < b ? a : b)
         : 0;
     
     return Row(
       children: [
         Expanded(
-          child: _buildStatCard('Average', '$avgBpm', Icons.show_chart, colorScheme),
+          child: _buildStatCard('Average', '$avgBpm', SolarIconsBold.chartSquare, colorScheme),
         ),
         const SizedBox(width: 12),
         Expanded(
-          child: _buildStatCard('Max', '$maxBpm', Icons.arrow_upward, colorScheme),
+          child: _buildStatCard('Max', '$maxBpm', SolarIconsBold.altArrowUp, colorScheme),
         ),
         const SizedBox(width: 12),
         Expanded(
-          child: _buildStatCard('Min', '$minBpm', Icons.arrow_downward, colorScheme),
+          child: _buildStatCard('Min', '$minBpm', SolarIconsBold.altArrowDown, colorScheme),
         ),
       ],
     );
@@ -309,7 +491,7 @@ class _PhoneHomePageState extends State<PhoneHomePage> {
         child: Row(
           children: [
             Icon(
-              _isConnected ? Icons.check_circle : Icons.info_outline,
+              _isConnected ? SolarIconsBold.checkCircle : SolarIconsOutline.infoCircle,
               color: _isConnected 
                   ? colorScheme.onPrimaryContainer 
                   : colorScheme.onSurfaceVariant,
@@ -354,7 +536,7 @@ class _PhoneHomePageState extends State<PhoneHomePage> {
           children: [
             Row(
               children: [
-                Icon(Icons.history, color: colorScheme.primary),
+                Icon(SolarIconsBold.history, color: colorScheme.primary),
                 const SizedBox(width: 8),
                 Text(
                   'Recent Readings',
@@ -377,7 +559,7 @@ class _PhoneHomePageState extends State<PhoneHomePage> {
                   child: Column(
                     children: [
                       Icon(
-                        Icons.watch,
+                        Icons.watch_outlined,
                         size: 48,
                         color: colorScheme.onSurfaceVariant.withOpacity(0.3),
                       ),
@@ -413,7 +595,7 @@ class _PhoneHomePageState extends State<PhoneHomePage> {
                     leading: CircleAvatar(
                       backgroundColor: colorScheme.primaryContainer,
                       child: Text(
-                        '${data.bpm ?? '--'}',
+                        '${data.hr}',
                         style: TextStyle(
                           color: colorScheme.onPrimaryContainer,
                           fontWeight: FontWeight.bold,
@@ -421,14 +603,25 @@ class _PhoneHomePageState extends State<PhoneHomePage> {
                         ),
                       ),
                     ),
-                    title: Text('${data.bpm ?? '--'} BPM'),
+                    title: Text('${data.hr} BPM'),
                     subtitle: Text(
-                      'IBI: ${data.ibiValues.length} values • $timeAgo',
+                      'HRV: ${data.hrv.toStringAsFixed(1)} ms • IBI: ${data.ibiValues.length} • $timeAgo',
                     ),
-                    trailing: Icon(
-                      Icons.favorite,
-                      color: colorScheme.primary.withOpacity(0.5),
-                      size: 20,
+                    trailing: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          SolarIconsBold.heart,
+                          color: colorScheme.primary.withOpacity(0.5),
+                          size: 20,
+                        ),
+                        if (data.ibiValues.isNotEmpty)
+                          Icon(
+                            SolarIconsBold.pulse,
+                            color: colorScheme.secondary.withOpacity(0.5),
+                            size: 16,
+                          ),
+                      ],
                     ),
                   );
                 },

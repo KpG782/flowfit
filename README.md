@@ -4,7 +4,7 @@ A comprehensive health and fitness tracking application for Wear OS (Galaxy Watc
 
 flutter run -d adb-RFAX21TD0NA-FFYRNh._adb-tls-connect._tcp -t lib/main_wear.dart
 flutter run -d 6ece264d -t lib/main.dart
-g
+
 
 
 > 📁 **Project recently reorganized!** All documentation is now in [`docs/`](docs/) and scripts in [`scripts/`](scripts/). See [docs/INDEX.md](docs/INDEX.md) for complete documentation index.

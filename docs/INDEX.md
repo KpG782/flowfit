@@ -23,6 +23,9 @@
 - [SAMSUNG_HEALTH_SDK_ISSUE.md](SAMSUNG_HEALTH_SDK_ISSUE.md) - Samsung Health SDK issues
 
 ### 📊 Architecture & Comparison
+- [CLEAN_ARCHITECTURE_GUIDE.md](CLEAN_ARCHITECTURE_GUIDE.md) - **NEW** Clean architecture with Riverpod guide
+- [ARCHITECTURE_DIAGRAM.md](ARCHITECTURE_DIAGRAM.md) - **NEW** Visual architecture diagrams
+- [MIGRATION_TO_CLEAN_ARCHITECTURE.md](MIGRATION_TO_CLEAN_ARCHITECTURE.md) - **NEW** Migration guide for existing screens
 - [KOTLIN_COMPARISON_ANALYSIS.md](KOTLIN_COMPARISON_ANALYSIS.md) - Native Kotlin vs Flutter bridge comparison
 - [ARCHITECTURE_FIX_NEEDED.md](ARCHITECTURE_FIX_NEEDED.md) - Architecture improvements needed
 - [FIX_FLUTTER.md](FIX_FLUTTER.md) - Flutter-specific fixes
@@ -47,9 +50,11 @@
 3. Check [CONNECTION_TIMEOUT_FIX.md](CONNECTION_TIMEOUT_FIX.md) if issues occur
 
 ### Understanding the Architecture
-1. Start with [KOTLIN_COMPARISON_ANALYSIS.md](KOTLIN_COMPARISON_ANALYSIS.md)
-2. Review [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md)
-3. See [WORKING_KOTLIN_HR_FLOW_ANALYSIS.md](WORKING_KOTLIN_HR_FLOW_ANALYSIS.md)
+1. **Start with [CLEAN_ARCHITECTURE_GUIDE.md](CLEAN_ARCHITECTURE_GUIDE.md)** - New clean architecture setup
+2. Review [ARCHITECTURE_DIAGRAM.md](ARCHITECTURE_DIAGRAM.md) - Visual diagrams
+3. See [KOTLIN_COMPARISON_ANALYSIS.md](KOTLIN_COMPARISON_ANALYSIS.md) - Native vs Flutter
+4. Check [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) - File organization
+5. Read [WORKING_KOTLIN_HR_FLOW_ANALYSIS.md](WORKING_KOTLIN_HR_FLOW_ANALYSIS.md) - Working implementation
 
 ### Troubleshooting Connection Issues
 1. Check [ALL_ISSUES_FIXED.md](ALL_ISSUES_FIXED.md) for known fixes
@@ -66,6 +71,9 @@
 ## 📝 Document Status
 
 ### ✅ Complete & Current
+- **CLEAN_ARCHITECTURE_GUIDE.md** - NEW clean architecture documentation
+- **ARCHITECTURE_DIAGRAM.md** - NEW visual architecture diagrams
+- **MIGRATION_TO_CLEAN_ARCHITECTURE.md** - NEW migration guide
 - CONNECTION_TIMEOUT_FIX.md
 - CONNECTION_CALLBACK_FIX.md
 - ALL_ISSUES_FIXED.md
