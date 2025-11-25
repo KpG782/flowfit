@@ -30,10 +30,12 @@ class MainActivity: FlutterActivity() {
     
     private val CHANNEL = "com.flowfit.watch/data"
     private val EVENT_CHANNEL = "com.flowfit.watch/heartrate"
+    private val TRANSMISSION_EVENT_CHANNEL = "com.flowfit.watch/transmission"
     private val PERMISSION_REQUEST_CODE = 1001
     
     private var pendingPermissionResult: MethodChannel.Result? = null
     private var heartRateEventSink: EventChannel.EventSink? = null
+    private var transmissionEventSink: EventChannel.EventSink? = null
     private var healthTrackingManager: HealthTrackingManager? = null
     private var watchToPhoneSyncManager: WatchToPhoneSyncManager? = null
     private val mainHandler = Handler(Looper.getMainLooper())
@@ -135,6 +137,14 @@ class MainActivity: FlutterActivity() {
                 mainHandler.post {
                     heartRateEventSink?.error(code, message, null)
                 }
+            },
+            onTransmission = {
+                // Notify Flutter about sensor batch transmission
+                mainHandler.post {
+                    transmissionEventSink?.success(mapOf(
+                        "timestamp" to System.currentTimeMillis()
+                    ))
+                }
             }
         )
         
@@ -156,6 +166,7 @@ class MainActivity: FlutterActivity() {
                 "startHeartRate" -> startHeartRate(result)
                 "stopHeartRate" -> stopHeartRate(result)
                 "getCurrentHeartRate" -> getCurrentHeartRate(result)
+                "getTestModeData" -> getTestModeData(result)
                 else -> result.notImplemented()
             }
         }
@@ -184,6 +195,21 @@ class MainActivity: FlutterActivity() {
             }
         )
         
+        // Transmission event channel for sensor batch transmission notifications
+        EventChannel(flutterEngine.dartExecutor.binaryMessenger, TRANSMISSION_EVENT_CHANNEL).setStreamHandler(
+            object : EventChannel.StreamHandler {
+                override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+                    transmissionEventSink = events
+                    Log.i(TAG, "Transmission event sink registered")
+                }
+                
+                override fun onCancel(arguments: Any?) {
+                    transmissionEventSink = null
+                    Log.i(TAG, "Transmission event sink cancelled")
+                }
+            }
+        )
+        
         // Phone data listener event channel (phone side - receives from watch)
         EventChannel(flutterEngine.dartExecutor.binaryMessenger, "com.flowfit.phone/heartrate").setStreamHandler(
             object : EventChannel.StreamHandler {
@@ -201,71 +227,103 @@ class MainActivity: FlutterActivity() {
     }
 
     /**
-     * Request body sensor permission from the user
+     * Request body sensor and activity recognition permissions from the user
      * Uses health.READ_HEART_RATE for Android 15+ (BAKLAVA), BODY_SENSORS for older versions
+     * Also requests ACTIVITY_RECOGNITION for accelerometer access
+     * Requirements: 7.1, 7.3
      */
     private fun requestPermission(result: MethodChannel.Result) {
         try {
-            // Determine which permission to request based on Android version
-            val permission = if (android.os.Build.VERSION.SDK_INT >= 35) { // Android 15 (BAKLAVA)
+            // Determine which permissions to request based on Android version
+            val bodySensorPermission = if (android.os.Build.VERSION.SDK_INT >= 35) { // Android 15 (BAKLAVA)
                 "android.permission.health.READ_HEART_RATE"
             } else {
                 Manifest.permission.BODY_SENSORS
             }
             
-            if (ContextCompat.checkSelfPermission(this, permission) 
-                == PackageManager.PERMISSION_GRANTED) {
-                // Permission already granted
+            val activityPermission = Manifest.permission.ACTIVITY_RECOGNITION
+            
+            // Check if both permissions are already granted
+            val bodySensorGranted = ContextCompat.checkSelfPermission(this, bodySensorPermission) == PackageManager.PERMISSION_GRANTED
+            val activityGranted = ContextCompat.checkSelfPermission(this, activityPermission) == PackageManager.PERMISSION_GRANTED
+            
+            if (bodySensorGranted && activityGranted) {
+                // Both permissions already granted
                 result.success(true)
             } else {
+                // Build list of permissions to request
+                val permissionsToRequest = mutableListOf<String>()
+                if (!bodySensorGranted) {
+                    permissionsToRequest.add(bodySensorPermission)
+                }
+                if (!activityGranted) {
+                    permissionsToRequest.add(activityPermission)
+                }
+                
                 // Store the result to respond after permission dialog
                 pendingPermissionResult = result
                 ActivityCompat.requestPermissions(
                     this,
-                    arrayOf(permission),
+                    permissionsToRequest.toTypedArray(),
                     PERMISSION_REQUEST_CODE
                 )
             }
         } catch (e: Exception) {
             result.error(
                 "PERMISSION_ERROR",
-                "Failed to request body sensor permission",
+                "Failed to request sensor permissions",
                 e.message
             )
         }
     }
 
     /**
-     * Check the current body sensor permission status
+     * Check the current body sensor and activity recognition permission status
      * Checks health.READ_HEART_RATE for Android 15+, BODY_SENSORS for older versions
+     * Also checks ACTIVITY_RECOGNITION for accelerometer access
+     * Returns "granted" only if both permissions are granted
+     * Requirements: 7.1, 7.3
      */
     private fun checkPermission(result: MethodChannel.Result) {
         try {
             // Determine which permission to check based on Android version
-            val permission = if (android.os.Build.VERSION.SDK_INT >= 35) { // Android 15 (BAKLAVA)
+            val bodySensorPermission = if (android.os.Build.VERSION.SDK_INT >= 35) { // Android 15 (BAKLAVA)
                 "android.permission.health.READ_HEART_RATE"
             } else {
                 Manifest.permission.BODY_SENSORS
             }
             
-            val status = when (ContextCompat.checkSelfPermission(this, permission)) {
-                PackageManager.PERMISSION_GRANTED -> "granted"
-                PackageManager.PERMISSION_DENIED -> {
-                    // Check if we should show rationale (user denied but can ask again)
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-                        "denied"
-                    } else {
-                        // User permanently denied or hasn't been asked yet
-                        "denied"
-                    }
+            val activityPermission = Manifest.permission.ACTIVITY_RECOGNITION
+            
+            // Check both permissions
+            val bodySensorStatus = ContextCompat.checkSelfPermission(this, bodySensorPermission)
+            val activityStatus = ContextCompat.checkSelfPermission(this, activityPermission)
+            
+            // Return "granted" only if both are granted
+            val status = if (bodySensorStatus == PackageManager.PERMISSION_GRANTED && 
+                            activityStatus == PackageManager.PERMISSION_GRANTED) {
+                "granted"
+            } else if (bodySensorStatus == PackageManager.PERMISSION_DENIED || 
+                      activityStatus == PackageManager.PERMISSION_DENIED) {
+                // Check if we should show rationale for either permission
+                val shouldShowBodySensorRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, bodySensorPermission)
+                val shouldShowActivityRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, activityPermission)
+                
+                if (shouldShowBodySensorRationale || shouldShowActivityRationale) {
+                    "denied"
+                } else {
+                    // User permanently denied or hasn't been asked yet
+                    "denied"
                 }
-                else -> "notDetermined"
+            } else {
+                "notDetermined"
             }
+            
             result.success(status)
         } catch (e: Exception) {
             result.error(
                 "PERMISSION_ERROR",
-                "Failed to check body sensor permission",
+                "Failed to check sensor permissions",
                 e.message
             )
         }
@@ -273,6 +331,8 @@ class MainActivity: FlutterActivity() {
 
     /**
      * Handle permission request result
+     * Returns true only if all requested permissions are granted
+     * Requirements: 7.1, 7.3
      */
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -282,9 +342,12 @@ class MainActivity: FlutterActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         
         if (requestCode == PERMISSION_REQUEST_CODE) {
-            val granted = grantResults.isNotEmpty() && 
-                         grantResults[0] == PackageManager.PERMISSION_GRANTED
-            pendingPermissionResult?.success(granted)
+            // Check if all permissions were granted
+            val allGranted = grantResults.isNotEmpty() && 
+                           grantResults.all { it == PackageManager.PERMISSION_GRANTED }
+            
+            Log.i(TAG, "Permission request result: $allGranted (${grantResults.size} permissions)")
+            pendingPermissionResult?.success(allGranted)
             pendingPermissionResult = null
         }
     }
@@ -423,6 +486,64 @@ class MainActivity: FlutterActivity() {
      */
     private fun getCurrentHeartRate(result: MethodChannel.Result) {
         result.success(lastHeartRateData)
+    }
+
+    /**
+     * Get test mode data for debugging
+     * Requirements: 8.5
+     */
+    private fun getTestModeData(result: MethodChannel.Result) {
+        val manager = healthTrackingManager
+        if (manager == null) {
+            result.error(
+                "INITIALIZATION_ERROR",
+                "Health tracking manager not initialized",
+                null
+            )
+            return
+        }
+        
+        try {
+            // Access the sensor service through reflection or add a getter
+            // For now, we'll create a simple data structure
+            val testData = mutableMapOf<String, Any?>()
+            
+            // Get heart rate data
+            testData["heartRate"] = lastHeartRateData?.get("bpm")
+            testData["heartRateStatus"] = lastHeartRateData?.get("status")
+            
+            // Get accelerometer data from the sensor service
+            // We need to expose this through the HealthTrackingManager
+            val sensorServiceField = manager.javaClass.getDeclaredField("sensorService")
+            sensorServiceField.isAccessible = true
+            val sensorService = sensorServiceField.get(manager) as? WatchSensorService
+            
+            if (sensorService != null) {
+                val latestReading = sensorService.getLatestReading()
+                testData["accelerometerX"] = latestReading?.accX
+                testData["accelerometerY"] = latestReading?.accY
+                testData["accelerometerZ"] = latestReading?.accZ
+                testData["bufferSize"] = sensorService.getBufferSize()
+                testData["timeSinceLastTransmission"] = sensorService.getTimeSinceLastTransmission()
+                testData["isTracking"] = sensorService.isTracking()
+            } else {
+                testData["accelerometerX"] = null
+                testData["accelerometerY"] = null
+                testData["accelerometerZ"] = null
+                testData["bufferSize"] = 0
+                testData["timeSinceLastTransmission"] = 0
+                testData["isTracking"] = false
+            }
+            
+            result.success(testData)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting test mode data", e)
+            result.error(
+                "TEST_MODE_ERROR",
+                "Failed to get test mode data: ${e.message}",
+                null
+            )
+        }
     }
 
     // Support for rotary input (rotating bezel on Galaxy Watch)

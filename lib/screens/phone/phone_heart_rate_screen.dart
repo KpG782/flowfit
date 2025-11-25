@@ -16,24 +16,33 @@ class PhoneHeartRateScreen extends StatefulWidget {
 class _PhoneHeartRateScreenState extends State<PhoneHeartRateScreen> {
   static const EventChannel _eventChannel =
       EventChannel('com.flowfit.phone/heartrate');
+  static const EventChannel _sensorBatchEventChannel =
+      EventChannel('com.flowfit.phone/sensor_data');
 
   final List<TrackedData> _receivedData = [];
   StreamSubscription? _subscription;
+  StreamSubscription? _sensorBatchSubscription;
   bool _isConnected = false;
   DateTime? _lastDataTime;
+  
+  // Test mode state
+  bool _isTestMode = false;
+  Map<String, dynamic>? _lastSensorBatch;
+  int _totalBatchesReceived = 0;
 
   @override
   void initState() {
     super.initState();
     _listenToWatchData();
+    _listenToSensorBatches();
   }
 
   void _listenToWatchData() {
     _subscription = _eventChannel.receiveBroadcastStream().listen(
       (data) {
         try {
-          final jsonString = data as String;
-          final jsonData = jsonDecode(jsonString);
+          // Android sends data as Map directly, not as JSON string
+          final jsonData = data is String ? jsonDecode(data) : data;
 
           setState(() {
             _isConnected = true;
@@ -42,7 +51,7 @@ class _PhoneHeartRateScreenState extends State<PhoneHeartRateScreen> {
             if (jsonData is List) {
               // Batch data
               final batch = jsonData
-                  .map((item) => TrackedData.fromJson(item as Map<String, dynamic>))
+                  .map((item) => TrackedData.fromJson(Map<String, dynamic>.from(item as Map)))
                   .toList();
               _receivedData.addAll(batch);
               
@@ -52,7 +61,7 @@ class _PhoneHeartRateScreenState extends State<PhoneHeartRateScreen> {
               }
             } else {
               // Single data point
-              final trackedData = TrackedData.fromJson(jsonData as Map<String, dynamic>);
+              final trackedData = TrackedData.fromJson(Map<String, dynamic>.from(jsonData as Map));
               _receivedData.add(trackedData);
               
               // Keep only last 100 readings
@@ -74,9 +83,34 @@ class _PhoneHeartRateScreenState extends State<PhoneHeartRateScreen> {
     );
   }
 
+  void _listenToSensorBatches() {
+    _sensorBatchSubscription = _sensorBatchEventChannel.receiveBroadcastStream().listen(
+      (data) {
+        try {
+          final jsonData = data as Map;
+          
+          setState(() {
+            _lastSensorBatch = Map<String, dynamic>.from(jsonData);
+            _totalBatchesReceived++;
+            _isConnected = true;
+            _lastDataTime = DateTime.now();
+          });
+          
+          debugPrint('📦 Received sensor batch: ${_lastSensorBatch?['count']} samples, BPM: ${_lastSensorBatch?['bpm']}');
+        } catch (e) {
+          debugPrint('Error parsing sensor batch: $e');
+        }
+      },
+      onError: (error) {
+        debugPrint('Error receiving sensor batch: $error');
+      },
+    );
+  }
+
   @override
   void dispose() {
     _subscription?.cancel();
+    _sensorBatchSubscription?.cancel();
     super.dispose();
   }
 
@@ -86,6 +120,18 @@ class _PhoneHeartRateScreenState extends State<PhoneHeartRateScreen> {
       appBar: AppBar(
         title: const Text('Watch Heart Rate Data'),
         actions: [
+          // Test mode toggle
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _isTestMode = !_isTestMode;
+              });
+            },
+            icon: Icon(
+              _isTestMode ? Icons.bug_report : Icons.bug_report_outlined,
+            ),
+            tooltip: 'Test Mode',
+          ),
           // Connection status indicator
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -149,12 +195,18 @@ class _PhoneHeartRateScreenState extends State<PhoneHeartRateScreen> {
   Widget _buildDataList() {
     // Show most recent data first
     final reversedData = _receivedData.reversed.toList();
-    final latestData = reversedData.first;
+    final latestData = reversedData.isNotEmpty ? reversedData.first : null;
 
     return Column(
       children: [
+        // Test mode display
+        if (_isTestMode) ...[
+          _buildTestModeDisplay(),
+          const Divider(),
+        ],
+        
         // Large BPM display at top
-        _buildLatestBpmCard(latestData),
+        if (latestData != null) _buildLatestBpmCard(latestData),
         
         // Data freshness indicator
         if (_lastDataTime != null)
@@ -172,15 +224,16 @@ class _PhoneHeartRateScreenState extends State<PhoneHeartRateScreen> {
         const Divider(),
         
         // List of all readings
-        Expanded(
-          child: ListView.builder(
-            itemCount: reversedData.length,
-            itemBuilder: (context, index) {
-              final data = reversedData[index];
-              return _buildDataTile(data, index == 0);
-            },
+        if (!_isTestMode)
+          Expanded(
+            child: ListView.builder(
+              itemCount: reversedData.length,
+              itemBuilder: (context, index) {
+                final data = reversedData[index];
+                return _buildDataTile(data, index == 0);
+              },
+            ),
           ),
-        ),
       ],
     );
   }
@@ -226,10 +279,10 @@ class _PhoneHeartRateScreenState extends State<PhoneHeartRateScreen> {
                 ),
               ],
             ),
-            if (data.ibi.isNotEmpty) ...[
+            if (data.ibiValues.isNotEmpty) ...[
               const SizedBox(height: 16),
               Text(
-                'IBI: ${data.ibi.take(5).join(", ")}${data.ibi.length > 5 ? "..." : ""} ms',
+                'IBI: ${data.ibiValues.take(5).join(", ")}${data.ibiValues.length > 5 ? "..." : ""} ms',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[700],
@@ -254,8 +307,8 @@ class _PhoneHeartRateScreenState extends State<PhoneHeartRateScreen> {
           fontWeight: isLatest ? FontWeight.bold : FontWeight.normal,
         ),
       ),
-      subtitle: data.ibi.isNotEmpty
-          ? Text('IBI: ${data.ibi.take(4).join(", ")}${data.ibi.length > 4 ? "..." : ""} ms')
+      subtitle: data.ibiValues.isNotEmpty
+          ? Text('IBI: ${data.ibiValues.take(4).join(", ")}${data.ibiValues.length > 4 ? "..." : ""} ms')
           : const Text('No IBI data'),
       trailing: isLatest
           ? Container(
@@ -275,6 +328,133 @@ class _PhoneHeartRateScreenState extends State<PhoneHeartRateScreen> {
             )
           : null,
     );
+  }
+
+  Widget _buildTestModeDisplay() {
+    final batch = _lastSensorBatch;
+    
+    return Card(
+      margin: const EdgeInsets.all(16),
+      color: Colors.teal.shade50,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.bug_report, color: Colors.teal),
+                const SizedBox(width: 8),
+                const Text(
+                  'Test Mode - Sensor Batch Data',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.teal,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            if (batch != null) ...[
+              _buildTestRow('Total Batches Received', '$_totalBatchesReceived'),
+              _buildTestRow('Sample Count', '${batch['count'] ?? '--'}'),
+              _buildTestRow('Heart Rate', '${batch['bpm'] ?? '--'} bpm'),
+              _buildTestRow('Sample Rate', '${batch['sample_rate'] ?? '--'} Hz'),
+              _buildTestRow('Timestamp', '${batch['timestamp'] ?? '--'}'),
+              const SizedBox(height: 12),
+              const Text(
+                'Accelerometer Samples (first 3):',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.teal,
+                ),
+              ),
+              const SizedBox(height: 8),
+              if (batch['accelerometer'] != null) ...[
+                ..._buildAccelerometerSamples(batch['accelerometer'] as List),
+              ] else
+                const Text('No accelerometer data', style: TextStyle(color: Colors.grey)),
+            ] else
+              const Text(
+                'No sensor batch received yet',
+                style: TextStyle(color: Colors.grey),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTestRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.black87,
+            ),
+          ),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _buildAccelerometerSamples(List samples) {
+    final widgets = <Widget>[];
+    final samplesToShow = samples.take(3).toList();
+    
+    for (var i = 0; i < samplesToShow.length; i++) {
+      final sample = samplesToShow[i] as List;
+      if (sample.length >= 3) {
+        widgets.add(
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2.0),
+            child: Text(
+              'Sample ${i + 1}: X=${(sample[0] as num).toStringAsFixed(2)}, '
+              'Y=${(sample[1] as num).toStringAsFixed(2)}, '
+              'Z=${(sample[2] as num).toStringAsFixed(2)} m/s²',
+              style: const TextStyle(
+                fontSize: 12,
+                fontFamily: 'monospace',
+                color: Colors.black87,
+              ),
+            ),
+          ),
+        );
+      }
+    }
+    
+    if (samples.length > 3) {
+      widgets.add(
+        Padding(
+          padding: const EdgeInsets.only(top: 4.0),
+          child: Text(
+            '... and ${samples.length - 3} more samples',
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey[600],
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+        ),
+      );
+    }
+    
+    return widgets;
   }
 
   String _formatTimestamp(DateTime time) {

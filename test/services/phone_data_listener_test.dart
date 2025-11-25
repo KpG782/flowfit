@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flowfit/services/phone_data_listener.dart';
 import 'package:flowfit/models/sensor_error.dart';
 import 'package:flowfit/models/sensor_error_code.dart';
+import 'package:flowfit/models/sensor_batch.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -11,6 +12,7 @@ void main() {
     late PhoneDataListener service;
     const methodChannel = MethodChannel('com.flowfit.phone/data');
     const eventChannel = EventChannel('com.flowfit.phone/heartrate');
+    const sensorBatchEventChannel = EventChannel('com.flowfit.phone/sensor_data');
 
     setUp(() {
       service = PhoneDataListener();
@@ -21,6 +23,8 @@ void main() {
           .setMockMethodCallHandler(methodChannel, null);
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockStreamHandler(eventChannel, null);
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockStreamHandler(sensorBatchEventChannel, null);
       service.dispose();
     });
 
@@ -507,6 +511,326 @@ void main() {
 
         final result = await service.isWatchConnected();
         expect(result, false);
+      });
+    });
+
+    group('sensorBatchStream', () {
+      test('emits SensorBatch when valid data is received from watch', () async {
+        final testData = {
+          'type': 'sensor_batch',
+          'timestamp': 1234567890,
+          'bpm': 75,
+          'sample_rate': 32,
+          'count': 3,
+          'accelerometer': [
+            [0.12, -0.45, 9.81],
+            [0.15, -0.42, 9.79],
+            [0.13, -0.44, 9.80],
+          ],
+        };
+
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockStreamHandler(
+          sensorBatchEventChannel,
+          MockStreamHandler.inline(
+            onListen: (arguments, events) {
+              events.success(testData);
+              return null;
+            },
+          ),
+        );
+
+        final stream = service.sensorBatchStream;
+        final sensorBatch = await stream.first;
+
+        expect(sensorBatch.sampleCount, 3);
+        expect(sensorBatch.timestamp, 1234567890);
+        expect(sensorBatch.samples.length, 3);
+        expect(sensorBatch.samples[0].length, 4); // [accX, accY, accZ, bpm]
+        expect(sensorBatch.samples[0][3], 75.0); // BPM value
+      });
+
+      test('constructs 4-feature vectors correctly', () async {
+        final testData = {
+          'type': 'sensor_batch',
+          'timestamp': 1234567890,
+          'bpm': 80,
+          'sample_rate': 32,
+          'count': 2,
+          'accelerometer': [
+            [1.0, 2.0, 3.0],
+            [4.0, 5.0, 6.0],
+          ],
+        };
+
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockStreamHandler(
+          sensorBatchEventChannel,
+          MockStreamHandler.inline(
+            onListen: (arguments, events) {
+              events.success(testData);
+              return null;
+            },
+          ),
+        );
+
+        final stream = service.sensorBatchStream;
+        final sensorBatch = await stream.first;
+
+        // Verify first sample
+        expect(sensorBatch.samples[0][0], 1.0); // accX
+        expect(sensorBatch.samples[0][1], 2.0); // accY
+        expect(sensorBatch.samples[0][2], 3.0); // accZ
+        expect(sensorBatch.samples[0][3], 80.0); // bpm
+
+        // Verify second sample
+        expect(sensorBatch.samples[1][0], 4.0); // accX
+        expect(sensorBatch.samples[1][1], 5.0); // accY
+        expect(sensorBatch.samples[1][2], 6.0); // accZ
+        expect(sensorBatch.samples[1][3], 80.0); // bpm
+      });
+
+      test('throws SensorError when null event is received', () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockStreamHandler(
+          sensorBatchEventChannel,
+          MockStreamHandler.inline(
+            onListen: (arguments, events) {
+              events.success(null);
+              return null;
+            },
+          ),
+        );
+
+        final stream = service.sensorBatchStream;
+        
+        expect(
+          () => stream.first,
+          throwsA(isA<SensorError>().having(
+            (e) => e.message,
+            'message',
+            'Received null data from watch',
+          )),
+        );
+      });
+
+      test('throws SensorError when non-Map event is received', () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockStreamHandler(
+          sensorBatchEventChannel,
+          MockStreamHandler.inline(
+            onListen: (arguments, events) {
+              events.success('invalid string data');
+              return null;
+            },
+          ),
+        );
+
+        final stream = service.sensorBatchStream;
+        
+        expect(
+          () => stream.first,
+          throwsA(isA<SensorError>().having(
+            (e) => e.message,
+            'message',
+            'Invalid data format from watch',
+          )),
+        );
+      });
+
+      test('throws SensorError when required field "type" is missing', () async {
+        final invalidData = {
+          'timestamp': 1234567890,
+          'bpm': 75,
+          'sample_rate': 32,
+          'count': 1,
+          'accelerometer': [[0.1, 0.2, 0.3]],
+        };
+
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockStreamHandler(
+          sensorBatchEventChannel,
+          MockStreamHandler.inline(
+            onListen: (arguments, events) {
+              events.success(invalidData);
+              return null;
+            },
+          ),
+        );
+
+        final stream = service.sensorBatchStream;
+        
+        expect(
+          () => stream.first,
+          throwsA(isA<SensorError>().having(
+            (e) => e.message,
+            'message',
+            'Malformed sensor batch JSON from watch',
+          )),
+        );
+      });
+
+      test('throws SensorError when required field "accelerometer" is missing', () async {
+        final invalidData = {
+          'type': 'sensor_batch',
+          'timestamp': 1234567890,
+          'bpm': 75,
+          'sample_rate': 32,
+          'count': 1,
+        };
+
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockStreamHandler(
+          sensorBatchEventChannel,
+          MockStreamHandler.inline(
+            onListen: (arguments, events) {
+              events.success(invalidData);
+              return null;
+            },
+          ),
+        );
+
+        final stream = service.sensorBatchStream;
+        
+        expect(
+          () => stream.first,
+          throwsA(isA<SensorError>().having(
+            (e) => e.message,
+            'message',
+            'Malformed sensor batch JSON from watch',
+          )),
+        );
+      });
+
+      test('throws SensorError when count does not match accelerometer array length', () async {
+        final invalidData = {
+          'type': 'sensor_batch',
+          'timestamp': 1234567890,
+          'bpm': 75,
+          'sample_rate': 32,
+          'count': 5, // Says 5 but only has 2
+          'accelerometer': [
+            [0.1, 0.2, 0.3],
+            [0.4, 0.5, 0.6],
+          ],
+        };
+
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockStreamHandler(
+          sensorBatchEventChannel,
+          MockStreamHandler.inline(
+            onListen: (arguments, events) {
+              events.success(invalidData);
+              return null;
+            },
+          ),
+        );
+
+        final stream = service.sensorBatchStream;
+        
+        expect(
+          () => stream.first,
+          throwsA(isA<SensorError>().having(
+            (e) => e.message,
+            'message',
+            'Count mismatch in sensor batch',
+          )),
+        );
+      });
+
+      test('throws SensorError when bpm has invalid type', () async {
+        final invalidData = {
+          'type': 'sensor_batch',
+          'timestamp': 1234567890,
+          'bpm': 'seventy-five', // Should be int
+          'sample_rate': 32,
+          'count': 1,
+          'accelerometer': [[0.1, 0.2, 0.3]],
+        };
+
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockStreamHandler(
+          sensorBatchEventChannel,
+          MockStreamHandler.inline(
+            onListen: (arguments, events) {
+              events.success(invalidData);
+              return null;
+            },
+          ),
+        );
+
+        final stream = service.sensorBatchStream;
+        
+        expect(
+          () => stream.first,
+          throwsA(isA<SensorError>().having(
+            (e) => e.message,
+            'message',
+            'Invalid bpm field type',
+          )),
+        );
+      });
+
+      test('throws SensorError when accelerometer has invalid type', () async {
+        final invalidData = {
+          'type': 'sensor_batch',
+          'timestamp': 1234567890,
+          'bpm': 75,
+          'sample_rate': 32,
+          'count': 1,
+          'accelerometer': 'not a list',
+        };
+
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockStreamHandler(
+          sensorBatchEventChannel,
+          MockStreamHandler.inline(
+            onListen: (arguments, events) {
+              events.success(invalidData);
+              return null;
+            },
+          ),
+        );
+
+        final stream = service.sensorBatchStream;
+        
+        expect(
+          () => stream.first,
+          throwsA(isA<SensorError>().having(
+            (e) => e.message,
+            'message',
+            'Invalid accelerometer field type',
+          )),
+        );
+      });
+
+      test('handles malformed JSON and continues listening', () async {
+        final invalidData = {
+          'type': 'sensor_batch',
+          'timestamp': 'invalid', // Wrong type
+          'bpm': 75,
+          'sample_rate': 32,
+          'count': 1,
+          'accelerometer': [[0.1, 0.2, 0.3]],
+        };
+
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockStreamHandler(
+          sensorBatchEventChannel,
+          MockStreamHandler.inline(
+            onListen: (arguments, events) {
+              events.success(invalidData);
+              return null;
+            },
+          ),
+        );
+
+        final stream = service.sensorBatchStream;
+        
+        expect(
+          () => stream.first,
+          throwsA(isA<SensorError>()),
+        );
       });
     });
 

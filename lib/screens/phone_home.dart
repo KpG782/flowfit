@@ -150,6 +150,14 @@ class _PhoneHomePageState extends State<PhoneHomePage> {
             SliverAppBar.large(
               title: const Text('FlowFit'),
               actions: [
+                // Test Mode / Sensor Data button
+                IconButton(
+                  icon: const Icon(Icons.sensors),
+                  tooltip: 'Sensor Data (Test Mode)',
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/phone_heart_rate');
+                  },
+                ),
                 // Statistics badge
                 if (_statistics.isNotEmpty)
                   Padding(

@@ -14,6 +14,7 @@ import 'screens/auth/welcome_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/signup_screen.dart';
 import 'screens/phone_home.dart';
+import 'screens/phone/phone_heart_rate_screen.dart';
 import 'screens/onboarding/survey_screen_1.dart';
 import 'screens/onboarding/survey_screen_2.dart';
 import 'screens/onboarding/survey_screen_3.dart';
@@ -82,6 +83,7 @@ class FlowFitPhoneApp extends StatelessWidget {
           '/dashboard': (context) => const DashboardScreen(),
           '/trackertest': (context) => const TrackerPage(),
           '/home': (context) => const PhoneHomePage(),
+          '/phone_heart_rate': (context) => const PhoneHeartRateScreen(),
         },
       ),
     );

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:logger/logger.dart';
@@ -789,6 +788,38 @@ class WatchBridgeService {
           conn.ConnectionState.disconnected(errorMessage: e.toString()),
         );
       }
+    }
+  }
+
+  /// Get test mode data for debugging
+  /// Requirements: 8.5
+  /// Returns a map containing current sensor values and status
+  Future<Map<String, dynamic>> getTestModeData() async {
+    _logger.d('Getting test mode data');
+    
+    try {
+      final result = await _methodChannel
+          .invokeMethod<Map<dynamic, dynamic>>('getTestModeData')
+          .timeout(_operationTimeout);
+      
+      if (result == null) {
+        _logger.d('No test mode data available');
+        return {};
+      }
+
+      // Convert dynamic map to Map<String, dynamic>
+      final testData = Map<String, dynamic>.from(result);
+      _logger.d('Test mode data retrieved: $testData');
+      return testData;
+    } on TimeoutException catch (e) {
+      _logger.e('Get test mode data timed out', error: e);
+      return {};
+    } on PlatformException catch (e) {
+      _logger.e('Platform exception getting test mode data', error: e);
+      return {};
+    } catch (e, stackTrace) {
+      _logger.e('Failed to get test mode data', error: e, stackTrace: stackTrace);
+      return {};
     }
   }
 
