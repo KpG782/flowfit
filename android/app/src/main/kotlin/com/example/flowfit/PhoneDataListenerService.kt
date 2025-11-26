@@ -21,9 +21,11 @@ class PhoneDataListenerService : WearableListenerService() {
         private const val TAG = "PhoneDataListener"
         private const val MESSAGE_PATH = "/heart_rate"
         private const val BATCH_PATH = "/heart_rate_batch"
+        private const val SENSOR_DATA_PATH = "/sensor_data"
         
         // Static event sink for sending data to Flutter
         var eventSink: EventChannel.EventSink? = null
+        var sensorBatchEventSink: EventChannel.EventSink? = null
     }
     
     // Handler for posting to main thread
@@ -41,6 +43,9 @@ class PhoneDataListenerService : WearableListenerService() {
             }
             BATCH_PATH -> {
                 handleBatchData(messageEvent)
+            }
+            SENSOR_DATA_PATH -> {
+                handleSensorBatchData(messageEvent)
             }
             else -> {
                 Log.w(TAG, "Unknown message path: ${messageEvent.path}")
@@ -108,6 +113,33 @@ class PhoneDataListenerService : WearableListenerService() {
             Log.e(TAG, "Error handling batch data", e)
             mainHandler.post {
                 eventSink?.error("PARSE_ERROR", "Failed to parse batch data", e.message)
+            }
+        }
+    }
+
+    private fun handleSensorBatchData(messageEvent: MessageEvent) {
+        try {
+            val jsonData = String(messageEvent.data, Charsets.UTF_8)
+            Log.i(TAG, "Sensor batch data received: $jsonData")
+            
+            // Parse JSON string to Map for Flutter
+            val jsonMap = parseJsonToMap(jsonData)
+            
+            // Post to main thread for Flutter communication
+            mainHandler.post {
+                try {
+                    // Send to Flutter via sensor batch event channel as Map
+                    sensorBatchEventSink?.success(jsonMap)
+                    Log.i(TAG, "Sensor batch data sent to Flutter successfully")
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error sending sensor batch to Flutter", e)
+                    sensorBatchEventSink?.error("SEND_ERROR", "Failed to send sensor batch data to Flutter", e.message)
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error handling sensor batch data", e)
+            mainHandler.post {
+                sensorBatchEventSink?.error("PARSE_ERROR", "Failed to parse sensor batch data", e.message)
             }
         }
     }

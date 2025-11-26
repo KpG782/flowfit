@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'dart:io';
+// dart:io is not required in this wrapper — removed unused import
 
 /// Permission wrapper for Wear OS screens
 /// Ensures BODY_SENSORS or health.READ_HEART_RATE permission is granted

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:flowfit/services/phone_data_listener.dart';
+import 'package:flowfit/models/sensor_batch.dart';
 import 'package:provider/provider.dart';
 
 import 'providers.dart';
@@ -10,6 +11,7 @@ import '../platform/tflite_activity_classifier.dart';
 import '../platform/heart_bpm_adapter.dart';
 
 enum BpmSource { Simulation, Plugin, Watch }
+enum AccelSource { Phone, Simulation, Watch }
 
 class TrackerPage extends StatefulWidget {
   const TrackerPage({Key? key}) : super(key: key);
@@ -29,11 +31,13 @@ class _TrackerPageState extends State<TrackerPage> {
   // Sensor subscription
   StreamSubscription<AccelerometerEvent>? _accelSub;
   StreamSubscription<int?>? _bpmSub;
+  StreamSubscription? _sensorBatchSub;
   Timer? _accelTimer;
   int _accelSimTick = 0;
   bool _simulateAccel = false; // Use synthetic accelerometer data
   double _accelAmplitude = 1.0; // Synthetic amplitude
   double _accelFreqHz = 1.0; // Tones per second in simulation
+  AccelSource _accelSource = AccelSource.Phone;
 
   // Local references to providers
   late ActivityClassifierViewModel _viewModel;
@@ -73,13 +77,45 @@ class _TrackerPageState extends State<TrackerPage> {
   void dispose() {
     _stopSensorSubscription();
     _bpmSub?.cancel();
+    _sensorBatchSub?.cancel();
     super.dispose();
   }
 
   void _startSensorSubscription() {
     _stopSensorSubscription();
 
-    if (_simulateAccel) {
+    if (_accelSource == AccelSource.Watch) {
+      // Use watch sensor batches (accelerometer + heart rate combined)
+      final phoneListener = Provider.of<PhoneDataListener>(context, listen: false);
+      phoneListener.startListening();
+      
+      _sensorBatchSub = phoneListener.sensorBatchStream.listen((sensorBatch) {
+        // Sensor batch contains samples as 4-feature vectors [accX, accY, accZ, bpm]
+        // Add all samples from the batch to our buffer
+        for (final sample in sensorBatch.samples) {
+          if (sample.length == 4) {
+            _dataBuffer.add(sample);
+            
+            // Keep buffer at exactly 320 items
+            if (_dataBuffer.length > WINDOW_SIZE) {
+              _dataBuffer.removeAt(0);
+            }
+          }
+        }
+        
+        // Run inference when we have a full window
+        if (_dataBuffer.length == WINDOW_SIZE && !_viewModel.isLoading) {
+          _runInference();
+        }
+        
+        // Update UI with current BPM from watch (extract from first sample)
+        if (sensorBatch.samples.isNotEmpty && sensorBatch.samples[0][3] > 0) {
+          setState(() => _currentBpmValue = sensorBatch.samples[0][3].toInt());
+        }
+      }, onError: (error) {
+        print('Error receiving sensor batch from watch: $error');
+      });
+    } else if (_accelSource == AccelSource.Simulation) {
       // Simulate at ~32Hz (31ms per sample)
       final sampleMs = (1000 / 32).round();
       _accelTimer = Timer.periodic(Duration(milliseconds: sampleMs), (_) {
@@ -92,6 +128,7 @@ class _TrackerPageState extends State<TrackerPage> {
         _addToBuffer(AccelerometerEvent(x, y, z));
       });
     } else {
+      // Use phone accelerometer
       _accelSub = accelerometerEvents.listen((event) {
         _addToBuffer(event);
       });
@@ -103,6 +140,8 @@ class _TrackerPageState extends State<TrackerPage> {
     _accelSub = null;
     _accelTimer?.cancel();
     _accelTimer = null;
+    _sensorBatchSub?.cancel();
+    _sensorBatchSub = null;
     _accelSimTick = 0;
   }
 
@@ -216,12 +255,12 @@ class _TrackerPageState extends State<TrackerPage> {
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(height: 20),
             // 1. The Result (Big Text)
             Text(
               currentActivity,
@@ -322,56 +361,103 @@ class _TrackerPageState extends State<TrackerPage> {
               ),
             ],
 
+            const SizedBox(height: 24),
+            const Divider(),
+            const SizedBox(height: 16),
+            
+            // Accelerometer Source Selection
+            const Text(
+              'Accelerometer Source',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 12),
-            // Simulate movement toggle and controls
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Wrap(
+              spacing: 8,
               children: [
-                const Text('Simulate Movement'),
-                Switch(
-                  value: _simulateAccel,
-                  onChanged: (val) {
+                ChoiceChip(
+                  label: const Text('Phone'),
+                  selected: _accelSource == AccelSource.Phone,
+                  onSelected: (s) {
                     setState(() {
-                      _simulateAccel = val;
+                      _accelSource = AccelSource.Phone;
                       _startSensorSubscription();
                     });
                   },
                 ),
-                const SizedBox(width: 8),
-                const Text('Amp:'),
-                Slider(
-                  min: 0.0,
-                  max: 2.0,
-                  value: _accelAmplitude,
-                  onChanged: (v) {
-                    setState(() => _accelAmplitude = v);
-                  },
-                  divisions: 20,
-                  label: _accelAmplitude.toStringAsFixed(2),
-                ),
-              ],
-            ),
-            Wrap(
-              spacing: 8,
-              children: [
-                const Text('Frequency'),
-                Slider(
-                  min: 0.5,
-                  max: 4.0,
-                  value: _accelFreqHz,
-                  onChanged: (v) {
+                ChoiceChip(
+                  label: const Text('Simulation'),
+                  selected: _accelSource == AccelSource.Simulation,
+                  onSelected: (s) {
                     setState(() {
-                      _accelFreqHz = v;
+                      _accelSource = AccelSource.Simulation;
+                      _startSensorSubscription();
                     });
                   },
-                  divisions: 35,
-                  label: '${_accelFreqHz.toStringAsFixed(2)}Hz',
+                ),
+                ChoiceChip(
+                  label: const Text('Watch'),
+                  selected: _accelSource == AccelSource.Watch,
+                  onSelected: (s) {
+                    setState(() {
+                      _accelSource = AccelSource.Watch;
+                      _startSensorSubscription();
+                    });
+                  },
                 ),
               ],
             ),
+            
+            // Simulation controls (only show when simulation is selected)
+            if (_accelSource == AccelSource.Simulation) ...[
+              const SizedBox(height: 16),
+              const Text('Simulation Controls', style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  const Text('Amplitude:'),
+                  Expanded(
+                    child: Slider(
+                      min: 0.0,
+                      max: 2.0,
+                      value: _accelAmplitude,
+                      onChanged: (v) {
+                        setState(() => _accelAmplitude = v);
+                      },
+                      divisions: 20,
+                      label: _accelAmplitude.toStringAsFixed(2),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const Text('Frequency:'),
+                  Expanded(
+                    child: Slider(
+                      min: 0.5,
+                      max: 4.0,
+                      value: _accelFreqHz,
+                      onChanged: (v) {
+                        setState(() => _accelFreqHz = v);
+                      },
+                      divisions: 35,
+                      label: '${_accelFreqHz.toStringAsFixed(2)}Hz',
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            
+            const SizedBox(height: 16),
+            const Divider(),
+            const SizedBox(height: 16),
 
+            // Heart Rate Source Selection
+            const Text(
+              'Heart Rate Source',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 12),
-            // BPM Source selection
             Wrap(
               spacing: 8,
               children: [
@@ -398,7 +484,7 @@ class _TrackerPageState extends State<TrackerPage> {
                   },
                 ),
                 ChoiceChip(
-                  label: const Text('Watch'),
+                  label: const Text('Watch HR'),
                   selected: _bpmSource == BpmSource.Watch,
                   onSelected: (s) {
                     setState(() {
@@ -414,22 +500,72 @@ class _TrackerPageState extends State<TrackerPage> {
             // Optional: show last error from ViewModel
             if (viewModel.hasError) ...[
               const SizedBox(height: 12),
-              Text('Error: ${viewModel.error}', style: const TextStyle(color: Colors.red)),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.red),
+                ),
+                child: Text(
+                  'Error: ${viewModel.error}',
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ),
             ],
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
+            
             // Display connection status
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.grey.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.withOpacity(0.3)),
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const Text(
+                    'Status',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 12),
+                  
+                  // Accelerometer Status
+                  Row(
+                    children: [
+                      Icon(
+                        _accelSource == AccelSource.Watch
+                            ? Icons.watch
+                            : _accelSource == AccelSource.Phone
+                                ? Icons.phone_android
+                                : Icons.science,
+                        color: _accelSource == AccelSource.Watch
+                            ? Colors.green
+                            : Colors.blue,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          _accelSource == AccelSource.Watch
+                              ? 'Accelerometer: Watch'
+                              : _accelSource == AccelSource.Phone
+                                  ? 'Accelerometer: Phone'
+                                  : 'Accelerometer: Simulated',
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ],
+                  ),
+                  
+                  const SizedBox(height: 8),
+                  
+                  // Heart Rate Status
                   if (_bpmSource == BpmSource.Plugin) ...[
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
                           _pluginAvailable ? Icons.check_circle : Icons.error,
@@ -437,46 +573,41 @@ class _TrackerPageState extends State<TrackerPage> {
                           size: 20,
                         ),
                         const SizedBox(width: 8),
-                        Text(
-                          _pluginAvailable ? 'Plugin connected' : 'Plugin not connected',
-                          style: TextStyle(
-                            color: _pluginAvailable ? Colors.green : Colors.orange,
-                            fontWeight: FontWeight.bold,
+                        Expanded(
+                          child: Text(
+                            _pluginAvailable ? 'Heart Rate: Plugin connected' : 'Heart Rate: Plugin not connected',
+                            style: TextStyle(
+                              color: _pluginAvailable ? Colors.green : Colors.orange,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ] else if (_bpmSource == BpmSource.Watch) ...[
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          _currentBpmValue != null ? Icons.watch : Icons.watch_off,
+                          _currentBpmValue != null ? Icons.check_circle : Icons.watch_off,
                           color: _currentBpmValue != null ? Colors.green : Colors.orange,
                           size: 20,
                         ),
                         const SizedBox(width: 8),
-                        Text(
-                          _currentBpmValue != null
-                              ? '✓ Galaxy Watch Connected'
-                              : '⚠ Waiting for watch data...',
-                          style: TextStyle(
-                            color: _currentBpmValue != null ? Colors.green : Colors.orange,
-                            fontWeight: FontWeight.bold,
+                        Expanded(
+                          child: Text(
+                            _currentBpmValue != null
+                                ? 'Heart Rate: Watch connected'
+                                : 'Heart Rate: Waiting for watch...',
+                            style: TextStyle(
+                              color: _currentBpmValue != null ? Colors.green : Colors.orange,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    if (_currentBpmValue == null) ...[
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Make sure watch is sending heart rate data',
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
-                      ),
-                    ],
                   ] else if (_bpmSource == BpmSource.Simulation) ...[
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Icon(
                           Icons.science,
@@ -484,19 +615,74 @@ class _TrackerPageState extends State<TrackerPage> {
                           size: 20,
                         ),
                         const SizedBox(width: 8),
-                        Text(
-                          'Using simulated heart rate: ${_simulatedHR.round()} BPM',
-                          style: const TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
+                        Expanded(
+                          child: Text(
+                            'Heart Rate: Simulated (${_simulatedHR.round()} BPM)',
+                            style: const TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ],
+                  
+                  const SizedBox(height: 12),
+                  
+                  // Buffer status
+                  Row(
+                    children: [
+                      Icon(
+                        _dataBuffer.length == WINDOW_SIZE
+                            ? Icons.check_circle
+                            : Icons.hourglass_empty,
+                        color: _dataBuffer.length == WINDOW_SIZE
+                            ? Colors.green
+                            : Colors.orange,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Buffer: ${_dataBuffer.length}/$WINDOW_SIZE samples',
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ],
+                  ),
+                  
+                  // Watch integration tip
+                  if (_accelSource == AccelSource.Watch || _bpmSource == BpmSource.Watch) ...[
+                    const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.info, color: Colors.blue, size: 16),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              _accelSource == AccelSource.Watch
+                                  ? 'Using complete sensor batch from watch (accel + HR)'
+                                  : 'Using watch heart rate only',
+                              style: const TextStyle(fontSize: 12, color: Colors.blue),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
+            
+            // Bottom padding for scrolling
+            const SizedBox(height: 40),
           ],
         ),
       ),

@@ -15,18 +15,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
   bool _isLoading = false;
+  bool _termsAccepted = false;
+  bool _watchDataConsent = false;
+  bool _marketingOptIn = false;
 
   @override
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
   Future<void> _handleSignUp() async {
+    if (!_termsAccepted || !_watchDataConsent) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please accept required terms to continue'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+    
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
 
@@ -35,8 +51,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       if (mounted) {
         setState(() => _isLoading = false);
-        // Go to survey questions
-        Navigator.pushReplacementNamed(context, '/survey1');
+        // Go to survey intro
+        Navigator.pushReplacementNamed(context, '/survey_intro');
       }
     }
   }
@@ -246,13 +262,111 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a password';
                     }
-                    if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
+                    if (value.length < 8) {
+                      return 'Password must be at least 8 characters';
                     }
                     return null;
                   },
                 ),
-
+                
+                const SizedBox(height: 8),
+                Text(
+                  'Must be at least 8 characters',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Colors.grey[600],
+                  ),
+                ),
+                
+                const SizedBox(height: 20),
+                
+                // Confirm Password Label
+                Text(
+                  'Confirm Password',
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                
+                // Confirm Password Field
+                TextFormField(
+                  controller: _confirmPasswordController,
+                  obscureText: _obscureConfirmPassword,
+                  decoration: InputDecoration(
+                    hintText: 'Re-enter your password',
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureConfirmPassword
+                            ? SolarIconsOutline.eyeClosed
+                            : SolarIconsOutline.eye,
+                        color: Colors.grey[600],
+                      ),
+                      onPressed: () {
+                        setState(() => _obscureConfirmPassword = !_obscureConfirmPassword);
+                      },
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please confirm your password';
+                    }
+                    if (value != _passwordController.text) {
+                      return 'Passwords do not match';
+                    }
+                    return null;
+                  },
+                ),
+                
+                const SizedBox(height: 32),
+                
+                // Divider
+                Divider(color: Colors.grey[300], thickness: 1),
+                
+                const SizedBox(height: 24),
+                
+                // Privacy Consent Section
+                _buildCheckbox(
+                  value: _termsAccepted,
+                  onChanged: (value) => setState(() => _termsAccepted = value ?? false),
+                  label: 'I agree to FlowFit\'s Terms of Service and Privacy Policy',
+                  required: true,
+                  links: ['Read Terms', 'Read Policy'],
+                ),
+                
+                const SizedBox(height: 16),
+                
+                _buildCheckbox(
+                  value: _watchDataConsent,
+                  onChanged: (value) => setState(() => _watchDataConsent = value ?? false),
+                  label: 'I consent to health data collection from my Galaxy Watch for app features',
+                  required: true,
+                ),
+                
+                const SizedBox(height: 16),
+                
+                _buildCheckbox(
+                  value: _marketingOptIn,
+                  onChanged: (value) => setState(() => _marketingOptIn = value ?? false),
+                  label: 'Send me tips & updates (Optional)',
+                  required: false,
+                ),
+                
                 const SizedBox(height: 32),
 
                 // Terms and Privacy
@@ -321,7 +435,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
 
                 const SizedBox(height: 24),
-
+                
                 // Login Link
                 Center(
                   child: Row(
@@ -329,7 +443,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     children: [
                       Text(
                         'Already have an account? ',
-                        style: TextStyle(color: AppTheme.text),
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                        ),
                       ),
                       GestureDetector(
                         onTap: () {
@@ -346,98 +462,93 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ],
                   ),
                 ),
-
-                const SizedBox(height: 24),
-
-                // Divider
-                Row(
-                  children: [
-                    Expanded(
-                      child: Divider(color: AppTheme.text.withOpacity(0.1)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        'Or sign up with',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppTheme.text.withOpacity(0.5),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Divider(color: AppTheme.text.withOpacity(0.1)),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 24),
-
-                // Google Sign Up Button
-                SizedBox(
-                  height: 56,
-                  child: OutlinedButton.icon(
-                    onPressed: () {
-                      // Go to survey questions
-                      Navigator.pushReplacementNamed(context, '/survey1');
-                    },
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppTheme.text,
-                      side: BorderSide(color: AppTheme.text.withOpacity(0.1)),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      backgroundColor: Colors.white,
-                    ),
-                    icon: Icon(
-                      Icons.g_mobiledata,
-                      size: 32,
-                      color: Colors.red[600],
-                    ),
-                    label: const Text(
-                      'Sign up with Google',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // Apple Sign Up Button
-                SizedBox(
-                  height: 56,
-                  child: OutlinedButton.icon(
-                    onPressed: () {
-                      // Go to survey questions
-                      Navigator.pushReplacementNamed(context, '/survey1');
-                    },
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppTheme.text,
-                      side: BorderSide(color: AppTheme.text.withOpacity(0.1)),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      backgroundColor: Colors.white,
-                    ),
-                    icon: Icon(Icons.apple, size: 24, color: Colors.black),
-                    label: const Text(
-                      'Sign up with Apple',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-
+                
                 const SizedBox(height: 16),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+  
+  Widget _buildCheckbox({
+    required bool value,
+    required ValueChanged<bool?> onChanged,
+    required String label,
+    required bool required,
+    List<String>? links,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 24,
+          height: 24,
+          child: Checkbox(
+            value: value,
+            onChanged: onChanged,
+            activeColor: AppTheme.primaryBlue,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text.rich(
+                TextSpan(
+                  children: [
+                    if (required)
+                      const TextSpan(
+                        text: '* ',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    TextSpan(
+                      text: label,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey[800],
+                        height: 1.4,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (links != null && links.isNotEmpty) ...[
+                const SizedBox(height: 4),
+                Wrap(
+                  spacing: 8,
+                  children: links.map((link) {
+                    return GestureDetector(
+                      onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('$link coming soon')),
+                        );
+                      },
+                      child: Text(
+                        link,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppTheme.primaryBlue,
+                          fontWeight: FontWeight.w600,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

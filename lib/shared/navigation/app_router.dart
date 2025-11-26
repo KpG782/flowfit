@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flowfit/features/wellness/presentation/maps_page_wrapper.dart';
 import 'package:flowfit/screens/font_demo_screen.dart';
 
 /// Application router configuration using go_router
@@ -17,7 +18,24 @@ class AppRouter {
           body: Center(child: Text('Dashboard - To be implemented')),
         ),
       ),
-
+      
+      // Active/Workout tracking route
+      GoRoute(
+        path: '/active',
+        builder: (context, state) {
+          final activityType = state.uri.queryParameters['type'];
+          return Scaffold(
+            body: Center(
+              child: Text(
+                activityType != null
+                    ? 'Activity Tracking - $activityType'
+                    : 'Workout Selection - To be implemented',
+              ),
+            ),
+          );
+        },
+      ),
+      
       // Fitness routes - to be implemented
       GoRoute(
         path: '/fitness',
@@ -65,6 +83,15 @@ class AppRouter {
           body: Center(child: Text('Profile - To be implemented')),
         ),
       ),
+      // Wellness (Geofence maps)
+      GoRoute(
+        path: '/wellness',
+        builder: (context, state) => const MapsPageWrapper(),
+      ),
+    ],
+    errorBuilder: (context, state) => Scaffold(
+      body: Center(
+        child: Text('Page not found: ${state.uri}'),
       // Font demo route - useful for verifying custom fonts
       GoRoute(
         path: '/font-demo',

@@ -14,6 +14,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        // Enable core library desugaring to support libraries that require newer java APIs
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
@@ -54,7 +56,9 @@ dependencies {
     // Wear OS libraries
     implementation("androidx.wear:wear:1.3.0")
     implementation("com.google.android.support:wearable:2.9.0")
-    compileOnly("com.google.android.wearable:wearable:2.9.0")
+    // Include the Wearable runtime dependency at runtime so classes (e.g. WearableActivityController)
+    // are present when plugins such as wearable_rotary or wear access them at runtime.
+    implementation("com.google.android.wearable:wearable:2.9.0")
     
     // Wearable Data Layer API for watch-phone communication
     implementation("com.google.android.gms:play-services-wearable:18.1.0")
@@ -66,4 +70,6 @@ dependencies {
     
     // Kotlin Serialization for JSON encoding/decoding
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    // Enable the desugaring support library for plugin compatibility (e.g., flutter_local_notifications)
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

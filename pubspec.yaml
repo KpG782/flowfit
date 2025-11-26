@@ -12,12 +12,13 @@ dependencies:
   supabase_flutter: ^2.0.0
 
   # Device Features
-  google_maps_flutter: ^2.5.0 # For Runs
-  geolocator: ^10.1.0 # Keep current - major upgrade to 14.x may break things
+  # google_maps_flutter removed per maps migration to flutter_map
+  geolocator: ^14.0.1 # Keep current - major upgrade to 14.x may break things
   sensors_plus: ^4.0.2 # Keep current - 7.x is major version change
   wakelock_plus: ^1.1.0 # Keep screen on during Sleep Mode
   permission_handler: ^11.0.0 # Keep current - 12.x may have breaking changes
   wear_plus: ^1.2.0 # Wear OS support
+  package_info_plus: ^8.3.1
 
   # State Management (Clean Architecture)
   flutter_riverpod: ^2.6.1 # SAFE UPGRADE: Bug fixes, no breaking changes
@@ -47,6 +48,11 @@ dependencies:
   sqflite: ^2.3.3 # SAFE UPGRADE: Bug fixes
   shared_preferences: ^2.3.2 # SAFE UPGRADE: Bug fixes
   path_provider: ^2.1.4 # SAFE UPGRADE: Bug fixes
+  flutter_map: ^8.2.2
+  latlong2: ^0.9.1
+  flutter_local_notifications: ^19.5.0 # Local notifications for geofence alerts
+  native_geofence: ^1.2.0
+  flutter_map_location_marker: ^10.1.0
 
 flutter:
   assets:

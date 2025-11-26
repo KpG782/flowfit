@@ -102,7 +102,9 @@ minSdk = 30
 // Wear OS libraries
 implementation("androidx.wear:wear:1.3.0")
 implementation("com.google.android.support:wearable:2.9.0")
-compileOnly("com.google.android.wearable:wearable:2.9.0")
+  // Was `compileOnly` previously; using `implementation` to ensure runtime classes
+  // (e.g. `WearableActivityController`) are available when plugins run on-device.
+  implementation("com.google.android.wearable:wearable:2.9.0")
 
 // Health Services
 implementation("androidx.health:health-services-client:1.0.0-beta03")

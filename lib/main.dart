@@ -3,6 +3,7 @@ import 'package:flowfit/features/activity_classifier/domain/classify_activity_us
 import 'package:flowfit/features/activity_classifier/platform/tflite_activity_classifier.dart';
 import 'package:flowfit/features/activity_classifier/platform/heart_bpm_adapter.dart';
 import 'package:flowfit/features/activity_classifier/presentation/tracker_page.dart';
+import 'package:flowfit/features/wellness/presentation/maps_page_wrapper.dart';
 import 'package:flowfit/services/phone_data_listener.dart';
 import 'package:flowfit/features/activity_classifier/presentation/providers.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +15,15 @@ import 'screens/auth/welcome_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/signup_screen.dart';
 import 'screens/phone_home.dart';
+import 'screens/phone/phone_heart_rate_screen.dart';
 import 'screens/onboarding/survey_screen_1.dart';
 import 'screens/onboarding/survey_screen_2.dart';
 import 'screens/onboarding/survey_screen_3.dart';
+import 'screens/onboarding/survey_intro_screen.dart';
+import 'screens/onboarding/survey_basic_info_screen.dart';
+import 'screens/onboarding/survey_body_measurements_screen.dart';
+import 'screens/onboarding/survey_activity_goals_screen.dart';
+import 'screens/onboarding/survey_daily_targets_screen.dart';
 import 'screens/onboarding/onboarding_screen.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/font_demo_screen.dart';
@@ -95,13 +102,22 @@ class FlowFitPhoneApp extends StatelessWidget {
           '/welcome': (context) => const WelcomeScreen(),
           '/login': (context) => const LoginScreen(),
           '/signup': (context) => const SignUpScreen(),
+          // Old survey screens (kept for backward compatibility)
           '/survey1': (context) => const SurveyScreen1(),
           '/survey2': (context) => const SurveyScreen2(),
           '/survey3': (context) => const SurveyScreen3(),
+          // New optimized survey flow
+          '/survey_intro': (context) => const SurveyIntroScreen(),
+          '/survey_basic_info': (context) => const SurveyBasicInfoScreen(),
+          '/survey_body_measurements': (context) => const SurveyBodyMeasurementsScreen(),
+          '/survey_activity_goals': (context) => const SurveyActivityGoalsScreen(),
+          '/survey_daily_targets': (context) => const SurveyDailyTargetsScreen(),
           '/onboarding1': (context) => const OnboardingScreen(),
           '/dashboard': (context) => const DashboardScreen(),
           '/trackertest': (context) => const TrackerPage(),
+          '/mission': (context) => const MapsPageWrapper(),
           '/home': (context) => const PhoneHomePage(),
+          '/phone_heart_rate': (context) => const PhoneHeartRateScreen(),
           '/font-demo': (context) => const FontDemoScreen(),
         },
       ),

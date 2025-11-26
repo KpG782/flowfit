@@ -17,7 +17,8 @@ import com.samsung.android.service.health.tracking.data.ValueKey
 class HealthTrackingManager(
     private val context: Context,
     private val onHeartRateData: (HeartRateData) -> Unit,
-    private val onError: (String, String?) -> Unit
+    private val onError: (String, String?) -> Unit,
+    private val onTransmission: (() -> Unit)? = null
 ) {
     companion object {
         private const val TAG = "HealthTrackingManager"
@@ -39,6 +40,9 @@ class HealthTrackingManager(
     
     // Batch data collection
     private val validHrData = ArrayList<TrackedData>()
+    
+    // Accelerometer sensor service for activity classification
+    private val sensorService: WatchSensorService = WatchSensorService(context, onTransmission)
 
     /**
      * Connection listener for Samsung Health Tracking Service
@@ -212,6 +216,27 @@ class HealthTrackingManager(
             
             isTracking = true
             Log.i(TAG, "Heart rate tracking started successfully")
+            
+            // Start accelerometer tracking after heart rate starts successfully
+            // Requirements: 1.5 - Handle accelerometer unavailable
+            try {
+                sensorService.startTracking()
+                Log.i(TAG, "Accelerometer tracking started successfully")
+            } catch (e: AccelerometerUnavailableException) {
+                Log.w(TAG, "Accelerometer not available on this device: ${e.message}")
+                // Continue with heart rate only - don't fail the entire operation
+                onError("ACCELEROMETER_UNAVAILABLE", "Accelerometer sensor not available. Continuing with heart rate only.")
+            } catch (e: SensorInitializationException) {
+                Log.e(TAG, "Failed to initialize accelerometer: ${e.message}", e)
+                // Continue with heart rate only - don't fail the entire operation
+                // Requirements: 6.5 - Handle sensor initialization failures
+                onError("SENSOR_INITIALIZATION_FAILED", "Failed to initialize accelerometer. Continuing with heart rate only.")
+            } catch (e: Exception) {
+                Log.e(TAG, "Unexpected error starting accelerometer tracking: ${e.message}", e)
+                // Continue with heart rate only - don't fail the entire operation
+                onError("ACCELEROMETER_ERROR", "Accelerometer error: ${e.message}. Continuing with heart rate only.")
+            }
+            
             true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start heart rate tracking", e)
@@ -235,6 +260,14 @@ class HealthTrackingManager(
             heartRateTracker = null
             isTracking = false
             Log.i(TAG, "Heart rate tracking stopped")
+            
+            // Stop accelerometer tracking when heart rate stops
+            try {
+                sensorService.stopTracking()
+                Log.i(TAG, "Accelerometer tracking stopped")
+            } catch (e: Exception) {
+                Log.e(TAG, "Error stopping accelerometer tracking", e)
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Error stopping heart rate tracking", e)
         }
@@ -288,6 +321,9 @@ class HealthTrackingManager(
                 validHrData.add(trackedData)
                 trimDataList()
             }
+            
+            // Update sensor service with latest heart rate value
+            sensorService.currentHeartRate = hrValue
             
             Log.d(TAG, "Valid HR data stored: $hrValue bpm, ${ibiList.size} IBI values (total: ${validHrData.size})")
         }
