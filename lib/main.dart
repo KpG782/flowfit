@@ -9,11 +9,16 @@ import 'package:flowfit/features/activity_classifier/presentation/providers.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' hide Provider;
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'secrets.dart';
 import 'theme/app_theme.dart';
+import 'utils/deep_link_handler.dart';
 import 'screens/loading_screen.dart';
+import 'screens/splash_screen.dart';
 import 'screens/auth/welcome_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/signup_screen.dart';
+import 'screens/auth/email_verification_screen.dart';
 import 'screens/phone_home.dart';
 import 'screens/phone/phone_heart_rate_screen.dart';
 import 'screens/onboarding/survey_screen_1.dart';
@@ -29,7 +34,22 @@ import 'screens/dashboard_screen.dart';
 import 'screens/font_demo_screen.dart';
 import 'widgets/debug_route_menu.dart';
 
-void main() {
+Future<void> main() async {
+  // Ensure Flutter bindings are initialized before async operations
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Supabase with configuration from secrets and deep link support
+  await Supabase.initialize(
+    url: SupabaseConfig.url,
+    anonKey: SupabaseConfig.anonKey,
+    authOptions: const FlutterAuthClientOptions(
+      authFlowType: AuthFlowType.pkce, // Use PKCE flow for mobile security
+    ),
+  );
+  
+  // Initialize deep link handler
+  DeepLinkHandler().initialize();
+  
   runApp(const ProviderScope(child: FlowFitPhoneApp()));
 }
 
@@ -38,7 +58,7 @@ class FlowFitPhoneApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String initialRoute = const String.fromEnvironment(
+    const String initialRoute = String.fromEnvironment(
       'INITIAL_ROUTE',
       defaultValue: '/',
     );
@@ -98,10 +118,12 @@ class FlowFitPhoneApp extends StatelessWidget {
         themeMode: ThemeMode.system,
         initialRoute: initialRoute,
         routes: {
-          '/': (context) => const LoadingScreen(),
+          '/': (context) => const SplashScreen(),
+          '/loading': (context) => const LoadingScreen(),
           '/welcome': (context) => const WelcomeScreen(),
           '/login': (context) => const LoginScreen(),
           '/signup': (context) => const SignUpScreen(),
+          '/email_verification': (context) => const EmailVerificationScreen(),
           // Old survey screens (kept for backward compatibility)
           '/survey1': (context) => const SurveyScreen1(),
           '/survey2': (context) => const SurveyScreen2(),

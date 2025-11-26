@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:solar_icons/solar_icons.dart';
 import '../../theme/app_theme.dart';
+import '../../presentation/providers/providers.dart';
 
-class SurveyIntroScreen extends StatelessWidget {
+class SurveyIntroScreen extends ConsumerWidget {
   const SurveyIntroScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Get user data from auth state
+    final authState = ref.watch(authNotifierProvider);
+    final user = authState.user;
+    final userName = user?.email?.split('@').first ?? 'there';
+    final userId = user?.id;
+    
+    // Also check for args passed from signup
+    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final passedName = args?['name'] as String?;
+    final displayName = passedName ?? userName;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -64,7 +76,7 @@ class SurveyIntroScreen extends StatelessWidget {
               
               // Description
               Text(
-                'Let\'s personalize FlowFit for you!',
+                'Let\'s personalize FlowFit for you, $displayName!',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
@@ -130,7 +142,17 @@ class SurveyIntroScreen extends StatelessWidget {
                 height: 56,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/survey_basic_info');
+                    // Pass user ID to survey flow
+                    final surveyArgs = {
+                      'userId': userId,
+                      'name': displayName,
+                      ...?args,
+                    };
+                    Navigator.pushReplacementNamed(
+                      context,
+                      '/survey_basic_info',
+                      arguments: surveyArgs,
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryBlue,

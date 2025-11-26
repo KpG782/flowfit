@@ -68,14 +68,13 @@ class MissionBottomSheet extends StatelessWidget {
               ],
             ),
             trailing: SizedBox(
-              height: 56,
-              width: 56,
-              child: Column(
+              width: 100,
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Transform.scale(
-                    scale: 0.9,
+                    scale: 0.8,
                     child: Switch(
                       value: m.isActive,
                       onChanged: (v) => v ? service.activateMission(m.id) : service.deactivateMission(m.id),
@@ -83,8 +82,8 @@ class MissionBottomSheet extends StatelessWidget {
                   ),
                   IconButton(
                     padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
-                    iconSize: 18,
+                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                    iconSize: 20,
                     icon: const Icon(Icons.delete_outline),
                     onPressed: () async => await repo.delete(m.id),
                   ),

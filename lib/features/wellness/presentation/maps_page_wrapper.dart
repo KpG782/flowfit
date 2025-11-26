@@ -11,22 +11,11 @@ class MapsPageWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      final GeofenceRepository repo = InMemoryGeofenceRepository();
+    final GeofenceRepository repo = InMemoryGeofenceRepository();
     final service = GeofenceService(repository: repo);
-    // Add a sample mission for demo purposes
-    final sample = GeofenceMission(
-      id: 'sample-1',
-      title: 'Neighborhood Walk',
-      description: 'A friendly walking target',
-      center: LatLngSimple(37.4219999, -122.0840575),
-      radiusMeters: 100,
-      type: MissionType.target,
-      targetDistanceMeters: 500,
-    );
-    // fire-and-forget add
-    repo.add(sample);
-      // Initialize notifications (fire-and-forget)
-      NotificationService.init();
+    
+    // Initialize notifications (fire-and-forget)
+    NotificationService.init();
 
     return MultiProvider(
       providers: [

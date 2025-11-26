@@ -174,7 +174,7 @@ class _TrackerPageState extends State<TrackerPage> {
     }
   }
 
-  void _connectToSelectedSource() {
+  Future<void> _connectToSelectedSource() async {
     final adapter = Provider.of<HeartBpmAdapter>(context, listen: false);
 
     // Cancel existing subscription
@@ -205,8 +205,13 @@ class _TrackerPageState extends State<TrackerPage> {
         // Use PhoneDataListener to get watch HR - START LISTENING FIRST!
         final phoneListener = Provider.of<PhoneDataListener>(context, listen: false);
         
-        // Start listening for watch data
-        phoneListener.startListening();
+        // Start listening for watch data (with error handling)
+        try {
+          await phoneListener.startListening();
+        } catch (e) {
+          print('Warning: Could not start phone data listener: $e');
+          // Continue anyway - the event channels may still work
+        }
         
         // Connect the watch heart rate stream to the adapter
         adapter.connectExternalStream(
@@ -254,6 +259,15 @@ class _TrackerPageState extends State<TrackerPage> {
             ),
           ],
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.map),
+            tooltip: 'Open Map',
+            onPressed: () {
+              Navigator.of(context).pushNamed('/mission');
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),

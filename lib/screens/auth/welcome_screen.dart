@@ -1,9 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../theme/app_theme.dart';
+import '../../presentation/providers/providers.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends ConsumerStatefulWidget {
   const WelcomeScreen({super.key});
+
+  @override
+  ConsumerState<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Check if user is already authenticated
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAuthState();
+    });
+  }
+
+  void _checkAuthState() {
+    final authState = ref.read(authNotifierProvider);
+    
+    // If already authenticated, redirect to dashboard
+    if (authState.user != null && mounted) {
+      Navigator.of(context).pushReplacementNamed('/dashboard');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

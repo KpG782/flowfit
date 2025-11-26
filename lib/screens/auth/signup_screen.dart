@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:solar_icons/solar_icons.dart';
 import '../../theme/app_theme.dart';
+import '../../presentation/providers/providers.dart';
+import '../../domain/entities/auth_state.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  ConsumerState<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -18,7 +21,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _confirmPasswordController = TextEditingController();
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
-  bool _isLoading = false;
   bool _termsAccepted = false;
   bool _watchDataConsent = false;
   bool _marketingOptIn = false;
@@ -33,6 +35,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> _handleSignUp() async {
+    // Validate consent checkboxes first
     if (!_termsAccepted || !_watchDataConsent) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -43,22 +46,68 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return;
     }
     
+    // Validate form fields
     if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
-
-      // Simulate API call
-      await Future.delayed(const Duration(milliseconds: 800));
-
-      if (mounted) {
-        setState(() => _isLoading = false);
-        // Go to survey intro
-        Navigator.pushReplacementNamed(context, '/survey_intro');
-      }
+      // Call authNotifier to sign up
+      await ref.read(authNotifierProvider.notifier).signUp(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+        fullName: _nameController.text.trim(),
+        metadata: {
+          'terms_accepted': _termsAccepted,
+          'watch_data_consent': _watchDataConsent,
+          'marketing_opt_in': _marketingOptIn,
+        },
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Listen to auth state changes
+    final authState = ref.watch(authNotifierProvider);
+    final isLoading = authState.status == AuthStatus.loading;
+    
+    // Listen for auth state changes and navigate accordingly
+    ref.listen<AuthState>(authNotifierProvider, (previous, next) {
+      if (next.status == AuthStatus.authenticated && next.user != null) {
+        // Check if email is verified
+        final isEmailVerified = next.user!.emailConfirmedAt != null;
+        
+        if (isEmailVerified) {
+          // Email already verified, go directly to survey
+          Navigator.pushReplacementNamed(
+            context,
+            '/survey_intro',
+            arguments: {
+              'name': _nameController.text.trim(),
+              'email': _emailController.text.trim(),
+              'userId': next.user!.id,
+            },
+          );
+        } else {
+          // Navigate to email verification screen
+          Navigator.pushReplacementNamed(
+            context,
+            '/email_verification',
+            arguments: {
+              'name': _nameController.text.trim(),
+              'email': _emailController.text.trim(),
+              'userId': next.user!.id,
+            },
+          );
+        }
+      } else if (next.errorMessage != null) {
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.errorMessage!),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    });
+    
     return Scaffold(
       backgroundColor: const Color(0xFFF2F7FF),
       body: SafeArea(
@@ -404,7 +453,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: _isLoading ? null : _handleSignUp,
+                    onPressed: isLoading ? null : _handleSignUp,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primaryBlue,
                       foregroundColor: Colors.white,
@@ -413,7 +462,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    child: _isLoading
+                    child: isLoading
                         ? const SizedBox(
                             width: 24,
                             height: 24,

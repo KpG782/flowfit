@@ -125,6 +125,36 @@ class CTASection extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(height: 12),
+              
+              // Map Mission button
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/mission');
+                  },
+                  icon: const Icon(Icons.map_outlined),
+                  label: Text(
+                    'Map Missions',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: theme.colorScheme.primary,
+                    side: BorderSide(
+                      color: theme.colorScheme.outline,
+                      width: 2,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
