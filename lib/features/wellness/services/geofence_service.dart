@@ -5,6 +5,7 @@ import '../domain/geofence_mission.dart';
 import 'notification_service.dart';
 import '../data/geofence_repository.dart';
 import '../platform/geofence_native.dart';
+import '../platform/native_geofence_wrapper.dart' as ngw;
 
 enum GeofenceEventType { entered, exited, targetReached, outsideAlert }
 
@@ -59,7 +60,7 @@ class GeofenceService extends ChangeNotifier {
       await _handlePosition(pos);
     });
 
-    // Listen to native geofence events if available
+    // Listen to native geofence events if available (method channel)
     _nativeSub ??= GeofenceNative.events.listen((dynamic event) {
       try {
         final map = Map<String, dynamic>.from(event);
@@ -73,11 +74,34 @@ class GeofenceService extends ChangeNotifier {
       } catch (_) {}
     }, onError: (_) {});
 
-    // Register currently active missions with native bridge for background monitoring
+    // Initialize native geofence plugin and register currently active missions with native bridge for background monitoring
+    try {
+      await ngw.NativeGeofenceWrapper.initialize();
+    } catch (_) {}
     final missions = await repository.getAll();
     for (final m in missions.where((m) => m.isActive)) {
       GeofenceNative.register(m);
     }
+
+    // Subscribe to native_geofence plugin events (if available)
+    try {
+      GeofenceNative.nativeGeofenceEvents.listen((Map<String, dynamic> e) {
+        try {
+          final id = e['missionId'] as String? ?? '';
+          final typeStr = e['type']?.toString().toLowerCase() ?? '';
+          final lat = (e['lat'] as num?)?.toDouble();
+          final lon = (e['lon'] as num?)?.toDouble();
+          final pos = Position(latitude: lat ?? 0.0, longitude: lon ?? 0.0, timestamp: DateTime.now(), accuracy: 0.0, altitude: 0.0, heading: 0.0, speed: 0.0, speedAccuracy: 0.0, headingAccuracy: 0.0, altitudeAccuracy: 0.0);
+          if (typeStr.contains('enter')) {
+            _eventController.add(GeofenceEvent(missionId: id, type: GeofenceEventType.entered, position: pos));
+          } else if (typeStr.contains('exit')) {
+            _eventController.add(GeofenceEvent(missionId: id, type: GeofenceEventType.exited, position: pos));
+          } else if (typeStr.contains('dwell')) {
+            _eventController.add(GeofenceEvent(missionId: id, type: GeofenceEventType.targetReached, position: pos));
+          }
+        } catch (_) {}
+      }, onError: (_) {});
+    } catch (_) {}
   }
 
   Future<void> stopMonitoring() async {

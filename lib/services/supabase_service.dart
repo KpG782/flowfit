@@ -24,3 +24,4 @@ class SupabaseService {
     return List<Map<String, dynamic>>.from(response);
   }
 }
+// Restored SupabaseService implementation; supabase_flutter dependency used.

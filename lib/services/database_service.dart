@@ -202,28 +202,3 @@ class DatabaseService {
   }
 }
 
-/// Data retention policy manager
-class DataRetentionManager {
-  final DatabaseService _dbService;
-  final int daysToKeep;
-
-  DataRetentionManager({
-    DatabaseService? dbService,
-    this.daysToKeep = 30,
-  }) : _dbService = dbService ?? DatabaseService.instance;
-
-  /// Clean up old data based on retention policy
-  Future<int> cleanupOldData() async {
-    return await _dbService.deleteOldData(daysToKeep: daysToKeep);
-  }
-
-  /// Get data that needs to be synced
-  Future<List<Map<String, dynamic>>> getDataToSync() async {
-    return await _dbService.getUnsyncedData();
-  }
-
-  /// Mark data as synced after successful upload
-  Future<void> markDataSynced(List<int> ids) async {
-    await _dbService.markAsSynced(ids);
-  }
-}

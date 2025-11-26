@@ -47,7 +47,7 @@ Files Changed (Non-feature)
 
 Other Observations & Repository Impact
 -------------------------------------
-- `pubspec.yaml` still contains global dependencies `sqflite` and `supabase_flutter` and many docs demonstrate how to connect to Supabase; those were not removed by this feature-level change.
+- `pubspec.yaml` contains global dependencies `sqflite` and `supabase_flutter`. These packages were restored globally after a previous temporary removal; the wellness feature remains independent of Supabase/SQL (it uses `InMemoryGeofenceRepository`).
 - The feature-level removal should not break existing code unless other features depend on the deleted repository files directly. The `InMemoryGeofenceRepository` is used by the `maps_page_wrapper` and tests.
 - The `NotificationService` uses `flutter_local_notifications`, which required Android desugaring to compile correctly. The plugin was added to `pubspec.yaml` and may require platform setup (AndroidManifest, iOS entitlements) for full behavior.
 
