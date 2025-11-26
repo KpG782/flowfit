@@ -18,8 +18,9 @@ class AppTheme {
   static const Color black = Color(0xFF000000);
   static const Color white = Color(0xFFFFFFFF);
   static const Color lightGray = Color(0xFFF1F6FD);
-  static const Color darkGray = Color(0xFF6B7280);
+  static const Color darkGray = Color(0xFF62748E);
   static const Color text = Color(0xFF314158);
+  static const Color background = lightGray;
 
   // Light Theme
   static ThemeData lightTheme = ThemeData(
@@ -44,25 +45,25 @@ class AppTheme {
     textTheme: const TextTheme(
       displayLarge: TextStyle(
         fontSize: 57,
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w600,
         letterSpacing: -2.85,
         color: text,
       ),
       displayMedium: TextStyle(
         fontSize: 45,
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w600,
         letterSpacing: -2.25,
         color: text,
       ),
       displaySmall: TextStyle(
         fontSize: 36,
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w600,
         letterSpacing: -1.8,
         color: text,
       ),
       headlineLarge: TextStyle(
         fontSize: 32,
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w600,
         letterSpacing: -1.6,
         color: text,
       ),
@@ -235,25 +236,25 @@ class AppTheme {
     textTheme: const TextTheme(
       displayLarge: TextStyle(
         fontSize: 57,
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w600,
         letterSpacing: -2.85,
         color: white,
       ),
       displayMedium: TextStyle(
         fontSize: 45,
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w600,
         letterSpacing: -2.25,
         color: white,
       ),
       displaySmall: TextStyle(
         fontSize: 36,
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w600,
         letterSpacing: -1.8,
         color: white,
       ),
       headlineLarge: TextStyle(
         fontSize: 32,
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w600,
         letterSpacing: -1.6,
         color: white,
       ),
