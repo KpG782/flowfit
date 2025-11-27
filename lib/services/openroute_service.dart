@@ -130,10 +130,55 @@ class OpenRouteService {
     };
   }
 
+  /// Searches for nearby POIs
+  Future<List<POI>> searchNearbyPOIs(
+    LatLng location, {
+    required double radius,
+    required List<String> categories,
+  }) async {
+    try {
+      // Mock implementation - in production, use OpenRouteService POI API
+      // For now, generate mock POIs based on location
+      final pois = <POI>[];
+      
+      // Generate some mock POIs around the location
+      final random = DateTime.now().millisecondsSinceEpoch % 100;
+      for (int i = 0; i < 5; i++) {
+        final angle = (i / 5) * 2 * 3.14159;
+        final distance = (radius / 2) * (0.5 + (random + i) % 50 / 100);
+        final lat = location.latitude + (distance / 111000) * (angle > 3.14159 ? -1 : 1);
+        final lng = location.longitude + (distance / 111000) * (angle % 3.14159 > 1.57 ? -1 : 1);
+        
+        pois.add(POI(
+          name: '${categories[i % categories.length]} ${i + 1}',
+          location: LatLng(lat, lng),
+          category: categories[i % categories.length],
+        ));
+      }
+      
+      return pois;
+    } catch (e) {
+      return [];
+    }
+  }
+
   /// Clears the map tile cache
   Future<void> clearCache() async {
     await _cacheManager.emptyCache();
   }
+}
+
+/// Point of Interest model
+class POI {
+  final String name;
+  final LatLng location;
+  final String category;
+
+  POI({
+    required this.name,
+    required this.location,
+    required this.category,
+  });
 }
 
 /// Exception thrown when OpenRouteService API fails

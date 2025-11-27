@@ -81,6 +81,35 @@ class CTASection extends ConsumerWidget {
         ),
         const SizedBox(height: 12),
         
+        // Wellness Tracker button
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: OutlinedButton.icon(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/wellness-tracker');
+              },
+              icon: const Icon(Icons.favorite, size: 20),
+              label: Text(
+                'Wellness Tracker',
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: const Color(0xFFEF4444), // Red for heart
+                side: const BorderSide(color: Color(0xFFEF4444), width: 2),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        
         // Test button for OLD Map Mission screen (temporary for testing)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
