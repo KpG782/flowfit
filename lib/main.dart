@@ -46,12 +46,12 @@ import 'screens/profile/settings/delete_account_screen.dart';
 import 'screens/profile/goals/weight_goals_screen.dart';
 import 'screens/profile/goals/fitness_goals_screen.dart';
 import 'screens/profile/goals/nutrition_goals_screen.dart';
-import 'widgets/debug_route_menu.dart';
+// import 'widgets/debug_route_menu.dart';
 
 Future<void> main() async {
   // Ensure Flutter bindings are initialized before async operations
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize Supabase with configuration from secrets and deep link support
   await Supabase.initialize(
     url: SupabaseConfig.url,
@@ -60,10 +60,10 @@ Future<void> main() async {
       authFlowType: AuthFlowType.pkce, // Use PKCE flow for mobile security
     ),
   );
-  
+
   // Initialize deep link handler
   DeepLinkHandler().initialize();
-  
+
   runApp(const ProviderScope(child: FlowFitPhoneApp()));
 }
 
@@ -122,7 +122,7 @@ class FlowFitPhoneApp extends StatelessWidget {
           children: [
             if (child != null) child,
             // Show the debug route menu only in debug builds.
-            const DebugRouteMenu(),
+            // const DebugRouteMenu(),
           ],
         ),
         title: 'FlowFit',
