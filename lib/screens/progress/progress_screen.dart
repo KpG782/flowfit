@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:solar_icons/solar_icons.dart';
-import '../../widgets/page_header.dart';
 
 // Progress Screen
 class ProgressScreen extends StatefulWidget {
@@ -21,9 +20,18 @@ class _ProgressScreenState extends State<ProgressScreen> {
       backgroundColor: theme.colorScheme.background,
       body: Column(
         children: [
-          const PageHeader(
-            title: 'Progress',
-            subtitle: 'Track your fitness journey',
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 60, 20, 0),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Progress & Insights',
+                style: theme.textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ),
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -32,21 +40,20 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 24),
-
                     // This Week's Insight Card
                     Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.primaryContainer,
+                        color: const Color(0xFFD6EBF9), // Light blue background
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(
+                          const Icon(
                             SolarIconsBold.lightbulb,
-                            size: 32,
-                            color: theme.colorScheme.primary,
+                            size: 28,
+                            color: Color(0xFF2D82E8), // Blue icon
                           ),
                           const SizedBox(width: 16),
                           Expanded(
@@ -57,14 +64,17 @@ class _ProgressScreenState extends State<ProgressScreen> {
                                   "This Week's Insight",
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
-                                    color: theme.colorScheme.onPrimaryContainer,
+                                    color: const Color(
+                                      0xFF2D82E8,
+                                    ), // Blue title
                                   ),
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
                                   "Great job on your consistency! You've increased your average daily steps by 15% this week. Keep it up!",
                                   style: theme.textTheme.bodyMedium?.copyWith(
-                                    color: theme.colorScheme.onPrimaryContainer,
+                                    color: Colors.black87,
+                                    height: 1.4,
                                   ),
                                 ),
                               ],
@@ -126,46 +136,27 @@ class _ProgressScreenState extends State<ProgressScreen> {
 
                     // Activity Chart
                     Container(
-                      height: 200,
-                      padding: const EdgeInsets.all(16),
+                      height: 180,
+                      width: double.infinity,
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.surface,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.05),
-                            blurRadius: 10,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
+                        color: const Color(
+                          0xFFD9D9D9,
+                        ), // Grey placeholder color
+                        borderRadius: BorderRadius.circular(4),
                       ),
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Center(
-                              child: Text(
-                                'Activity Chart',
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Text('Mon', style: theme.textTheme.bodySmall),
-                              Text('Tue', style: theme.textTheme.bodySmall),
-                              Text('Wed', style: theme.textTheme.bodySmall),
-                              Text('Thu', style: theme.textTheme.bodySmall),
-                              Text('Fri', style: theme.textTheme.bodySmall),
-                              Text('Sat', style: theme.textTheme.bodySmall),
-                              Text('Sun', style: theme.textTheme.bodySmall),
-                            ],
-                          ),
-                        ],
-                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Mon', style: theme.textTheme.bodySmall),
+                        Text('Tue', style: theme.textTheme.bodySmall),
+                        Text('Wed', style: theme.textTheme.bodySmall),
+                        Text('Thu', style: theme.textTheme.bodySmall),
+                        Text('Fri', style: theme.textTheme.bodySmall),
+                        Text('Sat', style: theme.textTheme.bodySmall),
+                        Text('Sun', style: theme.textTheme.bodySmall),
+                      ],
                     ),
 
                     const SizedBox(height: 24),
@@ -209,10 +200,11 @@ class _ProgressScreenState extends State<ProgressScreen> {
                               ),
                               TextButton(
                                 onPressed: () {},
-                                child: Text(
+                                child: const Text(
                                   'View Details',
                                   style: TextStyle(
-                                    color: theme.colorScheme.primary,
+                                    color: Color(0xFF2D82E8), // Blue
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ),
@@ -298,8 +290,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
                             'Steps',
                             '8,210',
                             '+1204 vs last week',
-                            SolarIconsBold.walking,
-                            theme.colorScheme.primary,
+                            SolarIconsBold.walking, // Footprints icon
+                            const Color(0xFF2D82E8), // Blue
                             true,
                           ),
                         ),
@@ -310,8 +302,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
                             'Calories',
                             '8,210',
                             '+1204 vs last week',
-                            SolarIconsBold.fire,
-                            Colors.orange,
+                            SolarIconsBold.chefHat, // Chef hat icon
+                            const Color(0xFF2D82E8), // Blue
                             true,
                           ),
                         ),
