@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:solar_icons/solar_icons.dart';
-import '../../widgets/page_header.dart';
 
 // Health Screen
 class HealthScreen extends StatefulWidget {
@@ -12,9 +12,12 @@ class HealthScreen extends StatefulWidget {
 
 class _HealthScreenState extends State<HealthScreen> {
   // State variables
+  DateTime _selectedDate = DateTime.now();
   double _waterIntake = 1.5;
   final double _waterGoal = 2.0;
   String _selectedMealTab = 'Breakfast';
+  TimeOfDay _bedTime = const TimeOfDay(hour: 22, minute: 30);
+  TimeOfDay _wakeTime = const TimeOfDay(hour: 6, minute: 0);
 
   // Mock data for food items
   final Map<String, List<Map<String, String>>> _foodItems = {
@@ -40,6 +43,170 @@ class _HealthScreenState extends State<HealthScreen> {
     });
   }
 
+  void _changeDate(int days) {
+    setState(() {
+      _selectedDate = _selectedDate.add(Duration(days: days));
+    });
+  }
+
+  Future<void> _showAddFoodDialog() async {
+    final nameController = TextEditingController();
+    final caloriesController = TextEditingController();
+
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Add Food'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(
+                labelText: 'Food Name',
+                hintText: 'e.g., Banana',
+              ),
+              autofocus: true,
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: caloriesController,
+              decoration: const InputDecoration(
+                labelText: 'Calories',
+                hintText: 'e.g., 105',
+                suffixText: 'kcal',
+              ),
+              keyboardType: TextInputType.number,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (nameController.text.isNotEmpty &&
+                  caloriesController.text.isNotEmpty) {
+                setState(() {
+                  if (_foodItems[_selectedMealTab] == null) {
+                    _foodItems[_selectedMealTab] = [];
+                  }
+                  _foodItems[_selectedMealTab]!.add({
+                    'name': nameController.text,
+                    'calories': '${caloriesController.text} kcal',
+                  });
+                });
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Add'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showEditSleepDialog() async {
+    TimeOfDay tempBedTime = _bedTime;
+    TimeOfDay tempWakeTime = _wakeTime;
+
+    await showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: const Text('Edit Sleep Schedule'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: const Text('Bed Time'),
+                trailing: Text(tempBedTime.format(context)),
+                onTap: () async {
+                  final time = await showTimePicker(
+                    context: context,
+                    initialTime: tempBedTime,
+                  );
+                  if (time != null) {
+                    setDialogState(() => tempBedTime = time);
+                  }
+                },
+              ),
+              ListTile(
+                title: const Text('Wake Up Time'),
+                trailing: Text(tempWakeTime.format(context)),
+                onTap: () async {
+                  final time = await showTimePicker(
+                    context: context,
+                    initialTime: tempWakeTime,
+                  );
+                  if (time != null) {
+                    setDialogState(() => tempWakeTime = time);
+                  }
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _bedTime = tempBedTime;
+                  _wakeTime = tempWakeTime;
+                });
+                Navigator.pop(context);
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    if (date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day) {
+      return 'Today, ${DateFormat('MMMM d').format(date)}';
+    }
+    return DateFormat('EEEE, MMMM d').format(date);
+  }
+
+  String _calculateSleepDuration() {
+    final now = DateTime.now();
+    final bed = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      _bedTime.hour,
+      _bedTime.minute,
+    );
+    var wake = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      _wakeTime.hour,
+      _wakeTime.minute,
+    );
+
+    if (wake.isBefore(bed)) {
+      wake = wake.add(const Duration(days: 1));
+    }
+
+    final duration = wake.difference(bed);
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes % 60;
+
+    return '${hours}h ${minutes}m';
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -61,21 +228,21 @@ class _HealthScreenState extends State<HealthScreen> {
                     children: [
                       IconButton(
                         icon: const Icon(Icons.arrow_back_ios, size: 18),
-                        onPressed: () {},
+                        onPressed: () => _changeDate(-1),
                         style: IconButton.styleFrom(
                           padding: EdgeInsets.zero,
                           minimumSize: const Size(40, 40),
                         ),
                       ),
                       Text(
-                        'Today, November 25',
+                        _formatDate(_selectedDate),
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       IconButton(
                         icon: const Icon(Icons.arrow_forward_ios, size: 18),
-                        onPressed: () {},
+                        onPressed: () => _changeDate(1),
                         style: IconButton.styleFrom(
                           padding: EdgeInsets.zero,
                           minimumSize: const Size(40, 40),
@@ -167,7 +334,7 @@ class _HealthScreenState extends State<HealthScreen> {
                                 ],
                               ),
                               ElevatedButton.icon(
-                                onPressed: () {},
+                                onPressed: _showAddFoodDialog,
                                 icon: const Icon(Icons.add, size: 18),
                                 label: const Text('Add Food'),
                                 style: ElevatedButton.styleFrom(
@@ -425,7 +592,7 @@ class _HealthScreenState extends State<HealthScreen> {
                                       ),
                                       const SizedBox(height: 2),
                                       Text(
-                                        'Total sleep: 7h 30m',
+                                        'Total sleep: ${_calculateSleepDuration()}',
                                         style: theme.textTheme.bodyMedium
                                             ?.copyWith(
                                               color: theme
@@ -438,7 +605,7 @@ class _HealthScreenState extends State<HealthScreen> {
                                 ],
                               ),
                               TextButton(
-                                onPressed: () {},
+                                onPressed: _showEditSleepDialog,
                                 style: TextButton.styleFrom(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 16,
@@ -483,7 +650,7 @@ class _HealthScreenState extends State<HealthScreen> {
                                       ),
                                       const SizedBox(height: 12),
                                       Text(
-                                        '10:30 PM',
+                                        _bedTime.format(context),
                                         style: theme.textTheme.headlineSmall
                                             ?.copyWith(
                                               fontWeight: FontWeight.bold,
@@ -515,7 +682,7 @@ class _HealthScreenState extends State<HealthScreen> {
                                       ),
                                       const SizedBox(height: 12),
                                       Text(
-                                        '6:00 AM',
+                                        _wakeTime.format(context),
                                         style: theme.textTheme.headlineSmall
                                             ?.copyWith(
                                               fontWeight: FontWeight.bold,
