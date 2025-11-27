@@ -1,60 +1,88 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:solar_icons/solar_icons.dart';
 import '../../theme/app_theme.dart';
+import '../../presentation/providers/providers.dart';
 
-class SurveyBodyMeasurementsScreen extends StatefulWidget {
+class SurveyBodyMeasurementsScreen extends ConsumerStatefulWidget {
   const SurveyBodyMeasurementsScreen({super.key});
 
   @override
-  State<SurveyBodyMeasurementsScreen> createState() => _SurveyBodyMeasurementsScreenState();
+  ConsumerState<SurveyBodyMeasurementsScreen> createState() =>
+      _SurveyBodyMeasurementsScreenState();
 }
 
-class _SurveyBodyMeasurementsScreenState extends State<SurveyBodyMeasurementsScreen> {
-  String _unitSystem = 'imperial';
-  
-  // Imperial
-  int _heightFeet = 5;
-  int _heightInches = 9;
-  double _weightLbs = 165;
-  
-  // Metric
-  double _heightCm = 175;
-  double _weightKg = 75;
+class _SurveyBodyMeasurementsScreenState
+    extends ConsumerState<SurveyBodyMeasurementsScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _weightController = TextEditingController();
+  final _heightController = TextEditingController();
 
-  double get _displayHeightCm {
-    if (_unitSystem == 'metric') {
-      return _heightCm;
-    } else {
-      return (_heightFeet * 30.48) + (_heightInches * 2.54);
+  @override
+  void initState() {
+    super.initState();
+    // Load existing data if available
+    final surveyState = ref.read(surveyNotifierProvider);
+    final weight = surveyState.surveyData['weight'];
+    if (weight != null) {
+      _weightController.text = weight.toString();
+    }
+    final height = surveyState.surveyData['height'];
+    if (height != null) {
+      _heightController.text = height.toString();
     }
   }
 
-  double get _displayWeightKg {
-    if (_unitSystem == 'metric') {
-      return _weightKg;
-    } else {
-      return _weightLbs * 0.453592;
+  @override
+  void dispose() {
+    _weightController.dispose();
+    _heightController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleNext() async {
+    if (_formKey.currentState!.validate()) {
+      // Save data to survey notifier
+      final surveyNotifier = ref.read(surveyNotifierProvider.notifier);
+      await surveyNotifier.updateSurveyData(
+        'weight',
+        double.parse(_weightController.text),
+      );
+      await surveyNotifier.updateSurveyData(
+        'height',
+        double.parse(_heightController.text),
+      );
+
+      // Validate using the notifier's validation method
+      final validationError = surveyNotifier.validateBodyMeasurements();
+      if (validationError != null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(validationError),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        return;
+      }
+
+      // Navigate to next screen
+      if (mounted) {
+        final args =
+            ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+        Navigator.pushReplacementNamed(
+          context,
+          '/survey_activity_goals',
+          arguments: args,
+        );
+      }
     }
   }
 
-  double get _bmi {
-    final heightM = _displayHeightCm / 100;
-    return _displayWeightKg / (heightM * heightM);
-  }
-
-  String get _bmiStatus {
-    if (_bmi < 18.5) return 'Underweight';
-    if (_bmi < 25) return 'Healthy ✓';
-    if (_bmi < 30) return 'Overweight';
-    return 'Obese';
-  }
-
-  Color get _bmiColor {
-    if (_bmi < 18.5) return Colors.blue;
-    if (_bmi < 25) return Colors.green;
-    if (_bmi < 30) return Colors.orange;
-    return Colors.red;
+  void _handleBack() {
+    Navigator.pop(context);
   }
 
   @override
@@ -66,7 +94,7 @@ class _SurveyBodyMeasurementsScreenState extends State<SurveyBodyMeasurementsScr
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
+          onPressed: _handleBack,
         ),
         title: const Text(
           'Body Measurements',
@@ -88,13 +116,12 @@ class _SurveyBodyMeasurementsScreenState extends State<SurveyBodyMeasurementsScr
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Progress Indicator
-              Row(
+        child: Column(
+          children: [
+            // Progress indicator
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Row(
                 children: [
                   Expanded(
                     child: Container(
@@ -137,410 +164,176 @@ class _SurveyBodyMeasurementsScreenState extends State<SurveyBodyMeasurementsScr
                   ),
                 ],
               ),
-              
-              const SizedBox(height: 32),
-              
-              // Title
-              const Row(
-                children: [
-                  Icon(SolarIconsBold.ruler, color: AppTheme.primaryBlue, size: 24),
-                  SizedBox(width: 8),
-                  Text(
-                    'Your measurements',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-              
-              const SizedBox(height: 32),
-              
-              Divider(color: Colors.grey[300], thickness: 1),
-              
-              const SizedBox(height: 24),
-              
-              // Unit System Toggle
-              Text(
-                'Units:',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 12),
-              
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildUnitButton('Metric', 'metric'),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _buildUnitButton('Imperial', 'imperial'),
-                  ),
-                ],
-              ),
-              
-              const SizedBox(height: 32),
-              
-              Divider(color: Colors.grey[300], thickness: 1),
-              
-              const SizedBox(height: 24),
-              
-              // Height
-              Row(
-                children: [
-                  const Icon(SolarIconsBold.ruler, size: 20, color: AppTheme.primaryBlue),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Height',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                  ),
-                ],
-              ),
-              
-              const SizedBox(height: 16),
-              
-              if (_unitSystem == 'imperial') ...[
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Title
+                      const Row(
                         children: [
+                          Icon(SolarIconsBold.scale, color: AppTheme.primaryBlue, size: 24),
+                          SizedBox(width: 8),
                           Text(
-                            'Feet',
+                            'Your body measurements',
                             style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<int>(
-                                value: _heightFeet,
-                                isExpanded: true,
-                                items: List.generate(5, (i) => i + 3).map((int value) {
-                                  return DropdownMenuItem<int>(
-                                    value: value,
-                                    child: Text('$value ft'),
-                                  );
-                                }).toList(),
-                                onChanged: (int? newValue) {
-                                  if (newValue != null) {
-                                    setState(() => _heightFeet = newValue);
-                                  }
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Inches',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<int>(
-                                value: _heightInches,
-                                isExpanded: true,
-                                items: List.generate(12, (i) => i).map((int value) {
-                                  return DropdownMenuItem<int>(
-                                    value: value,
-                                    child: Text('$value in'),
-                                  );
-                                }).toList(),
-                                onChanged: (int? newValue) {
-                                  if (newValue != null) {
-                                    setState(() => _heightInches = newValue);
-                                  }
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  '= ${_displayHeightCm.toStringAsFixed(0)} cm ($_heightFeet\'$_heightInches")',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ] else ...[
-                Slider(
-                  value: _heightCm,
-                  min: 120,
-                  max: 220,
-                  divisions: 100,
-                  activeColor: AppTheme.primaryBlue,
-                  label: '${_heightCm.toStringAsFixed(0)} cm',
-                  onChanged: (value) {
-                    setState(() => _heightCm = value);
-                  },
-                ),
-                Text(
-                  '${_heightCm.toStringAsFixed(0)} cm',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-              
-              const SizedBox(height: 32),
-              
-              Divider(color: Colors.grey[300], thickness: 1),
-              
-              const SizedBox(height: 24),
-              
-              // Weight
-              Row(
-                children: [
-                  const Icon(SolarIconsBold.scale, size: 20, color: AppTheme.primaryBlue),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Current Weight',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                  ),
-                ],
-              ),
-              
-              const SizedBox(height: 16),
-              
-              if (_unitSystem == 'imperial') ...[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          if (_weightLbs > 50) _weightLbs -= 1;
-                        });
-                      },
-                      icon: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(Icons.remove, size: 20),
-                      ),
-                    ),
-                    const SizedBox(width: 24),
-                    Text(
-                      '${_weightLbs.toStringAsFixed(0)} lbs',
-                      style: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.primaryBlue,
-                      ),
-                    ),
-                    const SizedBox(width: 24),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          if (_weightLbs < 400) _weightLbs += 1;
-                        });
-                      },
-                      icon: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: AppTheme.primaryBlue.withOpacity(0.1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(Icons.add, size: 20, color: AppTheme.primaryBlue),
-                      ),
-                    ),
-                  ],
-                ),
-                Slider(
-                  value: _weightLbs,
-                  min: 50,
-                  max: 400,
-                  divisions: 350,
-                  activeColor: AppTheme.primaryBlue,
-                  onChanged: (value) {
-                    setState(() => _weightLbs = value);
-                  },
-                ),
-                Text(
-                  '= ${_displayWeightKg.toStringAsFixed(1)} kg',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ] else ...[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          if (_weightKg > 30) _weightKg -= 0.5;
-                        });
-                      },
-                      icon: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(Icons.remove, size: 20),
-                      ),
-                    ),
-                    const SizedBox(width: 24),
-                    Text(
-                      '${_weightKg.toStringAsFixed(1)} kg',
-                      style: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.primaryBlue,
-                      ),
-                    ),
-                    const SizedBox(width: 24),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          if (_weightKg < 200) _weightKg += 0.5;
-                        });
-                      },
-                      icon: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: AppTheme.primaryBlue.withOpacity(0.1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(Icons.add, size: 20, color: AppTheme.primaryBlue),
-                      ),
-                    ),
-                  ],
-                ),
-                Slider(
-                  value: _weightKg,
-                  min: 30,
-                  max: 200,
-                  divisions: 340,
-                  activeColor: AppTheme.primaryBlue,
-                  onChanged: (value) {
-                    setState(() => _weightKg = value);
-                  },
-                ),
-              ],
-              
-              const SizedBox(height: 32),
-              
-              Divider(color: Colors.grey[300], thickness: 1),
-              
-              const SizedBox(height: 24),
-              
-              // BMI Display
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: _bmiColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: _bmiColor.withOpacity(0.3), width: 2),
-                ),
-                child: Row(
-                  children: [
-                    Icon(SolarIconsBold.chartSquare, color: _bmiColor, size: 32),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Your BMI: ${_bmi.toStringAsFixed(1)}',
-                            style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 22,
                               fontWeight: FontWeight.bold,
-                              color: _bmiColor,
-                            ),
-                          ),
-                          Text(
-                            _bmiStatus,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: _bmiColor,
-                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
                             ),
                           ),
                         ],
                       ),
-                    ),
-                  ],
+
+                      const SizedBox(height: 8),
+
+                      Text(
+                        'Help us calculate your daily targets',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+
+                      const SizedBox(height: 32),
+                      
+                      Divider(color: Colors.grey[300], thickness: 1),
+
+                      const SizedBox(height: 24),
+
+                      // Weight Field
+                      const Text(
+                        'Weight (kg)',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _weightController,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter your weight in kg',
+                          prefixIcon: Icon(SolarIconsBold.scale),
+                          suffixText: 'kg',
+                        ),
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                            RegExp(r'^\d+\.?\d{0,2}'),
+                          ),
+                        ],
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Weight is required';
+                          }
+                          final weight = double.tryParse(value);
+                          if (weight == null) {
+                            return 'Please enter a valid number';
+                          }
+                          if (weight <= 0 || weight >= 500) {
+                            return 'Weight must be between 0 and 500 kg';
+                          }
+                          return null;
+                        },
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Height Field
+                      const Text(
+                        'Height (cm)',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _heightController,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter your height in cm',
+                          prefixIcon: Icon(SolarIconsBold.ruler),
+                          suffixText: 'cm',
+                        ),
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                            RegExp(r'^\d+\.?\d{0,2}'),
+                          ),
+                        ],
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Height is required';
+                          }
+                          final height = double.tryParse(value);
+                          if (height == null) {
+                            return 'Please enter a valid number';
+                          }
+                          if (height <= 0 || height >= 300) {
+                            return 'Height must be between 0 and 300 cm';
+                          }
+                          return null;
+                        },
+                      ),
+
+                      const SizedBox(height: 32),
+
+                      // Info box
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryBlue.withOpacity(0.05),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: AppTheme.primaryBlue.withOpacity(0.2),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              SolarIconsBold.infoCircle,
+                              color: AppTheme.primaryBlue,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                'We use this to calculate your BMI and personalized calorie targets',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              
-              const SizedBox(height: 12),
-              
-              Row(
-                children: [
-                  Icon(SolarIconsBold.infoCircle, size: 16, color: Colors.grey[600]),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'Used to calculate personalized calorie burn during activities',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              
-              const SizedBox(height: 48),
-              
-              // Continue Button
-              SizedBox(
+            ),
+
+            // Next Button
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: SizedBox(
+                width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/survey_activity_goals');
-                  },
+                  onPressed: _handleNext,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryBlue,
                     foregroundColor: Colors.white,
@@ -559,79 +352,11 @@ class _SurveyBodyMeasurementsScreenState extends State<SurveyBodyMeasurementsScr
                   ),
                 ),
               ),
-              
-              const SizedBox(height: 16),
-              
-              // Back and Skip
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text(
-                      '← Back',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppTheme.primaryBlue,
-                      ),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/dashboard');
-                    },
-                    child: Text(
-                      'Skip this screen',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildUnitButton(String label, String value) {
-    final isSelected = _unitSystem == value;
-    
-    return GestureDetector(
-      onTap: () => setState(() => _unitSystem = value),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          color: isSelected ? AppTheme.primaryBlue : Colors.grey[100],
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isSelected ? AppTheme.primaryBlue : Colors.transparent,
-            width: 2,
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
-              color: isSelected ? Colors.white : Colors.grey[400],
-              size: 20,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: isSelected ? Colors.white : Colors.grey[700],
-              ),
             ),
           ],
         ),
       ),
     );
   }
+
 }

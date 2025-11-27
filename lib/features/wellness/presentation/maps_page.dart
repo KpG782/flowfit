@@ -18,6 +18,7 @@ import 'widgets/top_action_button.dart';
 import 'widgets/floating_actions.dart';
 import 'widgets/mission_bottom_sheet.dart';
 import 'widgets/edit_mission_dialog.dart';
+import 'widgets/map_tutorial_overlay.dart';
 
 class WellnessMapsPage extends StatefulWidget {
   const WellnessMapsPage({super.key});
@@ -32,6 +33,7 @@ class _WellnessMapsPageState extends State<WellnessMapsPage> {
   maplat.LatLng? _lastCenter;
   StreamSubscription<GeofenceEvent>? _eventsSub;
   bool _missionsVisible = true;
+  bool _showTutorial = true; // Show tutorial on first visit
   // Place mode state
   bool _isPlacingMission = false;
   maplat.LatLng? _placingLatLng;
@@ -353,6 +355,12 @@ class _WellnessMapsPageState extends State<WellnessMapsPage> {
               lastCenter: _lastCenter,
               onAddAtLatLng: (lat) async => await _addGeofenceAtLatLng(lat),
               onOpenMission: (m) => _showMissionActions(m),
+            ),
+          
+          // Tutorial overlay (shows on first visit)
+          if (_showTutorial)
+            MapTutorialOverlay(
+              onDismiss: () => setState(() => _showTutorial = false),
             ),
         ],
       ),

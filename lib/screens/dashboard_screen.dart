@@ -3,20 +3,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:solar_icons/solar_icons.dart';
 import '../theme/app_theme.dart';
 import '../providers/dashboard_providers.dart';
+import '../presentation/providers/providers.dart';
 import '../widgets/page_header.dart';
 import 'home/widgets/home_header.dart';
 import 'home/widgets/stats_section.dart';
 import 'home/widgets/cta_section.dart';
 import 'home/widgets/recent_activity_section.dart';
 
-class DashboardScreen extends StatefulWidget {
+class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
+  ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
@@ -28,8 +29,41 @@ class _DashboardScreenState extends State<DashboardScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    // Check auth state on init
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAuthState();
+    });
+  }
+
+  void _checkAuthState() {
+    final authState = ref.read(authNotifierProvider);
+    
+    // If not authenticated, redirect to welcome screen
+    if (authState.user == null) {
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        '/welcome',
+        (route) => false,
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final authState = ref.watch(authNotifierProvider);
+    
+    // Listen for auth state changes
+    ref.listen(authNotifierProvider, (previous, next) {
+      // If user logs out, redirect to welcome
+      if (next.user == null && mounted) {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          '/welcome',
+          (route) => false,
+        );
+      }
+    });
     
     return Scaffold(
       body: _screens[_currentIndex],
@@ -1350,12 +1384,13 @@ class _ProgressTabState extends State<ProgressTab> {
 }
 
 // Profile Tab
-class ProfileTab extends StatelessWidget {
+class ProfileTab extends ConsumerWidget {
   const ProfileTab({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final authState = ref.watch(authNotifierProvider);
     
     return Scaffold(
       backgroundColor: theme.colorScheme.background,
@@ -1466,12 +1501,41 @@ class ProfileTab extends StatelessWidget {
               context, 
               'Logout', 
               SolarIconsOutline.logout,
-              onTap: () {
-                // Navigate to welcome screen
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  '/welcome',
-                  (route) => false,
+              onTap: () async {
+                // Show confirmation dialog
+                final shouldLogout = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Logout'),
+                    content: const Text('Are you sure you want to logout?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.red,
+                        ),
+                        child: const Text('Logout'),
+                      ),
+                    ],
+                  ),
                 );
+
+                if (shouldLogout == true && context.mounted) {
+                  // Sign out using auth notifier
+                  await ref.read(authNotifierProvider.notifier).signOut();
+                  
+                  // Navigate to welcome screen and clear stack
+                  if (context.mounted) {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/welcome',
+                      (route) => false,
+                    );
+                  }
+                }
               },
             ),
             

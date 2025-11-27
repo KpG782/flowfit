@@ -1,26 +1,216 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:solar_icons/solar_icons.dart';
 import '../../theme/app_theme.dart';
+import '../../presentation/providers/providers.dart';
+import 'dart:math';
 
-class SurveyDailyTargetsScreen extends StatefulWidget {
+class SurveyDailyTargetsScreen extends ConsumerStatefulWidget {
   const SurveyDailyTargetsScreen({super.key});
 
   @override
-  State<SurveyDailyTargetsScreen> createState() => _SurveyDailyTargetsScreenState();
+  ConsumerState<SurveyDailyTargetsScreen> createState() => _SurveyDailyTargetsScreenState();
 }
 
-class _SurveyDailyTargetsScreenState extends State<SurveyDailyTargetsScreen> {
+class _SurveyDailyTargetsScreenState extends ConsumerState<SurveyDailyTargetsScreen> {
   int _targetCalories = 2450;
   int _targetSteps = 10000;
   int _targetActiveMinutes = 30;
   double _targetWaterLiters = 2.0;
+  bool _isSubmitting = false;
 
   final List<int> _stepsOptions = [5000, 10000, 12000, 15000];
   final List<int> _minutesOptions = [20, 30, 45, 60];
   final List<double> _waterOptions = [1.5, 2.0, 2.5, 3.0];
 
   @override
+  void initState() {
+    super.initState();
+    _calculateCalorieTarget();
+  }
+
+  void _calculateCalorieTarget() {
+    final surveyState = ref.read(surveyNotifierProvider);
+    final surveyData = surveyState.surveyData;
+
+    // Get user data
+    final age = surveyData['age'] as int? ?? 25;
+    final gender = surveyData['gender'] as String? ?? 'male';
+    final weight = surveyData['weight'] as double? ?? 70.0;
+    final height = surveyData['height'] as double? ?? 170.0;
+    final activityLevel = surveyData['activityLevel'] as String? ?? 'moderately_active';
+    final goals = surveyData['goals'] as List<dynamic>? ?? [];
+
+    // Calculate BMR using Mifflin-St Jeor Equation
+    double bmr;
+    if (gender == 'male') {
+      bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+    } else {
+      bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+    }
+
+    // Apply activity multiplier
+    double activityMultiplier;
+    switch (activityLevel) {
+      case 'sedentary':
+        activityMultiplier = 1.2;
+        break;
+      case 'lightly_active':
+        activityMultiplier = 1.375;
+        break;
+      case 'moderately_active':
+        activityMultiplier = 1.55;
+        break;
+      case 'very_active':
+        activityMultiplier = 1.725;
+        break;
+      case 'extremely_active':
+        activityMultiplier = 1.9;
+        break;
+      default:
+        activityMultiplier = 1.55;
+    }
+
+    double tdee = bmr * activityMultiplier;
+
+    // Adjust based on primary goal
+    if (goals.contains('lose_weight')) {
+      tdee -= 500; // Safe deficit
+    } else if (goals.contains('build_muscle')) {
+      tdee += 300; // Surplus
+    }
+
+    setState(() {
+      _targetCalories = tdee.round();
+    });
+
+    // Save to survey data
+    ref.read(surveyNotifierProvider.notifier).updateSurveyData('dailyCalorieTarget', _targetCalories);
+  }
+
+  Future<void> _handleComplete() async {
+    if (_isSubmitting) return;
+
+    setState(() {
+      _isSubmitting = true;
+    });
+
+    try {
+      // Save daily targets to survey data
+      final surveyNotifier = ref.read(surveyNotifierProvider.notifier);
+      await surveyNotifier.updateSurveyData('dailyCalorieTarget', _targetCalories);
+      await surveyNotifier.updateSurveyData('dailyStepsTarget', _targetSteps);
+      await surveyNotifier.updateSurveyData('dailyActiveMinutesTarget', _targetActiveMinutes);
+      await surveyNotifier.updateSurveyData('dailyWaterTarget', _targetWaterLiters);
+
+      // Get user ID from arguments
+      final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+      final userId = args?['userId'] as String?;
+
+      if (userId == null) {
+        throw Exception('User ID not found');
+      }
+
+      // Submit survey to backend
+      final success = await surveyNotifier.submitSurvey(userId);
+
+      if (!mounted) return;
+
+      if (success) {
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('✅ Profile saved successfully!'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+        
+        // Navigate to dashboard
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (mounted) {
+            Navigator.pushReplacementNamed(context, '/dashboard');
+          }
+        });
+      } else {
+        // Show error
+        final errorMessage = ref.read(surveyNotifierProvider).errorMessage ?? 'Failed to save profile';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
+    }
+  }
+
+  String _getActivityLevelDisplay() {
+    final surveyData = ref.read(surveyNotifierProvider).surveyData;
+    final activityLevel = surveyData['activityLevel'] as String? ?? 'moderately_active';
+    
+    switch (activityLevel) {
+      case 'sedentary':
+        return 'Sedentary';
+      case 'lightly_active':
+        return 'Lightly active';
+      case 'moderately_active':
+        return 'Moderately active';
+      case 'very_active':
+        return 'Very active';
+      case 'extremely_active':
+        return 'Extremely active';
+      default:
+        return 'Moderately active';
+    }
+  }
+
+  String _getGoalsDisplay() {
+    final surveyData = ref.read(surveyNotifierProvider).surveyData;
+    final goals = surveyData['goals'] as List<dynamic>? ?? [];
+    
+    if (goals.isEmpty) return 'No goals selected';
+    
+    final goalNames = goals.map((goal) {
+      switch (goal) {
+        case 'lose_weight':
+          return 'Lose weight';
+        case 'maintain_weight':
+          return 'Maintain weight';
+        case 'build_muscle':
+          return 'Build muscle';
+        case 'improve_cardio':
+          return 'Improve cardio';
+        default:
+          return goal.toString();
+      }
+    }).toList();
+    
+    return goalNames.join(', ');
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final surveyData = ref.watch(surveyNotifierProvider).surveyData;
+    final age = surveyData['age'] as int? ?? 0;
+    final gender = surveyData['gender'] as String? ?? 'male';
+    final height = surveyData['height'] as double? ?? 0.0;
+    final weight = surveyData['weight'] as double? ?? 0.0;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -170,14 +360,14 @@ class _SurveyDailyTargetsScreenState extends State<SurveyDailyTargetsScreen> {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'Based on: 27M, 175cm, 75kg',
+                      'Based on: ${age}${gender == 'male' ? 'M' : gender == 'female' ? 'F' : ''}, ${height.toStringAsFixed(0)}cm, ${weight.toStringAsFixed(0)}kg',
                       style: TextStyle(
                         fontSize: 13,
                         color: Colors.grey[700],
                       ),
                     ),
                     Text(
-                      'Moderately active • Goal: Maintain weight',
+                      '${_getActivityLevelDisplay()} • Goals: ${_getGoalsDisplay()}',
                       style: TextStyle(
                         fontSize: 13,
                         color: Colors.grey[700],
@@ -409,9 +599,7 @@ class _SurveyDailyTargetsScreenState extends State<SurveyDailyTargetsScreen> {
               SizedBox(
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/dashboard');
-                  },
+                  onPressed: _isSubmitting ? null : _handleComplete,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     foregroundColor: Colors.white,
@@ -420,53 +608,31 @@ class _SurveyDailyTargetsScreenState extends State<SurveyDailyTargetsScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.check_circle, size: 24),
-                      SizedBox(width: 12),
-                      Text(
-                        'COMPLETE & START APP',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5,
+                  child: _isSubmitting
+                      ? const SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.check_circle, size: 24),
+                            SizedBox(width: 12),
+                            Text(
+                              'COMPLETE & START APP',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
                 ),
-              ),
-              
-              const SizedBox(height: 16),
-              
-              // Back and Use Defaults
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text(
-                      '← Back',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppTheme.primaryBlue,
-                      ),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/dashboard');
-                    },
-                    child: Text(
-                      'Use these defaults',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ],
           ),

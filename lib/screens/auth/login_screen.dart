@@ -1,21 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:solar_icons/solar_icons.dart';
 import '../../theme/app_theme.dart';
+import '../../presentation/providers/providers.dart';
+import '../../domain/entities/auth_state.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
-  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Check if user is already authenticated
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAuthState();
+    });
+  }
+
+  void _checkAuthState() {
+    final authState = ref.read(authNotifierProvider);
+    
+    // If already authenticated, redirect to dashboard
+    if (authState.user != null && mounted) {
+      Navigator.of(context).pushReplacementNamed('/dashboard');
+    }
+  }
 
   @override
   void dispose() {
@@ -25,22 +45,64 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _handleLogin() async {
+    // Validate form fields
     if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
-
-      // Simulate API call
-      await Future.delayed(const Duration(milliseconds: 800));
-
-      if (mounted) {
-        setState(() => _isLoading = false);
-        // Go directly to dashboard
-        Navigator.pushReplacementNamed(context, '/dashboard');
-      }
+      // Call authNotifier to sign in
+      await ref.read(authNotifierProvider.notifier).signIn(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Listen to auth state changes
+    final authState = ref.watch(authNotifierProvider);
+    final isLoading = authState.status == AuthStatus.loading;
+    
+    // Listen for auth state changes and navigate accordingly
+    ref.listen<AuthState>(authNotifierProvider, (previous, next) async {
+      if (next.status == AuthStatus.authenticated && next.user != null) {
+        // Check if user has completed survey
+        try {
+          final hasCompletedSurvey = await ref
+              .read(profileRepositoryProvider)
+              .hasCompletedSurvey(next.user!.id);
+          
+          if (!mounted) return;
+          
+          if (hasCompletedSurvey) {
+            // Navigate to dashboard if survey is complete
+            Navigator.pushReplacementNamed(context, '/dashboard');
+          } else {
+            // Navigate to survey if not complete
+            Navigator.pushReplacementNamed(
+              context,
+              '/survey_intro',
+              arguments: {
+                'name': next.user!.fullName ?? 'there',
+                'email': next.user!.email,
+                'userId': next.user!.id,
+              },
+            );
+          }
+        } catch (e) {
+          // If there's an error checking survey status, default to dashboard
+          if (!mounted) return;
+          Navigator.pushReplacementNamed(context, '/dashboard');
+        }
+      } else if (next.errorMessage != null) {
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.errorMessage!),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    });
+    
     return Scaffold(
       backgroundColor: const Color(0xFFF2F7FF),
       body: SafeArea(
@@ -216,7 +278,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: _isLoading ? null : _handleLogin,
+                    onPressed: isLoading ? null : _handleLogin,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primaryBlue,
                       foregroundColor: Colors.white,
@@ -225,7 +287,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    child: _isLoading
+                    child: isLoading
                         ? const SizedBox(
                             width: 24,
                             height: 24,

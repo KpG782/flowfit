@@ -1,55 +1,100 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:solar_icons/solar_icons.dart';
 import '../../theme/app_theme.dart';
+import '../../presentation/providers/providers.dart';
 
-class SurveyBasicInfoScreen extends StatefulWidget {
+class SurveyBasicInfoScreen extends ConsumerStatefulWidget {
   const SurveyBasicInfoScreen({super.key});
 
   @override
-  State<SurveyBasicInfoScreen> createState() => _SurveyBasicInfoScreenState();
+  ConsumerState<SurveyBasicInfoScreen> createState() => _SurveyBasicInfoScreenState();
 }
 
-class _SurveyBasicInfoScreenState extends State<SurveyBasicInfoScreen> {
-  final _nameController = TextEditingController();
-  DateTime? _selectedDate;
-  String? _selectedSex;
+class _SurveyBasicInfoScreenState extends ConsumerState<SurveyBasicInfoScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _ageController = TextEditingController();
+  String? _selectedGender;
+  String _userName = '';
+
+  final List<Map<String, dynamic>> _genderOptions = [
+    {'value': 'male', 'label': 'Male', 'icon': SolarIconsBold.user},
+    {'value': 'female', 'label': 'Female', 'icon': SolarIconsBold.user},
+    {'value': 'other', 'label': 'Other', 'icon': SolarIconsBold.user},
+    {'value': 'prefer_not_to_say', 'label': 'Prefer not to say', 'icon': SolarIconsBold.user},
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    // Get user name from arguments (passed from signup)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+      final name = args?['name'] as String?;
+      if (name != null && name.isNotEmpty) {
+        setState(() {
+          _userName = name;
+        });
+        // Save to survey data
+        ref.read(surveyNotifierProvider.notifier).updateSurveyData('fullName', name);
+      }
+    });
+    
+    // Load existing data if available
+    final surveyState = ref.read(surveyNotifierProvider);
+    final age = surveyState.surveyData['age'];
+    if (age != null) {
+      _ageController.text = age.toString();
+    }
+    _selectedGender = surveyState.surveyData['gender'] as String?;
+  }
 
   @override
   void dispose() {
-    _nameController.dispose();
+    _ageController.dispose();
     super.dispose();
   }
 
-  int? get _age {
-    if (_selectedDate == null) return null;
-    final now = DateTime.now();
-    int age = now.year - _selectedDate!.year;
-    if (now.month < _selectedDate!.month ||
-        (now.month == _selectedDate!.month && now.day < _selectedDate!.day)) {
-      age--;
-    }
-    return age;
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime(1997, 1, 15),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: AppTheme.primaryBlue,
-            ),
+  Future<void> _handleNext() async {
+    if (_formKey.currentState!.validate()) {
+      if (_selectedGender == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please select your gender'),
+            backgroundColor: Colors.red,
           ),
-          child: child!,
         );
-      },
-    );
-    if (picked != null && picked != _selectedDate) {
-      setState(() => _selectedDate = picked);
+        return;
+      }
+
+      // Save data to survey notifier
+      final surveyNotifier = ref.read(surveyNotifierProvider.notifier);
+      await surveyNotifier.updateSurveyData('age', int.parse(_ageController.text));
+      await surveyNotifier.updateSurveyData('gender', _selectedGender);
+
+      // Validate using the notifier's validation method
+      final validationError = surveyNotifier.validateBasicInfo();
+      if (validationError != null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(validationError),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        return;
+      }
+
+      // Navigate to next screen
+      if (mounted) {
+        final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+        Navigator.pushReplacementNamed(
+          context,
+          '/survey_body_measurements',
+          arguments: args,
+        );
+      }
     }
   }
 
@@ -60,12 +105,9 @@ class _SurveyBasicInfoScreenState extends State<SurveyBasicInfoScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
+        automaticallyImplyLeading: false,
         title: const Text(
-          'About You',
+          'Basic Info',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
         ),
         actions: [
@@ -84,13 +126,12 @@ class _SurveyBasicInfoScreenState extends State<SurveyBasicInfoScreen> {
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Progress Indicator
-              Row(
+        child: Column(
+          children: [
+            // Progress indicator
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Row(
                 children: [
                   Expanded(
                     child: Container(
@@ -133,208 +174,164 @@ class _SurveyBasicInfoScreenState extends State<SurveyBasicInfoScreen> {
                   ),
                 ],
               ),
-              
-              const SizedBox(height: 32),
-              
-              // Title
-              const Row(
-                children: [
-                  Icon(SolarIconsBold.user, color: AppTheme.primaryBlue, size: 24),
-                  SizedBox(width: 8),
-                  Text(
-                    'Let\'s get to know you',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-              
-              const SizedBox(height: 32),
-              
-              Divider(color: Colors.grey[300], thickness: 1),
-              
-              const SizedBox(height: 24),
-              
-              // First Name
-              Row(
-                children: [
-                  const Icon(SolarIconsBold.user, size: 20, color: AppTheme.primaryBlue),
-                  const SizedBox(width: 8),
-                  Text(
-                    'First Name',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              
-              TextFormField(
-                controller: _nameController,
-                textCapitalization: TextCapitalization.words,
-                decoration: InputDecoration(
-                  hintText: 'Alex',
-                  filled: true,
-                  fillColor: Colors.grey[100],
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                ),
-                onChanged: (value) => setState(() {}),
-              ),
-              
-              const SizedBox(height: 32),
-              
-              Divider(color: Colors.grey[300], thickness: 1),
-              
-              const SizedBox(height: 24),
-              
-              // Birthday
-              Row(
-                children: [
-                  const Icon(SolarIconsBold.calendar, size: 20, color: AppTheme.primaryBlue),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Birthday',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              
-              InkWell(
-                onTap: () => _selectDate(context),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
+            ),
+
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        SolarIconsOutline.calendar,
-                        color: Colors.grey[600],
+                      // Title
+                      Row(
+                        children: [
+                          const Icon(SolarIconsBold.user, color: AppTheme.primaryBlue, size: 24),
+                          const SizedBox(width: 8),
+                          Text(
+                            _userName.isNotEmpty ? 'Hi $_userName!' : 'Tell us about yourself',
+                            style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _selectedDate == null
-                            ? Text(
-                                'Select date...',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 16,
+
+                      const SizedBox(height: 8),
+
+                      Text(
+                        'Just a few quick questions to personalize your experience',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+
+                      const SizedBox(height: 32),
+                      
+                      Divider(color: Colors.grey[300], thickness: 1),
+
+                      const SizedBox(height: 24),
+
+                      // Age Field
+                      const Text(
+                        'Age',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _ageController,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter your age',
+                          prefixIcon: Icon(SolarIconsBold.calendar),
+                        ),
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Age is required';
+                          }
+                          final age = int.tryParse(value);
+                          if (age == null) {
+                            return 'Please enter a valid number';
+                          }
+                          if (age < 13 || age > 120) {
+                            return 'Age must be between 13 and 120';
+                          }
+                          return null;
+                        },
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Gender Selection
+                      const Text(
+                        'Gender',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      ..._genderOptions.map((option) {
+                        final isSelected = _selectedGender == option['value'];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                _selectedGender = option['value'] as String;
+                              });
+                            },
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? AppTheme.primaryBlue.withOpacity(0.1)
+                                    : Colors.white,
+                                border: Border.all(
+                                  color: isSelected
+                                      ? AppTheme.primaryBlue
+                                      : Colors.grey.shade300,
+                                  width: isSelected ? 2 : 1,
                                 ),
-                              )
-                            : Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
                                 children: [
+                                  Icon(
+                                    option['icon'] as IconData,
+                                    color: isSelected
+                                        ? AppTheme.primaryBlue
+                                        : Colors.grey[600],
+                                  ),
+                                  const SizedBox(width: 12),
                                   Text(
-                                    '${_selectedDate!.month}/${_selectedDate!.day}/${_selectedDate!.year}',
-                                    style: const TextStyle(
+                                    option['label'] as String,
+                                    style: TextStyle(
                                       fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black87,
+                                      fontWeight: isSelected
+                                          ? FontWeight.w600
+                                          : FontWeight.normal,
+                                      color: isSelected
+                                          ? AppTheme.primaryBlue
+                                          : Colors.black87,
                                     ),
                                   ),
-                                  if (_age != null)
-                                    Text(
-                                      '($_age years old)',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey[600],
-                                      ),
+                                  const Spacer(),
+                                  if (isSelected)
+                                    const Icon(
+                                      Icons.check_circle,
+                                      color: AppTheme.primaryBlue,
                                     ),
                                 ],
                               ),
-                      ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
                     ],
                   ),
                 ),
               ),
-              
-              const SizedBox(height: 12),
-              
-              Row(
-                children: [
-                  Icon(SolarIconsBold.infoCircle, size: 16, color: Colors.grey[600]),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'Needed for age-specific health metrics and BMR calculation',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              
-              const SizedBox(height: 32),
-              
-              Divider(color: Colors.grey[300], thickness: 1),
-              
-              const SizedBox(height: 24),
-              
-              // Biological Sex
-              Row(
-                children: [
-                  const Icon(Icons.people, size: 20, color: AppTheme.primaryBlue),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Biological Sex',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                '(For calorie & heart rate zones)',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey[600],
-                ),
-              ),
-              
-              const SizedBox(height: 16),
-              
-              Row(
-                children: [
-                  Expanded(child: _buildSexCard('Male')),
-                  const SizedBox(width: 12),
-                  Expanded(child: _buildSexCard('Female')),
-                  const SizedBox(width: 12),
-                  Expanded(child: _buildSexCard('Other')),
-                ],
-              ),
-              
-              const SizedBox(height: 48),
-              
-              // Continue Button
-              SizedBox(
+            ),
+
+            // Next Button
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: SizedBox(
+                width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/survey_body_measurements');
-                  },
+                  onPressed: _handleNext,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryBlue,
                     foregroundColor: Colors.white,
@@ -353,65 +350,11 @@ class _SurveyBasicInfoScreenState extends State<SurveyBasicInfoScreen> {
                   ),
                 ),
               ),
-              
-              const SizedBox(height: 16),
-              
-              // Skip Button
-              Center(
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/dashboard');
-                  },
-                  child: Text(
-                    'Skip this screen',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSexCard(String sex) {
-    final isSelected = _selectedSex == sex;
-    
-    return GestureDetector(
-      onTap: () => setState(() => _selectedSex = sex),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        decoration: BoxDecoration(
-          color: isSelected ? AppTheme.primaryBlue.withOpacity(0.1) : Colors.grey[100],
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isSelected ? AppTheme.primaryBlue : Colors.transparent,
-            width: 2,
-          ),
-        ),
-        child: Column(
-          children: [
-            Icon(
-              isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
-              color: isSelected ? AppTheme.primaryBlue : Colors.grey[400],
-              size: 24,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              sex,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: isSelected ? AppTheme.primaryBlue : Colors.grey[700],
-              ),
             ),
           ],
         ),
       ),
     );
   }
+
 }

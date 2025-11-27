@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:solar_icons/solar_icons.dart';
 import '../../theme/app_theme.dart';
+import '../../presentation/providers/providers.dart';
 
-class SurveyActivityGoalsScreen extends StatefulWidget {
+class SurveyActivityGoalsScreen extends ConsumerStatefulWidget {
   const SurveyActivityGoalsScreen({super.key});
 
   @override
-  State<SurveyActivityGoalsScreen> createState() => _SurveyActivityGoalsScreenState();
+  ConsumerState<SurveyActivityGoalsScreen> createState() => _SurveyActivityGoalsScreenState();
 }
 
-class _SurveyActivityGoalsScreenState extends State<SurveyActivityGoalsScreen> {
+class _SurveyActivityGoalsScreenState extends ConsumerState<SurveyActivityGoalsScreen> {
   String? _selectedActivityLevel;
-  String? _selectedGoal;
+  Set<String> _selectedGoals = {};
 
   final List<Map<String, dynamic>> _activityLevels = [
     {
@@ -22,7 +24,7 @@ class _SurveyActivityGoalsScreenState extends State<SurveyActivityGoalsScreen> {
       'multiplier': '1.2×',
     },
     {
-      'id': 'moderate',
+      'id': 'moderately_active',
       'title': 'Moderately Active',
       'icon': SolarIconsBold.bicycling,
       'description': 'Exercise 3-5 times/week',
@@ -46,7 +48,7 @@ class _SurveyActivityGoalsScreenState extends State<SurveyActivityGoalsScreen> {
       'color': Colors.orange,
     },
     {
-      'id': 'maintain',
+      'id': 'maintain_weight',
       'title': 'Maintain Weight',
       'icon': SolarIconsBold.scale,
       'description': 'Stay at current weight',
@@ -67,6 +69,70 @@ class _SurveyActivityGoalsScreenState extends State<SurveyActivityGoalsScreen> {
       'color': Colors.red,
     },
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    // Load existing data if available
+    final surveyState = ref.read(surveyNotifierProvider);
+    _selectedActivityLevel = surveyState.surveyData['activityLevel'] as String?;
+    final goals = surveyState.surveyData['goals'] as List<dynamic>?;
+    if (goals != null) {
+      _selectedGoals = goals.map((e) => e.toString()).toSet();
+    }
+  }
+
+  Future<void> _handleNext() async {
+    // Validate selections
+    if (_selectedActivityLevel == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select your activity level'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    if (_selectedGoals.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select at least one fitness goal'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // Save data to survey notifier
+    final surveyNotifier = ref.read(surveyNotifierProvider.notifier);
+    await surveyNotifier.updateSurveyData('activityLevel', _selectedActivityLevel);
+    await surveyNotifier.updateSurveyData('goals', _selectedGoals.toList());
+
+    // Validate using the notifier's validation method
+    final validationError = surveyNotifier.validateActivityGoals();
+    if (validationError != null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(validationError),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      return;
+    }
+
+    // Navigate to next screen
+    if (mounted) {
+      final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+      Navigator.pushReplacementNamed(
+        context,
+        '/survey_daily_targets',
+        arguments: args,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -209,9 +275,7 @@ class _SurveyActivityGoalsScreenState extends State<SurveyActivityGoalsScreen> {
               SizedBox(
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/survey_daily_targets');
-                  },
+                  onPressed: _handleNext,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryBlue,
                     foregroundColor: Colors.white,
@@ -229,37 +293,6 @@ class _SurveyActivityGoalsScreenState extends State<SurveyActivityGoalsScreen> {
                     ),
                   ),
                 ),
-              ),
-              
-              const SizedBox(height: 16),
-              
-              // Back and Skip
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text(
-                      '← Back',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppTheme.primaryBlue,
-                      ),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/dashboard');
-                    },
-                    child: Text(
-                      'Skip this screen',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ],
           ),
@@ -336,10 +369,28 @@ class _SurveyActivityGoalsScreenState extends State<SurveyActivityGoalsScreen> {
   }
 
   Widget _buildGoalCard(Map<String, dynamic> goal) {
-    final isSelected = _selectedGoal == goal['id'];
+    final isSelected = _selectedGoals.contains(goal['id']);
     
     return GestureDetector(
-      onTap: () => setState(() => _selectedGoal = goal['id']),
+      onTap: () {
+        setState(() {
+          if (isSelected) {
+            _selectedGoals.remove(goal['id']);
+          } else {
+            if (_selectedGoals.length < 5) {
+              _selectedGoals.add(goal['id'] as String);
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Maximum 5 goals can be selected'),
+                  backgroundColor: Colors.orange,
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            }
+          }
+        });
+      },
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -353,7 +404,7 @@ class _SurveyActivityGoalsScreenState extends State<SurveyActivityGoalsScreen> {
         child: Row(
           children: [
             Icon(
-              isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+              isSelected ? Icons.check_box : Icons.check_box_outline_blank,
               color: isSelected ? goal['color'] : Colors.grey[400],
               size: 24,
             ),

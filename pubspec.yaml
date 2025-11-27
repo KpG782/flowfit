@@ -113,6 +113,9 @@ dev_dependencies:
   freezed: ^2.5.8 # SAFE UPGRADE: Bug fixes
   json_serializable: ^6.9.5 # SAFE UPGRADE: Bug fixes
 
+  # Testing
+  mockito: ^5.4.4
+  
   # Linting
   flutter_lints: ^3.0.2 # SAFE UPGRADE: New lint rules
 

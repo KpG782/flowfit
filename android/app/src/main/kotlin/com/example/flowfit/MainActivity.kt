@@ -254,6 +254,40 @@ class MainActivity: FlutterActivity() {
             }
         )
         
+        // Phone data listener method channel (phone side - control listening)
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.flowfit.phone/data").setMethodCallHandler { call, result ->
+            when (call.method) {
+                "startListening" -> {
+                    // The PhoneDataListenerService is already running as a background service
+                    // Just confirm it's ready to receive data
+                    Log.i(TAG, "Phone data listener start requested")
+                    result.success(true)
+                }
+                "stopListening" -> {
+                    Log.i(TAG, "Phone data listener stop requested")
+                    result.success(null)
+                }
+                "isWatchConnected" -> {
+                    // Check if we have any connected nodes via WatchToPhoneSyncManager
+                    scope.launch {
+                        try {
+                            val count = watchToPhoneSyncManager?.getConnectedNodesCount() ?: 0
+                            val connected = count > 0
+                            mainHandler.post {
+                                result.success(connected)
+                            }
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error checking watch connection", e)
+                            mainHandler.post {
+                                result.success(false)
+                            }
+                        }
+                    }
+                }
+                else -> result.notImplemented()
+            }
+        }
+        
         // Phone data listener event channel (phone side - receives from watch)
         EventChannel(flutterEngine.dartExecutor.binaryMessenger, "com.flowfit.phone/heartrate").setStreamHandler(
             object : EventChannel.StreamHandler {
