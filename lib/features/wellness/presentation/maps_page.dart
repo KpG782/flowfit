@@ -32,6 +32,7 @@ class _WellnessMapsPageState extends State<WellnessMapsPage> {
   maplat.LatLng? _initialCenter;
   maplat.LatLng? _lastCenter;
   StreamSubscription<GeofenceEvent>? _eventsSub;
+  StreamSubscription<String>? _focusRequestsSub;
   bool _missionsVisible = true;
   bool _showTutorial = true; // Show tutorial on first visit
   // Place mode state
@@ -100,6 +101,25 @@ class _WellnessMapsPageState extends State<WellnessMapsPage> {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
       });
+      // Listen for focus requests (e.g., pushed by MoodTrackerService or notifications)
+      _focusRequestsSub = service.focusRequests.listen((id) async {
+        final repo = _getRepo();
+        if (id == 'add_sanctuary') {
+          // Prompt user to start place mode at current location
+          try {
+            final pos = await Geolocator.getCurrentPosition();
+            _startPlacingAtLatLng(maplat.LatLng(pos.latitude, pos.longitude));
+            return;
+          } catch (_) {
+            return;
+          }
+        }
+        final mission = repo.getById(id);
+        if (mission != null) {
+          // Start focus mode for this mission
+          _startFocusMission(mission);
+        }
+      });
     } catch (e) {
       // ignore
     }
@@ -109,6 +129,7 @@ class _WellnessMapsPageState extends State<WellnessMapsPage> {
   void dispose() {
     _mapController?.dispose();
     _eventsSub?.cancel();
+    _focusRequestsSub?.cancel();
     _placingTitleController.dispose();
     _focusTimer?.cancel();
     super.dispose();
