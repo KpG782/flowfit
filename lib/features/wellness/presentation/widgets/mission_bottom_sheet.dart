@@ -70,7 +70,7 @@ class MissionBottomSheet extends StatelessWidget {
               ],
             ),
             trailing: SizedBox(
-              width: 100,
+              width: 180,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -103,7 +103,8 @@ class MissionBottomSheet extends StatelessWidget {
                 ],
               ),
             ),
-            onTap: () => onOpenMission(m),
+            onTap: () => onFocusMission(m),
+            onLongPress: () => onOpenMission(m),
           ),
         );
       },
