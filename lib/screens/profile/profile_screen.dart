@@ -28,6 +28,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   /// Load profile image path from SharedPreferences
+  ///
+  /// SharedPreferences Key Format: 'profile_image_{userId}'
+  /// - This ensures user-specific storage for multi-user support
+  /// - Example: 'profile_image_abc123-def456-ghi789'
+  /// - The key is automatically cleaned up if the file no longer exists
+  ///
   /// Requirements: 3.2, 3.3, 3.4
   Future<void> _loadProfileImage() async {
     final authState = ref.read(authNotifierProvider);
@@ -37,6 +43,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
     try {
       final prefs = await SharedPreferences.getInstance();
+      // Key format: 'profile_image_{userId}' for user-specific storage
       final key = 'profile_image_$userId';
       final savedPath = prefs.getString(key);
 
@@ -61,6 +68,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   /// Save profile image path to SharedPreferences
+  ///
+  /// SharedPreferences Key Format: 'profile_image_{userId}'
+  /// - Saves the absolute file path to the locally stored image
+  /// - Pass null to remove the saved path (e.g., when user removes photo)
+  /// - The key is user-specific to support multiple user accounts
+  ///
   /// Requirements: 3.1, 3.5
   Future<void> _saveProfileImage(String? path) async {
     final authState = ref.read(authNotifierProvider);
@@ -70,6 +83,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
     try {
       final prefs = await SharedPreferences.getInstance();
+      // Key format: 'profile_image_{userId}' for user-specific storage
       final key = 'profile_image_$userId';
 
       if (path != null) {

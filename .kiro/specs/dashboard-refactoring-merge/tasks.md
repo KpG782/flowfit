@@ -228,7 +228,7 @@
   - Verify no code duplication between old and new implementations
   - _Requirements: All_
 
-- [-] 12.1 Write integration tests for end-to-end flows
+- [x] 12.1 Write integration tests for end-to-end flows
 
   - Test photo upload flow
   - Test logout flow
@@ -236,7 +236,8 @@
   - Test initial tab navigation flow
   - _Requirements: All_
 
-- [ ] 13. Final cleanup and documentation
+- [x] 13. Final cleanup and documentation
+
   - Remove or archive `dashboard_screen-mark-old.dart` after verification
   - Update any documentation referencing the old dashboard structure
   - Verify all features from monolithic version are present in modular version
