@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/buddy_onboarding_provider.dart';
 import '../../widgets/buddy_character_widget.dart';
+import '../../widgets/buddy_idle_animation.dart';
 import '../../widgets/onboarding_button.dart';
+import '../../theme/app_theme.dart';
 
 /// Wellness Goal Selection Screen - Step 6 of 8
 ///
@@ -35,29 +38,35 @@ class GoalSelectionScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final state = ref.watch(buddyOnboardingProvider);
     final selectedGoals = state.selectedGoals;
+    final buddyColor = state.selectedColor != null
+        ? _getColorFromKey(state.selectedColor!)
+        : const Color(0xFF4ECDC4);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF1F6FD),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Progress indicator: ●●●○ (step 6 of 8)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  8,
-                  (index) => Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    width: 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: index <= 5
-                          ? const Color(0xFF4ECDC4)
-                          : Colors.grey[300],
+              // Progress indicator: ●●●●●●○○ (step 6 of 8)
+              Semantics(
+                label: 'Progress: Step 6 of 8',
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    8,
+                    (index) => Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: index <= 5
+                            ? const Color(0xFF4ECDC4)
+                            : Colors.grey[300],
+                      ),
                     ),
                   ),
                 ),
@@ -66,39 +75,54 @@ class GoalSelectionScreen extends ConsumerWidget {
               const SizedBox(height: 32),
 
               // Buddy with lightbulb (thinking pose)
-              Center(
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    BuddyCharacterWidget(
-                      color: const Color(0xFF4ECDC4),
-                      size: 100,
-                    ),
-                    Positioned(
-                      top: -10,
-                      right: -10,
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.yellow[100],
-                          shape: BoxShape.circle,
+              Semantics(
+                label: '${state.buddyName ?? "Buddy"} thinking about goals',
+                image: true,
+                child: Center(
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      BuddyIdleAnimation(
+                        child: BuddyCharacterWidget(
+                          color: buddyColor,
+                          size: 100,
                         ),
-                        child: const Text('💡', style: TextStyle(fontSize: 24)),
                       ),
-                    ),
-                  ],
+                      Positioned(
+                        top: -10,
+                        right: -10,
+                        child: Semantics(
+                          label: 'Lightbulb idea',
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.yellow[100],
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Text(
+                              '💡',
+                              style: TextStyle(fontSize: 24),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
 
               const SizedBox(height: 24),
 
               // Title
-              Text(
-                'What areas would you like support with?',
-                textAlign: TextAlign.center,
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF314158),
+              Semantics(
+                header: true,
+                child: Text(
+                  'What areas would you like support with?',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.text,
+                  ),
                 ),
               ),
 
@@ -108,7 +132,7 @@ class GoalSelectionScreen extends ConsumerWidget {
                 'Select as many as you like',
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  color: const Color(0xFF7F8C8D),
+                  color: AppTheme.darkGray,
                 ),
               ),
 
@@ -116,35 +140,44 @@ class GoalSelectionScreen extends ConsumerWidget {
 
               // Goal cards
               Expanded(
-                child: ListView.separated(
-                  itemCount: predefinedGoals.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    final goal = predefinedGoals[index];
-                    final isSelected = selectedGoals.contains(goal.id);
+                child: Semantics(
+                  label: 'Wellness goals list',
+                  child: ListView.separated(
+                    itemCount: predefinedGoals.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    itemBuilder: (context, index) {
+                      final goal = predefinedGoals[index];
+                      final isSelected = selectedGoals.contains(goal.id);
 
-                    return GoalCard(
-                      goal: goal,
-                      isSelected: isSelected,
-                      onTap: () {
-                        ref
-                            .read(buddyOnboardingProvider.notifier)
-                            .toggleGoal(goal.id);
-                      },
-                    );
-                  },
+                      return GoalCard(
+                        goal: goal,
+                        isSelected: isSelected,
+                        onTap: () {
+                          HapticFeedback.lightImpact();
+                          ref
+                              .read(buddyOnboardingProvider.notifier)
+                              .toggleGoal(goal.id);
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
 
               const SizedBox(height: 24),
 
               // Next button (always enabled)
-              OnboardingButton(
-                label: 'NEXT',
-                onPressed: () {
-                  Navigator.pushNamed(context, '/notification-permission');
-                },
-                customColor: const Color(0xFF66BB6A),
+              Semantics(
+                label: 'Next button',
+                button: true,
+                hint: 'Continue to notification permissions',
+                child: OnboardingButton(
+                  label: 'NEXT',
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/notification-permission');
+                  },
+                  customColor: const Color(0xFF66BB6A),
+                ),
               ),
 
               const SizedBox(height: 16),
@@ -153,6 +186,20 @@ class GoalSelectionScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Color _getColorFromKey(String colorKey) {
+    const colorMap = {
+      'blue': Color(0xFF4ECDC4),
+      'teal': Color(0xFF26A69A),
+      'green': Color(0xFF66BB6A),
+      'purple': Color(0xFF9575CD),
+      'yellow': Color(0xFFFFD54F),
+      'orange': Color(0xFFFFB74D),
+      'pink': Color(0xFFF06292),
+      'gray': Color(0xFF90A4AE),
+    };
+    return colorMap[colorKey] ?? const Color(0xFF4ECDC4);
   }
 }
 
@@ -186,53 +233,82 @@ class GoalCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(
-            color: isSelected ? const Color(0xFF66BB6A) : Colors.grey[300]!,
-            width: 2,
+    return Semantics(
+      label: '${goal.title} goal',
+      button: true,
+      selected: isSelected,
+      hint: isSelected ? 'Tap to deselect' : 'Tap to select',
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          // Minimum touch target height of 56px (exceeds 48px requirement)
+          constraints: const BoxConstraints(minHeight: 56),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(
+              color: isSelected ? const Color(0xFF66BB6A) : Colors.grey[300]!,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: const Color(0xFF66BB6A).withOpacity(0.2),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 4,
+                      offset: const Offset(0, 1),
+                    ),
+                  ],
           ),
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: const Color(0xFF66BB6A).withOpacity(0.2),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
+          child: Row(
+            children: [
+              // Emoji icon
+              Semantics(
+                label: _getEmojiLabel(goal.icon),
+                child: Text(goal.icon, style: const TextStyle(fontSize: 32)),
+              ),
+              const SizedBox(width: 16),
+              // Title
+              Expanded(
+                child: Text(
+                  goal.title,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: AppTheme.text,
+                    fontSize: 16, // Minimum 16sp for body text
                   ),
-                ]
-              : null,
-        ),
-        child: Row(
-          children: [
-            // Emoji icon
-            Text(goal.icon, style: const TextStyle(fontSize: 32)),
-            const SizedBox(width: 16),
-            // Title
-            Expanded(
-              child: Text(
-                goal.title,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xFF314158),
                 ),
               ),
-            ),
-            const SizedBox(width: 8),
-            // Check/Plus icon
-            Icon(
-              isSelected ? Icons.check_circle : Icons.add_circle_outline,
-              color: isSelected ? const Color(0xFF66BB6A) : Colors.grey[400],
-              size: 28,
-            ),
-          ],
+              const SizedBox(width: 8),
+              // Check/Plus icon
+              Icon(
+                isSelected ? Icons.check_circle : Icons.add_circle_outline,
+                color: isSelected ? const Color(0xFF66BB6A) : Colors.grey[400],
+                size: 28,
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  String _getEmojiLabel(String emoji) {
+    const emojiLabels = {
+      '🎯': 'Target',
+      '🪥': 'Toothbrush',
+      '👟': 'Sneaker',
+      '🏔️': 'Mountain',
+      '☎️': 'Phone',
+    };
+    return emojiLabels[emoji] ?? 'Icon';
   }
 }

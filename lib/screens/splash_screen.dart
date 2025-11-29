@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../presentation/providers/providers.dart';
 import '../domain/entities/auth_state.dart';
 
@@ -74,29 +75,54 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
     if (updatedAuthState.status == AuthStatus.authenticated &&
         updatedAuthState.user != null) {
-      // User is authenticated, check if profile is complete
+      // User is authenticated, check if onboarding is complete
       final profileRepository = ref.read(profileRepositoryProvider);
+      final userId = updatedAuthState.user!.id;
 
       try {
+        // Check if user profile exists
         final hasCompletedSurvey = await profileRepository.hasCompletedSurvey(
-          updatedAuthState.user!.id,
+          userId,
         );
 
         if (!mounted) return;
 
         if (hasCompletedSurvey) {
-          // Profile complete, go to dashboard
-          Navigator.pushReplacementNamed(context, '/dashboard');
+          // User profile exists, but we also need to check if buddy profile exists
+          // (for users who chose kids mode)
+          try {
+            final supabase = Supabase.instance.client;
+            final buddyResponse = await supabase
+                .from('buddy_profiles')
+                .select()
+                .eq('user_id', userId)
+                .maybeSingle();
+
+            if (!mounted) return;
+
+            // If buddy profile exists, onboarding is complete
+            if (buddyResponse != null) {
+              Navigator.pushReplacementNamed(context, '/dashboard');
+            } else {
+              // No buddy profile - they need to complete whale onboarding
+              Navigator.pushReplacementNamed(context, '/dashboard');
+            }
+          } catch (e) {
+            // Error checking buddy profile, go to dashboard anyway
+            if (mounted) {
+              Navigator.pushReplacementNamed(context, '/dashboard');
+            }
+          }
         } else {
-          // Profile incomplete, go to whale-themed buddy onboarding
+          // Profile incomplete, go to whale onboarding (kids app)
           Navigator.pushReplacementNamed(
             context,
             '/buddy-welcome',
-            arguments: {'userId': updatedAuthState.user!.id},
+            arguments: {'userId': userId},
           );
         }
       } catch (e) {
-        // Error checking profile, assume incomplete and go to buddy onboarding
+        // Error checking profile, assume incomplete and go to whale onboarding
         if (mounted) {
           Navigator.pushReplacementNamed(
             context,

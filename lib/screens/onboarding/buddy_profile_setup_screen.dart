@@ -45,12 +45,9 @@ class _BuddyProfileSetupScreenState
 
   void _onContinue() {
     final nickname = _nicknameController.text.trim();
-    ref
-        .read(buddyOnboardingProvider.notifier)
-        .setUserInfo(
-          nickname: nickname.isNotEmpty ? nickname : null,
-          age: _selectedAge,
-        );
+    if (nickname.isNotEmpty) {
+      ref.read(buddyOnboardingProvider.notifier).setUserNickname(nickname);
+    }
     Navigator.of(context).pushNamed('/buddy_completion');
   }
 
@@ -63,6 +60,7 @@ class _BuddyProfileSetupScreenState
 
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),

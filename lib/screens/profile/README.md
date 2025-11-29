@@ -105,7 +105,6 @@ Profile Tab (dashboard_screen.dart)
   - Ken Patrick Garcia - Full-stack Engineer
   - Mark Angelo Siazon - UI/UX Designer & Front-end Developer
   - Exequel Adizon - UI/UX Designer & Front-end Developer
-  - Ashlyn Torres - Project Manager & Presenter
 - Project information (version, build, platform)
 - Contact information
 

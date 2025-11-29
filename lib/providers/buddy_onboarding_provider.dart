@@ -83,12 +83,11 @@ class BuddyOnboardingNotifier extends StateNotifier<BuddyOnboardingState> {
     _saveStateLocally();
   }
 
-  /// Set user information (nickname and age)
+  /// Set user nickname (age not collected in whale onboarding)
   ///
-  /// Updates the state with optional user profile information.
-  /// Both parameters are optional as users can skip this step.
-  void setUserInfo({String? nickname, int? age}) {
-    state = state.copyWith(userNickname: nickname, userAge: age);
+  /// Updates the state with optional user nickname.
+  void setUserNickname(String? nickname) {
+    state = state.copyWith(userNickname: nickname);
     _saveStateLocally();
   }
 
@@ -226,7 +225,6 @@ class BuddyOnboardingNotifier extends StateNotifier<BuddyOnboardingState> {
         await _updateUserProfile(
           userId,
           state.userNickname ?? state.userName,
-          state.userAge,
           wellnessGoals: state.selectedGoals,
           notificationsEnabled: state.notificationsGranted,
         );
@@ -350,8 +348,7 @@ class BuddyOnboardingNotifier extends StateNotifier<BuddyOnboardingState> {
   /// Update user profile with nickname and kids mode flag
   Future<void> _updateUserProfile(
     String userId,
-    String? nickname,
-    int? age, {
+    String? nickname, {
     List<String>? wellnessGoals,
     bool? notificationsEnabled,
   }) async {
@@ -361,9 +358,9 @@ class BuddyOnboardingNotifier extends StateNotifier<BuddyOnboardingState> {
       updates['nickname'] = nickname;
     }
 
-    if (age != null) {
-      updates['is_kids_mode'] = age <= 12;
-    }
+    // Whale onboarding is specifically for kids (7-12)
+    // Users reach this flow by selecting "7-12" on age gate screen
+    updates['is_kids_mode'] = true;
 
     if (wellnessGoals != null && wellnessGoals.isNotEmpty) {
       updates['wellness_goals'] = wellnessGoals;

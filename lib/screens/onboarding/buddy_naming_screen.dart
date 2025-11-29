@@ -99,6 +99,7 @@ class _BuddyNamingScreenState extends ConsumerState<BuddyNamingScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
@@ -271,9 +272,9 @@ class _BuddyNamingScreenState extends ConsumerState<BuddyNamingScreen> {
         children: [
           Text(
             'Or pick a suggestion:',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: AppTheme.darkGray,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: AppTheme.darkGray),
           ),
           const SizedBox(height: 16),
           Wrap(

@@ -45,20 +45,22 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       );
       return;
     }
-    
+
     // Validate form fields
     if (_formKey.currentState!.validate()) {
       // Call authNotifier to sign up
-      await ref.read(authNotifierProvider.notifier).signUp(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-        fullName: _nameController.text.trim(),
-        metadata: {
-          'terms_accepted': _termsAccepted,
-          'watch_data_consent': _watchDataConsent,
-          'marketing_opt_in': _marketingOptIn,
-        },
-      );
+      await ref
+          .read(authNotifierProvider.notifier)
+          .signUp(
+            email: _emailController.text.trim(),
+            password: _passwordController.text,
+            fullName: _nameController.text.trim(),
+            metadata: {
+              'terms_accepted': _termsAccepted,
+              'watch_data_consent': _watchDataConsent,
+              'marketing_opt_in': _marketingOptIn,
+            },
+          );
     }
   }
 
@@ -67,23 +69,19 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     // Listen to auth state changes
     final authState = ref.watch(authNotifierProvider);
     final isLoading = authState.status == AuthStatus.loading;
-    
+
     // Listen for auth state changes and navigate accordingly
     ref.listen<AuthState>(authNotifierProvider, (previous, next) {
       if (next.status == AuthStatus.authenticated && next.user != null) {
         // Check if email is verified
         final isEmailVerified = next.user!.emailConfirmedAt != null;
-        
+
         if (isEmailVerified) {
-          // Email already verified, go directly to survey
+          // Email already verified, go to age gate to choose onboarding flow
           Navigator.pushReplacementNamed(
             context,
-            '/survey_intro',
-            arguments: {
-              'name': _nameController.text.trim(),
-              'email': _emailController.text.trim(),
-              'userId': next.user!.id,
-            },
+            '/age-gate',
+            arguments: {'userId': next.user!.id},
           );
         } else {
           // Navigate to email verification screen
@@ -107,7 +105,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         );
       }
     });
-    
+
     return Scaffold(
       backgroundColor: const Color(0xFFF2F7FF),
       body: SafeArea(
@@ -317,17 +315,17 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     return null;
                   },
                 ),
-                
+
                 const SizedBox(height: 8),
                 Text(
                   'Must be at least 8 characters',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                 ),
-                
+
                 const SizedBox(height: 20),
-                
+
                 // Confirm Password Label
                 Text(
                   'Confirm Password',
@@ -337,7 +335,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                
+
                 // Confirm Password Field
                 TextFormField(
                   controller: _confirmPasswordController,
@@ -356,7 +354,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+                      borderSide: const BorderSide(
+                        color: AppTheme.primaryBlue,
+                        width: 2,
+                      ),
                     ),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -366,10 +367,16 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         color: Colors.grey[600],
                       ),
                       onPressed: () {
-                        setState(() => _obscureConfirmPassword = !_obscureConfirmPassword);
+                        setState(
+                          () => _obscureConfirmPassword =
+                              !_obscureConfirmPassword,
+                        );
                       },
                     ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 16,
+                    ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -381,41 +388,46 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     return null;
                   },
                 ),
-                
+
                 const SizedBox(height: 32),
-                
+
                 // Divider
                 Divider(color: Colors.grey[300], thickness: 1),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Privacy Consent Section
                 _buildCheckbox(
                   value: _termsAccepted,
-                  onChanged: (value) => setState(() => _termsAccepted = value ?? false),
-                  label: 'I agree to FlowFit\'s Terms of Service and Privacy Policy',
+                  onChanged: (value) =>
+                      setState(() => _termsAccepted = value ?? false),
+                  label:
+                      'I agree to FlowFit\'s Terms of Service and Privacy Policy',
                   required: true,
                   links: ['Read Terms', 'Read Policy'],
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 _buildCheckbox(
                   value: _watchDataConsent,
-                  onChanged: (value) => setState(() => _watchDataConsent = value ?? false),
-                  label: 'I consent to health data collection from my Galaxy Watch for app features',
+                  onChanged: (value) =>
+                      setState(() => _watchDataConsent = value ?? false),
+                  label:
+                      'I consent to health data collection from my Galaxy Watch for app features',
                   required: true,
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 _buildCheckbox(
                   value: _marketingOptIn,
-                  onChanged: (value) => setState(() => _marketingOptIn = value ?? false),
+                  onChanged: (value) =>
+                      setState(() => _marketingOptIn = value ?? false),
                   label: 'Send me tips & updates (Optional)',
                   required: false,
                 ),
-                
+
                 const SizedBox(height: 32),
 
                 // Terms and Privacy
@@ -484,7 +496,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 ),
 
                 const SizedBox(height: 24),
-                
+
                 // Login Link
                 Center(
                   child: Row(
@@ -492,9 +504,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     children: [
                       Text(
                         'Already have an account? ',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(color: Colors.grey[600]),
                       ),
                       GestureDetector(
                         onTap: () {
@@ -511,7 +521,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     ],
                   ),
                 ),
-                
+
                 const SizedBox(height: 16),
               ],
             ),
@@ -520,7 +530,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       ),
     );
   }
-  
+
   Widget _buildCheckbox({
     required bool value,
     required ValueChanged<bool?> onChanged,

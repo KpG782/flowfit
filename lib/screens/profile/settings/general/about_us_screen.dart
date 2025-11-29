@@ -122,14 +122,6 @@ class AboutUsScreen extends StatelessWidget {
               SolarIconsBold.palette,
               Colors.green,
             ),
-            const SizedBox(height: 12),
-            _buildTeamMember(
-              context,
-              'Ashlyn Torres',
-              'Project Manager & Presenter',
-              SolarIconsBold.userSpeak,
-              Colors.pink,
-            ),
 
             const SizedBox(height: 32),
 
@@ -159,9 +151,9 @@ class AboutUsScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  _buildInfoRow(context, 'Version', '1.0.0'),
+                  _buildInfoRow(context, 'Version', '1.0.1'),
                   const SizedBox(height: 8),
-                  _buildInfoRow(context, 'Build', 'Hackathon 2025'),
+                  _buildInfoRow(context, 'Build', 'Cold Start Hackathon 2025'),
                   const SizedBox(height: 8),
                   _buildInfoRow(context, 'Platform', 'Flutter'),
                 ],

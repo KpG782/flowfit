@@ -12,10 +12,12 @@ class EmailVerificationScreen extends ConsumerStatefulWidget {
   const EmailVerificationScreen({super.key});
 
   @override
-  ConsumerState<EmailVerificationScreen> createState() => _EmailVerificationScreenState();
+  ConsumerState<EmailVerificationScreen> createState() =>
+      _EmailVerificationScreenState();
 }
 
-class _EmailVerificationScreenState extends ConsumerState<EmailVerificationScreen> {
+class _EmailVerificationScreenState
+    extends ConsumerState<EmailVerificationScreen> {
   bool _isChecking = false;
   bool _isResending = false;
   Timer? _autoCheckTimer;
@@ -42,7 +44,9 @@ class _EmailVerificationScreenState extends ConsumerState<EmailVerificationScree
 
   void _listenToAuthChanges() {
     // Listen to Supabase auth state changes for deep link verification
-    _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+    _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((
+      data,
+    ) {
       if (data.event == AuthChangeEvent.signedIn && data.session != null) {
         final user = data.session!.user;
         // Check if email is verified
@@ -108,10 +112,11 @@ class _EmailVerificationScreenState extends ConsumerState<EmailVerificationScree
 
   void _onVerificationSuccess() {
     _autoCheckTimer?.cancel();
-    
+
     // Get user data passed from signup
-    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
     // Show success message
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -121,13 +126,13 @@ class _EmailVerificationScreenState extends ConsumerState<EmailVerificationScree
       ),
     );
 
-    // Navigate to survey
+    // Navigate to age gate to choose onboarding flow
     Future.delayed(const Duration(milliseconds: 500), () {
       if (mounted) {
         Navigator.pushReplacementNamed(
           context,
-          '/survey_intro',
-          arguments: args,
+          '/age-gate',
+          arguments: {'userId': args?['userId']},
         );
       }
     });
@@ -139,9 +144,10 @@ class _EmailVerificationScreenState extends ConsumerState<EmailVerificationScree
     setState(() => _isResending = true);
 
     try {
-      final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+      final args =
+          ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
       final email = args?['email'] as String?;
-      
+
       if (email != null) {
         await Supabase.instance.client.auth.resend(
           type: OtpType.signup,
@@ -188,7 +194,8 @@ class _EmailVerificationScreenState extends ConsumerState<EmailVerificationScree
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     final email = args?['email'] as String? ?? 'your email';
     final name = args?['name'] as String?;
 
@@ -243,9 +250,9 @@ class _EmailVerificationScreenState extends ConsumerState<EmailVerificationScree
               // Description
               Text(
                 'We sent a verification link to',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: AppTheme.text,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: AppTheme.text),
                 textAlign: TextAlign.center,
               ),
 
@@ -253,7 +260,10 @@ class _EmailVerificationScreenState extends ConsumerState<EmailVerificationScree
 
               // Email
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
@@ -298,10 +308,11 @@ class _EmailVerificationScreenState extends ConsumerState<EmailVerificationScree
                         const SizedBox(width: 8),
                         Text(
                           'Next Steps:',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.text,
-                          ),
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.text,
+                              ),
                         ),
                       ],
                     ),
@@ -329,7 +340,9 @@ class _EmailVerificationScreenState extends ConsumerState<EmailVerificationScree
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
                           ),
                         )
                       : const Icon(SolarIconsBold.checkCircle),
@@ -364,7 +377,9 @@ class _EmailVerificationScreenState extends ConsumerState<EmailVerificationScree
                         height: 16,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryBlue),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            AppTheme.primaryBlue,
+                          ),
                         ),
                       )
                     : const Icon(SolarIconsOutline.refresh),
@@ -372,8 +387,8 @@ class _EmailVerificationScreenState extends ConsumerState<EmailVerificationScree
                   _resendCountdown > 0
                       ? 'Resend in ${_resendCountdown}s'
                       : _isResending
-                          ? 'Sending...'
-                          : 'Resend Verification Email',
+                      ? 'Sending...'
+                      : 'Resend Verification Email',
                   style: TextStyle(
                     fontSize: 14,
                     color: _resendCountdown > 0
@@ -389,10 +404,7 @@ class _EmailVerificationScreenState extends ConsumerState<EmailVerificationScree
               // Help Text
               Text(
                 'Didn\'t receive the email? Check your spam folder',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[600],
-                ),
+                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                 textAlign: TextAlign.center,
               ),
 
@@ -429,10 +441,7 @@ class _EmailVerificationScreenState extends ConsumerState<EmailVerificationScree
         Expanded(
           child: Text(
             text,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[800],
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey[800]),
           ),
         ),
       ],

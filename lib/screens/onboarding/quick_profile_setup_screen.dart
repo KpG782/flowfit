@@ -58,6 +58,7 @@ class _QuickProfileSetupScreenState
 
     return Scaffold(
       backgroundColor: const Color(0xFFF1F6FD),
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),

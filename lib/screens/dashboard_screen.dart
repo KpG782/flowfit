@@ -17,8 +17,6 @@ import 'dashboard/health_tab.dart';
 import 'dashboard/track_tab.dart';
 // ignore: unused_import
 import 'dashboard/progress_tab.dart';
-// ignore: unused_import
-import 'dashboard/profile_tab.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -33,10 +31,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   List<Widget> _getScreens() {
     final authState = ref.watch(authNotifierProvider);
     final userId = authState.user?.id;
-    
-    // Default to adult profile
-    Widget profileScreen = const ProfileScreen();
-    
+
+    // Default to kids profile (kids-only app)
+    Widget profileScreen = const KidsProfileScreen();
+
     if (userId != null) {
       final profileAsync = ref.watch(profileNotifierProvider(userId));
       profileAsync.whenData((profile) {
@@ -45,7 +43,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         }
       });
     }
-    
+
     return [
       const HomeScreen(),
       const HealthScreen(),

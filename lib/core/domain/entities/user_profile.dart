@@ -13,6 +13,8 @@ class UserProfile {
   final String? weightUnit;
   final String? activityLevel;
   final List<String>? goals;
+  final List<String>? wellnessGoals; // Whale onboarding wellness goals
+  final bool? notificationsEnabled; // Whale onboarding notification preference
   final int? dailyCalorieTarget;
   final int? dailyStepsTarget;
   final int? dailyActiveMinutesTarget;
@@ -35,13 +37,15 @@ class UserProfile {
     this.weightUnit,
     this.activityLevel,
     this.goals,
+    this.wellnessGoals,
+    this.notificationsEnabled,
     this.dailyCalorieTarget,
     this.dailyStepsTarget,
     this.dailyActiveMinutesTarget,
     this.dailyWaterTarget,
     this.profileImagePath,
     this.nickname,
-    this.isKidsMode = false,
+    this.isKidsMode = true,
     required this.createdAt,
     required this.updatedAt,
     this.isSynced = false,
@@ -65,6 +69,16 @@ class UserProfile {
       goals: (json['goals'] as List<dynamic>?)
           ?.map((e) => e.toString())
           .toList(),
+      wellnessGoals:
+          (json['wellnessGoals'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          (json['wellness_goals'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList(),
+      notificationsEnabled:
+          json['notificationsEnabled'] as bool? ??
+          json['notifications_enabled'] as bool?,
       dailyCalorieTarget:
           json['dailyCalorieTarget'] as int? ??
           json['daily_calorie_target'] as int?,
@@ -111,6 +125,8 @@ class UserProfile {
       'weightUnit': weightUnit,
       'activityLevel': activityLevel,
       'goals': goals,
+      'wellnessGoals': wellnessGoals,
+      'notificationsEnabled': notificationsEnabled,
       'dailyCalorieTarget': dailyCalorieTarget,
       'dailyStepsTarget': dailyStepsTarget,
       'dailyActiveMinutesTarget': dailyActiveMinutesTarget,
@@ -137,6 +153,8 @@ class UserProfile {
       'weight_unit': weightUnit,
       'activity_level': activityLevel,
       'goals': goals,
+      'wellness_goals': wellnessGoals,
+      'notifications_enabled': notificationsEnabled,
       'daily_calorie_target': dailyCalorieTarget,
       'daily_steps_target': dailyStepsTarget,
       'daily_active_minutes_target': dailyActiveMinutesTarget,
@@ -200,6 +218,8 @@ class UserProfile {
     String? weightUnit,
     String? activityLevel,
     List<String>? goals,
+    List<String>? wellnessGoals,
+    bool? notificationsEnabled,
     int? dailyCalorieTarget,
     int? dailyStepsTarget,
     int? dailyActiveMinutesTarget,
@@ -222,6 +242,8 @@ class UserProfile {
       weightUnit: weightUnit ?? this.weightUnit,
       activityLevel: activityLevel ?? this.activityLevel,
       goals: goals ?? this.goals,
+      wellnessGoals: wellnessGoals ?? this.wellnessGoals,
+      notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
       dailyCalorieTarget: dailyCalorieTarget ?? this.dailyCalorieTarget,
       dailyStepsTarget: dailyStepsTarget ?? this.dailyStepsTarget,
       dailyActiveMinutesTarget:

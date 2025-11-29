@@ -62,7 +62,7 @@ import 'screens/workout/resistance/resistance_summary_screen.dart';
 import 'screens/wellness/wellness_tracker_page.dart';
 import 'screens/wellness/wellness_onboarding_screen.dart';
 import 'screens/wellness/wellness_settings_screen.dart';
-// Buddy onboarding screens
+// Buddy onboarding screens (whale-themed for kids)
 import 'screens/onboarding/buddy_welcome_screen.dart';
 import 'screens/onboarding/buddy_intro_screen.dart';
 import 'screens/onboarding/buddy_hatch_screen.dart';
@@ -237,7 +237,7 @@ class FlowFitPhoneApp extends StatelessWidget {
           '/wellness-tracker': (context) => const WellnessTrackerPage(),
           '/wellness-onboarding': (context) => const WellnessOnboardingScreen(),
           '/wellness-settings': (context) => const WellnessSettingsScreen(),
-          // Buddy onboarding flow (8-screen whale-themed)
+          // Buddy onboarding flow (8-screen whale-themed for kids)
           '/buddy-welcome': (context) => const BuddyWelcomeScreen(),
           '/buddy-intro': (context) => const BuddyIntroScreen(),
           '/buddy-hatch': (context) => const BuddyHatchScreen(),

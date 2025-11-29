@@ -58,139 +58,156 @@ class _BuddyIntroScreenState extends ConsumerState<BuddyIntroScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF1F6FD),
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            children: [
-              // Skip button
-              Semantics(
-                button: true,
-                label: 'Skip button',
-                hint: 'Tap to skip entering your name',
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: TextButton(
-                    onPressed: _handleSkip,
-                    child: Text(
-                      'Skip',
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: const Color(0xFF7F8C8D),
-                      ),
-                    ),
-                  ),
-                ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight:
+                    MediaQuery.of(context).size.height -
+                    MediaQuery.of(context).padding.top -
+                    MediaQuery.of(context).padding.bottom -
+                    48, // Account for padding
               ),
-
-              const Spacer(),
-
-              // Speech bubble from Buddy
-              Semantics(
-                label:
-                    'Bubbles says: Splash splash, thanks for finding me. If my name is Bubbles, what\'s your name?',
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Splash splash, thanks for finding me.',
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          color: const Color(0xFF314158),
-                          fontWeight: FontWeight.w600,
+              child: IntrinsicHeight(
+                child: Column(
+                  children: [
+                    // Skip button
+                    Semantics(
+                      button: true,
+                      label: 'Skip button',
+                      hint: 'Tap to skip entering your name',
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: TextButton(
+                          onPressed: _handleSkip,
+                          child: Text(
+                            'Skip',
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              color: const Color(0xFF7F8C8D),
+                            ),
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'If my name is Bubbles, what\'s your name?',
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: const Color(0xFF7F8C8D),
+                    ),
+
+                    const Spacer(),
+
+                    // Speech bubble from Buddy
+                    Semantics(
+                      label:
+                          'Bubbles says: Splash splash, thanks for finding me. If my name is Bubbles, what\'s your name?',
+                      child: Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              'Splash splash, thanks for finding me.',
+                              textAlign: TextAlign.center,
+                              style: theme.textTheme.titleLarge?.copyWith(
+                                color: const Color(0xFF314158),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'If my name is Bubbles, what\'s your name?',
+                              textAlign: TextAlign.center,
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                color: const Color(0xFF7F8C8D),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 32),
-
-              // Buddy character in Ocean Blue
-              Semantics(
-                label: 'Bubbles the whale, gently bobbing',
-                image: true,
-                child: BuddyIdleAnimation(
-                  child: const BuddyCharacterWidget(
-                    color: Color(0xFF4ECDC4), // Ocean Blue
-                    size: 160,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 32),
-
-              // Name input field
-              Semantics(
-                label: 'Your name input field',
-                textField: true,
-                hint: 'Enter your name',
-                child: TextField(
-                  controller: _nameController,
-                  focusNode: _nameFocusNode,
-                  autofocus: true,
-                  style: const TextStyle(fontSize: 20),
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    hintText: 'Name for Bubbles\' friend...',
-                    hintStyle: TextStyle(color: Colors.grey[400], fontSize: 18),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(24),
-                      borderSide: BorderSide.none,
                     ),
-                    filled: true,
-                    fillColor: Colors.grey[100],
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 20,
+
+                    const SizedBox(height: 32),
+
+                    // Buddy character in Ocean Blue
+                    Semantics(
+                      label: 'Bubbles the whale, gently bobbing',
+                      image: true,
+                      child: BuddyIdleAnimation(
+                        child: const BuddyCharacterWidget(
+                          color: Color(0xFF4ECDC4), // Ocean Blue
+                          size: 160,
+                        ),
+                      ),
                     ),
-                  ),
-                  onChanged: (_) => setState(() {}),
-                  onSubmitted: (_) {
-                    if (!isNameEmpty) _handleNext();
-                  },
+
+                    const SizedBox(height: 32),
+
+                    // Name input field
+                    Semantics(
+                      label: 'Your name input field',
+                      textField: true,
+                      hint: 'Enter your name',
+                      child: TextField(
+                        controller: _nameController,
+                        focusNode: _nameFocusNode,
+                        autofocus: true,
+                        style: const TextStyle(fontSize: 20),
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          hintText: 'Name for Bubbles\' friend...',
+                          hintStyle: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: 18,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(24),
+                            borderSide: BorderSide.none,
+                          ),
+                          filled: true,
+                          fillColor: Colors.grey[100],
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 20,
+                          ),
+                        ),
+                        onChanged: (_) => setState(() {}),
+                        onSubmitted: (_) {
+                          if (!isNameEmpty) _handleNext();
+                        },
+                      ),
+                    ),
+
+                    const Spacer(),
+
+                    // Next button (disabled until input)
+                    Semantics(
+                      button: true,
+                      label: 'Next button',
+                      hint: isNameEmpty
+                          ? 'Enter your name to continue'
+                          : 'Tap to continue',
+                      enabled: !isNameEmpty,
+                      child: OnboardingButton(
+                        label: 'NEXT',
+                        onPressed: isNameEmpty ? null : _handleNext,
+                        customColor: const Color(0xFF4ECDC4),
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+                  ],
                 ),
               ),
-
-              const Spacer(),
-
-              // Next button (disabled until input)
-              Semantics(
-                button: true,
-                label: 'Next button',
-                hint: isNameEmpty
-                    ? 'Enter your name to continue'
-                    : 'Tap to continue',
-                enabled: !isNameEmpty,
-                child: OnboardingButton(
-                  label: 'NEXT',
-                  onPressed: isNameEmpty ? null : _handleNext,
-                  customColor: const Color(0xFF4ECDC4),
-                ),
-              ),
-
-              const SizedBox(height: 16),
-            ],
+            ),
           ),
         ),
       ),

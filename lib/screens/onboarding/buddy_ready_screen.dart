@@ -6,6 +6,7 @@ import '../../widgets/buddy_character_widget.dart';
 import '../../widgets/buddy_celebration_animation.dart';
 import '../../widgets/onboarding_button.dart';
 import '../../utils/buddy_colors.dart';
+import '../../core/exceptions/buddy_exceptions.dart';
 
 /// Buddy Ready Screen - Step 8 of 8 (Final)
 ///
@@ -82,14 +83,57 @@ class _BuddyReadyScreenState extends ConsumerState<BuddyReadyScreen>
           (route) => false,
         );
       }
+    } on BuddySaveException catch (e) {
+      // Handle offline save gracefully
+      if (e.savedLocally) {
+        // Saved offline successfully - show success message and continue
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(e.userFriendlyMessage ?? 'Saved offline! We\'ll sync when you\'re back online.'),
+              backgroundColor: Colors.orange,
+              duration: const Duration(seconds: 3),
+            ),
+          );
+
+          // Navigate to dashboard anyway
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/dashboard',
+            (route) => false,
+          );
+        }
+      } else {
+        // Complete failure - show error and stay on screen
+        if (mounted) {
+          setState(() => _isLoading = false);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(e.userFriendlyMessage ?? 'Failed to save your Buddy. Please try again!'),
+              backgroundColor: Colors.red,
+              action: SnackBarAction(
+                label: 'Retry',
+                textColor: Colors.white,
+                onPressed: _handleNext,
+              ),
+            ),
+          );
+        }
+      }
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to complete onboarding: $e'),
+            content: Text('Oops! Something went wrong. Please try again!'),
             backgroundColor: Colors.red,
+            action: SnackBarAction(
+              label: 'Retry',
+              textColor: Colors.white,
+              onPressed: _handleNext,
+            ),
           ),
         );
       }
