@@ -67,7 +67,7 @@ class PotatoScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Hi, Potato! 👋',
+                              'Hi, Buddy! 👋', // Using Buddy as the pet name for now
                               style: theme.textTheme.headlineSmall?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.pink[800],
@@ -146,31 +146,37 @@ class PotatoScreen extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      // Pet Avatar
+                      // Pet Avatar - Sticker style
                       GestureDetector(
                         onTap: () {
                           _showPetInteraction(context);
                         },
                         child: Container(
-                          width: 120,
-                          height: 120,
+                          width: 130,
+                          height: 130,
                           decoration: BoxDecoration(
-                            color: Colors.blue[600],
-                            borderRadius: BorderRadius.circular(60),
-                            border: Border.all(color: Colors.white, width: 4),
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.cyan[300]!,
+                                Colors.blue[400]!,
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(65),
+                            border: Border.all(color: Colors.white, width: 6), // Thick white border
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.blue.withValues(alpha: 0.3),
-                                blurRadius: 15,
-                                offset: const Offset(0, 5),
+                                color: Colors.blue.withValues(alpha: 0.4),
+                                blurRadius: 20,
+                                offset: const Offset(0, 8),
                               ),
                             ],
                           ),
                           child: const Center(
-                            child: Icon(
-                              Icons.pets,
-                              size: 60,
-                              color: Colors.white,
+                            child: Text(
+                              '🐋', // Kid-friendly whale emoji
+                              style: TextStyle(fontSize: 70),
                             ),
                           ),
                         ),

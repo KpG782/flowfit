@@ -130,86 +130,80 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           elevation: 0, // We handle elevation with Container shadow
           items: [
             BottomNavigationBarItem(
-              icon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: _currentIndex == 0 ? Colors.orange[100] : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  Icons.home_rounded,
-                  size: 28,
-                  color: _currentIndex == 0 ? Colors.orange[600] : Colors.grey[500],
-                ),
+              icon: _buildStickerIcon(
+                Icons.home_rounded,
+                Colors.orange,
+                _currentIndex == 0,
               ),
               label: 'Home',
               tooltip: 'Home - Daily Goals',
             ),
             BottomNavigationBarItem(
-              icon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: _currentIndex == 1 ? Colors.blue[100] : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  Icons.assignment_rounded,
-                  size: 28,
-                  color: _currentIndex == 1 ? Colors.blue[600] : Colors.grey[500],
-                ),
+              icon: _buildStickerIcon(
+                Icons.assignment_rounded,
+                Colors.blue,
+                _currentIndex == 1,
               ),
               label: 'Quests',
               tooltip: 'Fitness Quests & Challenges',
             ),
             BottomNavigationBarItem(
-              icon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: _currentIndex == 2 ? Colors.green[100] : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  Icons.sports_gymnastics_rounded,
-                  size: 28,
-                  color: _currentIndex == 2 ? Colors.green[600] : Colors.grey[500],
-                ),
+              icon: _buildStickerIcon(
+                Icons.sports_gymnastics_rounded,
+                Colors.green,
+                _currentIndex == 2,
               ),
               label: 'Play',
               tooltip: 'Activities & Workouts',
             ),
             BottomNavigationBarItem(
-              icon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: _currentIndex == 3 ? Colors.purple[100] : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  Icons.emoji_events_rounded,
-                  size: 28,
-                  color: _currentIndex == 3 ? Colors.purple[600] : Colors.grey[500],
-                ),
+              icon: _buildStickerIcon(
+                Icons.emoji_events_rounded,
+                Colors.purple,
+                _currentIndex == 3,
               ),
               label: 'Rewards',
               tooltip: 'Achievements & Rewards',
             ),
             BottomNavigationBarItem(
-              icon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: _currentIndex == 4 ? Colors.pink[100] : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  Icons.account_circle_rounded,
-                  size: 28,
-                  color: _currentIndex == 4 ? Colors.pink[600] : Colors.grey[500],
-                ),
+              icon: _buildStickerIcon(
+                Icons.pets, // Changed to pet icon for kid-friendly feel
+                Colors.pink,
+                _currentIndex == 4,
               ),
-              label: 'Potato',
+              label: 'Buddy', // Changed from 'Potato' to 'Buddy' - will be dynamic later
               tooltip: 'Your Profile & Pet Buddy',
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStickerIcon(IconData icon, MaterialColor color, bool isSelected) {
+    return Container(
+      width: 56,
+      height: 56,
+      decoration: BoxDecoration(
+        color: isSelected ? color[100] : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.white,
+          width: 4, // Thick white border like sticker style
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Center(
+        child: Icon(
+          icon,
+          size: 28,
+          color: isSelected ? color[600] : color[400],
         ),
       ),
     );

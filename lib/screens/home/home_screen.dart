@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+  // Pet name - will be dynamic based on user's pet selection later
+  String get petName => 'Buddy'; // This will be replaced with actual pet name from state management
+  
   String _getGreeting() {
     final hour = DateTime.now().hour;
     if (hour < 12) return 'Good Morning';
@@ -90,7 +93,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            'Potato! 👋',
+                            '$petName! 👋',
                             style: theme.textTheme.headlineLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -106,7 +109,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     
-                    // Pet Buddy in center
+                    // Pet Buddy in center - Sticker style
                     Positioned(
                       top: 180,
                       left: 0,
@@ -118,25 +121,31 @@ class HomeScreen extends StatelessWidget {
                             _showPetInteractionDialog(context);
                           },
                           child: Container(
-                            width: 100,
-                            height: 100,
+                            width: 110,
+                            height: 110,
                             decoration: BoxDecoration(
-                              color: Colors.blue[800],
-                              borderRadius: BorderRadius.circular(50),
-                              border: Border.all(color: Colors.white, width: 4),
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.cyan[300]!,
+                                  Colors.blue[400]!,
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius: BorderRadius.circular(55),
+                              border: Border.all(color: Colors.white, width: 6), // Thick white border
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.blue.withValues(alpha: 0.3),
-                                  blurRadius: 15,
-                                  offset: const Offset(0, 5),
+                                  color: Colors.blue.withValues(alpha: 0.4),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 8),
                                 ),
                               ],
                             ),
                             child: const Center(
-                              child: Icon(
-                                Icons.pets,
-                                size: 50,
-                                color: Colors.white,
+                              child: Text(
+                                '🐋', // Kid-friendly whale emoji
+                                style: TextStyle(fontSize: 55),
                               ),
                             ),
                           ),
@@ -174,15 +183,28 @@ class HomeScreen extends StatelessWidget {
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.orange[300],
-                            borderRadius: BorderRadius.circular(12),
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.orange[400]!,
+                                Colors.amber[400]!,
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.white, width: 3),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.orange.withValues(alpha: 0.4),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
                           ),
                           child: const Icon(
                             Icons.bolt,
                             color: Colors.white,
-                            size: 24,
+                            size: 28,
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -367,7 +389,7 @@ class HomeScreen extends StatelessWidget {
                     
                     const SizedBox(height: 24),
                     
-                    // Add goal button
+                    // Add goal button - Sticker style
                     GestureDetector(
                       onTap: () {
                         _showAddGoalDialog(context, 'custom');
@@ -376,28 +398,46 @@ class HomeScreen extends StatelessWidget {
                         width: double.infinity,
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.blue[200]?.withValues(alpha: 0.5),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: Colors.blue[300]!,
-                            width: 2,
-                            style: BorderStyle.solid,
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.blue[300]!,
+                              Colors.cyan[300]!,
+                            ],
                           ),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 4,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.blue.withValues(alpha: 0.3),
+                              blurRadius: 12,
+                              offset: const Offset(0, 6),
+                            ),
+                          ],
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
-                              Icons.add_circle_outline,
-                              color: Colors.blue[700],
-                              size: 24,
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.3),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(
+                                Icons.add_circle_outline,
+                                color: Colors.white,
+                                size: 24,
+                              ),
                             ),
                             const SizedBox(width: 12),
                             Text(
                               'Add a goal',
                               style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.blue[700],
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
                               ),
                             ),
                           ],
@@ -437,6 +477,43 @@ class HomeScreen extends StatelessWidget {
   ) {
     final theme = Theme.of(context);
     
+    // Assign colorful colors to different icons
+    Color iconColor;
+    Color backgroundColor;
+    switch (icon) {
+      case Icons.wb_sunny:
+        iconColor = Colors.orange[600]!;
+        backgroundColor = Colors.orange[100]!;
+        break;
+      case Icons.clean_hands:
+        iconColor = Colors.blue[600]!;
+        backgroundColor = Colors.blue[100]!;
+        break;
+      case Icons.face:
+        iconColor = Colors.pink[600]!;
+        backgroundColor = Colors.pink[100]!;
+        break;
+      case Icons.water_drop:
+        iconColor = Colors.cyan[600]!;
+        backgroundColor = Colors.cyan[100]!;
+        break;
+      case Icons.accessibility_new:
+        iconColor = Colors.purple[600]!;
+        backgroundColor = Colors.purple[100]!;
+        break;
+      case Icons.sentiment_very_satisfied:
+        iconColor = Colors.amber[600]!;
+        backgroundColor = Colors.amber[100]!;
+        break;
+      case Icons.air:
+        iconColor = Colors.teal[600]!;
+        backgroundColor = Colors.teal[100]!;
+        break;
+      default:
+        iconColor = Colors.blue[600]!;
+        backgroundColor = Colors.blue[100]!;
+    }
+    
     return GestureDetector(
       onTap: () {
         _toggleGoalCompletion(context, title, isCompleted);
@@ -445,12 +522,13 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white, width: 4), // Thick white border
           boxShadow: [
             BoxShadow(
-              color: Colors.blue.withValues(alpha: 0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+              color: iconColor.withValues(alpha: 0.2),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
@@ -464,19 +542,27 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(width: 12),
             
-            // Icon
+            // Sticker-style Icon
             Container(
-              width: 50,
-              height: 50,
+              width: 56,
+              height: 56,
               decoration: BoxDecoration(
-                color: isCompleted ? Colors.green[100] : Colors.grey[100],
-                borderRadius: BorderRadius.circular(12),
+                color: isCompleted ? Colors.green[100] : backgroundColor,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.white, width: 3), // White border
+                boxShadow: [
+                  BoxShadow(
+                    color: (isCompleted ? Colors.green : iconColor).withValues(alpha: 0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: Center(
                 child: Icon(
                   icon,
-                  size: 24,
-                  color: isCompleted ? Colors.green[600] : Colors.grey[600],
+                  size: 28,
+                  color: isCompleted ? Colors.green[600] : iconColor,
                 ),
               ),
             ),
@@ -495,12 +581,25 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             
-            // Points
+            // Points - Sticker style
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.orange[100],
-                borderRadius: BorderRadius.circular(8),
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.orange[300]!,
+                    Colors.amber[300]!,
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.white, width: 2),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange.withValues(alpha: 0.3),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -509,13 +608,13 @@ class HomeScreen extends StatelessWidget {
                     '$points',
                     style: theme.textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Colors.orange[700],
+                      color: Colors.white,
                     ),
                   ),
-                  const SizedBox(width: 2),
-                  Icon(
+                  const SizedBox(width: 4),
+                  const Icon(
                     Icons.bolt,
-                    color: Colors.orange[700],
+                    color: Colors.white,
                     size: 16,
                   ),
                 ],
@@ -524,22 +623,34 @@ class HomeScreen extends StatelessWidget {
             
             const SizedBox(width: 12),
             
-            // Checkmark
+            // Checkmark - Sticker style
             GestureDetector(
               onTap: () {
                 _toggleGoalCompletion(context, title, isCompleted);
               },
               child: Container(
-                width: 32,
-                height: 32,
+                width: 40,
+                height: 40,
                 decoration: BoxDecoration(
-                  color: isCompleted ? Colors.green : Colors.grey[200],
-                  borderRadius: BorderRadius.circular(8),
+                  gradient: LinearGradient(
+                    colors: isCompleted 
+                      ? [Colors.green[400]!, Colors.green[600]!]
+                      : [Colors.grey[300]!, Colors.grey[400]!],
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.white, width: 3),
+                  boxShadow: [
+                    BoxShadow(
+                      color: (isCompleted ? Colors.green : Colors.grey).withValues(alpha: 0.4),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
                 ),
                 child: Icon(
                   Icons.check,
-                  color: isCompleted ? Colors.white : Colors.grey[400],
-                  size: 20,
+                  color: Colors.white,
+                  size: 22,
                 ),
               ),
             ),
@@ -803,8 +914,8 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              const Text(
-                'Hi there! I\'m your wellness buddy. Complete your daily goals to help me grow stronger!',
+              Text(
+                'Hi $petName! I\'m your wellness buddy. Complete your daily goals to help me grow stronger! 🌟',
                 textAlign: TextAlign.center,
               ),
             ],
