@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:ultralytics_yolo/ultralytics_yolo.dart';
+// import 'package:ultralytics_yolo/ultralytics_yolo.dart'; // Removed due to compilation errors
 import '../../services/phone_data_listener.dart';
 import '../../models/heart_rate_data.dart';
 
@@ -14,11 +14,11 @@ class RandomWorkoutScreen extends StatefulWidget {
 }
 
 class _RandomWorkoutScreenState extends State<RandomWorkoutScreen> {
-  ObjectDetector? _objectDetector;
+  // ObjectDetector? _objectDetector; // Removed
   StreamSubscription<HeartRateData>? _heartRateSubscription;
   int _heartRate = 0;
   int _squatCount = 0;
-  bool _isSquatting = false;
+  // bool _isSquatting = false; // Unused
   bool _isCameraInitialized = false;
 
   @override
@@ -29,33 +29,29 @@ class _RandomWorkoutScreenState extends State<RandomWorkoutScreen> {
   }
 
   Future<void> _initObjectDetector() async {
-    // In a real implementation, we would load a specific model for workout detection.
-    // Since we don't have a vision model in assets, we will initialize the detector
-    // but it won't detect anything without a valid model path.
-    // This is a placeholder for the "Random Workout" feature.
-    /*
-    final modelPath = await _copyAssetToLocal('assets/model/yolo_model.tflite');
-    _objectDetector = ObjectDetector(modelPath: modelPath);
-    _objectDetector?.loadModel();
-    */
-    setState(() {
-      _isCameraInitialized = true;
-    });
+    // Placeholder for camera initialization
+    await Future.delayed(const Duration(seconds: 1));
+    if (mounted) {
+      setState(() {
+        _isCameraInitialized = true;
+      });
+    }
   }
 
   void _initHeartRateListener() {
     final phoneDataListener = context.read<PhoneDataListener>();
     _heartRateSubscription = phoneDataListener.heartRateStream.listen((data) {
-      setState(() {
-        _heartRate = data.bpm ?? 0;
-      });
+      if (mounted) {
+        setState(() {
+          _heartRate = data.bpm ?? 0;
+        });
+      }
     });
   }
 
   @override
   void dispose() {
     _heartRateSubscription?.cancel();
-    // _objectDetector?.close();
     super.dispose();
   }
 
@@ -64,13 +60,43 @@ class _RandomWorkoutScreenState extends State<RandomWorkoutScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // Camera View
+          // Camera View Placeholder
           if (_isCameraInitialized)
-            UltralyticsYoloCamera(
-              predictor: _objectDetector,
-              onCameraCreated: (controller) {
-                // Camera controller created
-              },
+            Container(
+              color: Colors.grey[900],
+              width: double.infinity,
+              height: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.camera_alt,
+                    color: Colors.white54,
+                    size: 64,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Camera Preview',
+                    style: TextStyle(
+                      color: Colors.white54,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                    child: Text(
+                      'Squat detection model not loaded.\n(Waiting for model assets)',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.4),
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             )
           else
             Container(
