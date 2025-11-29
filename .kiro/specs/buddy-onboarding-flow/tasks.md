@@ -68,7 +68,7 @@
   - Create `buddyOnboardingProvider` StateNotifierProvider
   - _Requirements: 8.1, 8.2, 8.3, 3.4, 3.5_
 
-- [ ] 5. Implement BuddyWelcomeScreen
+- [x] 5. Implement BuddyWelcomeScreen
 
   - Create stateless screen with centered layout
   - Add BuddyCharacterWidget in Ocean Blue with idle animation
@@ -150,23 +150,25 @@
     - Navigate to profile setup screen
     - _Requirements: 3.4, 3.5, 3.6, 8.1_
 
-- [ ] 8. Implement QuickProfileSetupScreen
+-
 
-  - [ ] 8.1 Create screen layout
+- [x] 8. Implement QuickProfileSetupScreen
+
+  - [x] 8.1 Create screen layout
 
     - Display Buddy with name in selected color
     - Add prompt "Tell [Buddy Name] about yourself!"
     - Use consistent spacing and layout
     - _Requirements: 4.1, 10.3_
 
-  - [ ] 8.2 Add nickname input field
+  - [x] 8.2 Add nickname input field
 
     - Create text input labeled "Your Nickname"
     - Make field optional
     - Style consistently with naming screen
     - _Requirements: 4.2, 11.5_
 
-  - [ ] 8.3 Implement age selection
+  - [x] 8.3 Implement age selection
 
     - Create 6 age buttons for ages 7-12 (or adjust for general audience)
     - Style as rounded buttons in a row or grid
@@ -174,14 +176,15 @@
     - Make age optional
     - _Requirements: 4.3, 4.4, 11.1_
 
-  - [ ] 8.4 Add navigation buttons
+  - [x] 8.4 Add navigation buttons
+
     - Create "SKIP" button (secondary style)
     - Create "CONTINUE" button (primary style)
     - Save data to buddyOnboardingProvider
     - Navigate to completion screen
     - _Requirements: 4.5, 4.6, 4.7, 8.2_
 
-- [ ] 9. Implement BuddyCompletionScreen
+- [x] 9. Implement BuddyCompletionScreen
 
   - Display Buddy with celebration animation
   - Show personalized message "[Buddy Name] wants to play!"
@@ -191,30 +194,34 @@
   - Navigate to dashboard or first activity
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 8.3_
 
-- [ ] 10. Integrate with existing app
+- [x] 10. Integrate with existing app
 
-  - [ ] 10.1 Update route definitions in main.dart
+  - [x] 10.1 Update route definitions in main.dart
 
-    - Replace `/survey_intro` with BuddyWelcomeScreen
     - Add routes for all Buddy onboarding screens
-    - Update navigation from signup to Buddy welcome
+    - Add route for buddy customization
+    - Import all new screens
     - _Requirements: Integration_
 
-  - [ ] 10.2 Create Supabase repository methods
+  - [x] 10.2 Create Supabase repository methods
 
-    - Implement `saveBuddyProfile` method
-    - Implement `getBuddyProfile` method
-    - Implement `updateBuddyProfile` method
+    - Implement `buddyProfileProvider` for fetching
+    - Implement `buddyProfileNotifierProvider` for state management
+    - Add `updateColor` method
+    - Add `addXP` method with level calculation
     - Add error handling for network failures
     - _Requirements: 8.3_
 
-  - [ ] 10.3 Update user profile service
+  - [x] 10.3 Update user profile service
+
     - Add method to update nickname and is_kids_mode
     - Integrate with existing profile notifier
     - Ensure data consistency
     - _Requirements: 8.3_
 
-- [ ] 11. Add error handling and validation
+-
+
+- [x] 11. Add error handling and validation
 
   - Implement friendly error messages for validation failures
   - Add network error handling with retry logic
@@ -222,7 +229,7 @@
   - Add loading states for async operations
   - _Requirements: Error Handling section_
 
-- [ ] 12. Implement accessibility features
+- [x] 12. Implement accessibility features
 
   - Add Semantics labels to all interactive elements
   - Verify touch targets are minimum 48x48 pixels
@@ -232,4 +239,5 @@
   - _Requirements: 11.1, 11.2, 11.3, 11.4, 11.5_
 
 - [ ] 13. Final checkpoint - Ensure all tests pass
+
   - Ensure all tests pass, ask the user if questions arise.

@@ -69,43 +69,68 @@ class _BuddyEggWidgetState extends State<BuddyEggWidget>
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _handleTap,
-      child: AnimatedBuilder(
-        animation: _scaleAnimation,
-        builder: (context, child) {
-          return Transform.scale(
-            scale: _scaleAnimation.value,
-            child: Container(
-              width: widget.size,
-              height: widget.size * 1.2, // Eggs are taller than wide
-              decoration: BoxDecoration(
-                // Add selection border/glow
-                boxShadow: widget.isSelected
-                    ? [
-                        BoxShadow(
-                          color: widget.baseColor.withOpacity(0.6),
-                          blurRadius: 12,
-                          spreadRadius: 2,
-                        ),
-                      ]
-                    : null,
-                border: widget.isSelected
-                    ? Border.all(color: widget.baseColor, width: 3)
-                    : null,
-                borderRadius: BorderRadius.circular(widget.size * 0.5),
-              ),
-              child: CustomPaint(
-                painter: _EggPainter(
-                  baseColor: widget.baseColor,
-                  isSelected: widget.isSelected,
+    // Get color name for accessibility
+    final colorName = _getColorName(widget.baseColor);
+
+    return Semantics(
+      label: '$colorName color egg',
+      hint: widget.isSelected ? 'Selected' : 'Tap to select this color',
+      button: true,
+      selected: widget.isSelected,
+      child: GestureDetector(
+        onTap: _handleTap,
+        child: AnimatedBuilder(
+          animation: _scaleAnimation,
+          builder: (context, child) {
+            return Transform.scale(
+              scale: _scaleAnimation.value,
+              child: Container(
+                width: widget.size,
+                height: widget.size * 1.2, // Eggs are taller than wide
+                decoration: BoxDecoration(
+                  // Add selection border/glow
+                  boxShadow: widget.isSelected
+                      ? [
+                          BoxShadow(
+                            color: widget.baseColor.withValues(alpha: 0.6),
+                            blurRadius: 12,
+                            spreadRadius: 2,
+                          ),
+                        ]
+                      : null,
+                  border: widget.isSelected
+                      ? Border.all(color: widget.baseColor, width: 3)
+                      : null,
+                  borderRadius: BorderRadius.circular(widget.size * 0.5),
+                ),
+                child: CustomPaint(
+                  painter: _EggPainter(
+                    baseColor: widget.baseColor,
+                    isSelected: widget.isSelected,
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
+  }
+
+  /// Helper method to get a friendly color name for accessibility
+  String _getColorName(Color color) {
+    // Map common Buddy colors to friendly names
+    if (color == const Color(0xFF4ECDC4)) return 'Ocean blue';
+    if (color == const Color(0xFF26A69A)) return 'Teal';
+    if (color == const Color(0xFF66BB6A)) return 'Green';
+    if (color == const Color(0xFF9575CD)) return 'Purple';
+    if (color == const Color(0xFFFFD54F)) return 'Yellow';
+    if (color == const Color(0xFFFFB74D)) return 'Orange';
+    if (color == const Color(0xFFF06292)) return 'Pink';
+    if (color == const Color(0xFF90A4AE)) return 'Gray';
+
+    // Default description
+    return 'Colorful';
   }
 }
 
@@ -139,7 +164,7 @@ class _EggPainter extends CustomPainter {
     // Create darker shade for spots
     final spotColor = Color.lerp(baseColor, Colors.black, 0.2)!;
     final spotPaint = Paint()
-      ..color = spotColor.withOpacity(0.3)
+      ..color = spotColor.withValues(alpha: 0.3)
       ..style = PaintingStyle.fill;
 
     // Define spot positions and sizes (relative to egg size)

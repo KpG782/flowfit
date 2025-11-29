@@ -18,6 +18,8 @@ class UserProfile {
   final int? dailyActiveMinutesTarget;
   final double? dailyWaterTarget;
   final String? profileImagePath;
+  final String? nickname;
+  final bool isKidsMode;
   final DateTime createdAt;
   final DateTime updatedAt;
   final bool isSynced;
@@ -38,6 +40,8 @@ class UserProfile {
     this.dailyActiveMinutesTarget,
     this.dailyWaterTarget,
     this.profileImagePath,
+    this.nickname,
+    this.isKidsMode = false,
     required this.createdAt,
     required this.updatedAt,
     this.isSynced = false,
@@ -76,6 +80,9 @@ class UserProfile {
       profileImagePath:
           json['profileImagePath'] as String? ??
           json['profile_image_url'] as String?,
+      nickname: json['nickname'] as String?,
+      isKidsMode:
+          json['isKidsMode'] as bool? ?? json['is_kids_mode'] as bool? ?? false,
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'] as String)
           : (json['created_at'] != null
@@ -109,6 +116,8 @@ class UserProfile {
       'dailyActiveMinutesTarget': dailyActiveMinutesTarget,
       'dailyWaterTarget': dailyWaterTarget,
       'profileImagePath': profileImagePath,
+      'nickname': nickname,
+      'isKidsMode': isKidsMode,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       'isSynced': isSynced,
@@ -133,6 +142,8 @@ class UserProfile {
       'daily_active_minutes_target': dailyActiveMinutesTarget,
       'daily_water_target': dailyWaterTarget,
       'profile_image_url': profileImagePath,
+      'nickname': nickname,
+      'is_kids_mode': isKidsMode,
       'updated_at': updatedAt.toIso8601String(),
     };
   }
@@ -194,6 +205,8 @@ class UserProfile {
     int? dailyActiveMinutesTarget,
     double? dailyWaterTarget,
     String? profileImagePath,
+    String? nickname,
+    bool? isKidsMode,
     DateTime? createdAt,
     DateTime? updatedAt,
     bool? isSynced,
@@ -215,6 +228,8 @@ class UserProfile {
           dailyActiveMinutesTarget ?? this.dailyActiveMinutesTarget,
       dailyWaterTarget: dailyWaterTarget ?? this.dailyWaterTarget,
       profileImagePath: profileImagePath ?? this.profileImagePath,
+      nickname: nickname ?? this.nickname,
+      isKidsMode: isKidsMode ?? this.isKidsMode,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       isSynced: isSynced ?? this.isSynced,

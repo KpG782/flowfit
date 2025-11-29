@@ -1,4 +1,4 @@
-# Requirements Document
+```equirements Document
 
 ## Introduction
 
@@ -162,3 +162,4 @@ This document specifies the requirements for transforming the FlowFit onboarding
 3. WHEN buttons are displayed THEN the system SHALL provide sufficient color contrast (minimum 4.5:1 ratio)
 4. WHEN the Buddy character is displayed THEN the system SHALL provide alternative text descriptions for screen readers
 5. WHEN form inputs are displayed THEN the system SHALL provide clear labels and error messages
+```

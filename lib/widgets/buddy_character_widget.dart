@@ -24,13 +24,36 @@ class BuddyCharacterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: size,
-      height: size,
-      child: CustomPaint(
-        painter: _BuddyPainter(color: color, showFace: showFace),
+    // Get color name for accessibility
+    final colorName = _getColorName(color);
+
+    return Semantics(
+      label: 'Buddy character in $colorName color',
+      image: true,
+      child: SizedBox(
+        width: size,
+        height: size,
+        child: CustomPaint(
+          painter: _BuddyPainter(color: color, showFace: showFace),
+        ),
       ),
     );
+  }
+
+  /// Helper method to get a friendly color name for accessibility
+  String _getColorName(Color color) {
+    // Map common Buddy colors to friendly names
+    if (color == const Color(0xFF4ECDC4)) return 'ocean blue';
+    if (color == const Color(0xFF26A69A)) return 'teal';
+    if (color == const Color(0xFF66BB6A)) return 'green';
+    if (color == const Color(0xFF9575CD)) return 'purple';
+    if (color == const Color(0xFFFFD54F)) return 'yellow';
+    if (color == const Color(0xFFFFB74D)) return 'orange';
+    if (color == const Color(0xFFF06292)) return 'pink';
+    if (color == const Color(0xFF90A4AE)) return 'gray';
+
+    // Default description
+    return 'colorful';
   }
 }
 
@@ -70,7 +93,7 @@ class _BuddyPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     final cheekPaint = Paint()
-      ..color = Colors.pink.withOpacity(0.4)
+      ..color = Colors.pink.withValues(alpha: 0.4)
       ..style = PaintingStyle.fill;
 
     // Eye size: 8x8 circles

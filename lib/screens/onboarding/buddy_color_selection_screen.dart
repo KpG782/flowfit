@@ -8,11 +8,14 @@ import '../../widgets/buddy_idle_animation.dart';
 import '../../widgets/onboarding_button.dart';
 import '../../theme/app_theme.dart';
 
-/// Screen for selecting Buddy's starting color via egg selection
+/// Screen for selecting Buddy's starting color via egg selection - Step 4 of 8
 ///
-/// This screen allows users to choose from 8 color options displayed as eggs
+/// This screen allows users to choose from 6 whale color options displayed as eggs
 /// in a circular pattern around a central Buddy preview. The preview updates
 /// in real-time as colors are selected.
+///
+/// Whale-themed: "Choose your Whale Color!"
+/// Subtitle: "Whales are gentle, playful, and smart..."
 class BuddyColorSelectionScreen extends ConsumerStatefulWidget {
   const BuddyColorSelectionScreen({super.key});
 
@@ -70,7 +73,7 @@ class _BuddyColorSelectionScreenState
 
   void _onHatchEgg() {
     // Navigate to naming screen
-    Navigator.of(context).pushNamed('/buddy_naming');
+    Navigator.of(context).pushNamed('/buddy-naming');
   }
 
   @override
@@ -112,45 +115,56 @@ class _BuddyColorSelectionScreenState
     );
   }
 
-  /// Subtask 6.1: Create screen layout with heading and subtitle
+  /// Whale-themed header
   Widget _buildHeader() {
-    return Column(
-      children: [
-        // Heading
-        Text(
-          'Choose your Buddy!',
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-            color: AppTheme.text,
-            fontWeight: FontWeight.bold,
+    return Semantics(
+      header: true,
+      child: Column(
+        children: [
+          // Heading
+          Text(
+            'Choose your Whale Color!',
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              color: AppTheme.text,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 12),
-        // Descriptive subtitle
-        Text(
-          'Pick a color that matches your Buddy\'s personality.\nYou can unlock more colors as you level up!',
-          style: Theme.of(
-            context,
-          ).textTheme.bodyLarge?.copyWith(color: AppTheme.darkGray),
-          textAlign: TextAlign.center,
-        ),
-      ],
+          const SizedBox(height: 12),
+          // Whale personality subtitle
+          Semantics(
+            label:
+                'Whales are gentle, playful, and smart. Pick a color that makes you smile!',
+            child: Text(
+              'Whales are gentle, playful, and smart...\nPick a color that makes you smile! 🐋',
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(color: AppTheme.darkGray),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   /// Subtask 6.3: Add central Buddy preview with smooth color transition
   Widget _buildBuddyPreview(Color selectedColor) {
-    return AnimatedBuilder(
-      animation: _colorTransitionAnimation,
-      builder: (context, child) {
-        return BuddyIdleAnimation(
-          child: BuddyCharacterWidget(
-            color: selectedColor,
-            size: 180.0,
-            showFace: true,
-          ),
-        );
-      },
+    return Semantics(
+      label: 'Buddy preview showing selected color',
+      liveRegion: true,
+      child: AnimatedBuilder(
+        animation: _colorTransitionAnimation,
+        builder: (context, child) {
+          return BuddyIdleAnimation(
+            child: BuddyCharacterWidget(
+              color: selectedColor,
+              size: 180.0,
+              showFace: true,
+            ),
+          );
+        },
+      ),
     );
   }
 

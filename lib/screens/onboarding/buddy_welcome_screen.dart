@@ -3,10 +3,12 @@ import '../../widgets/buddy_character_widget.dart';
 import '../../widgets/buddy_idle_animation.dart';
 import '../../widgets/onboarding_button.dart';
 
-/// Buddy Welcome Screen
+/// Buddy Welcome Screen - Step 1 of 8
 ///
-/// First screen in the Buddy onboarding flow that introduces
-/// the user to their new fitness companion.
+/// First screen in the whale-themed Buddy onboarding flow that introduces
+/// the user to their new fitness whale companion.
+///
+/// "Meet Your Fitness Buddy!" with animated whale bouncing.
 ///
 /// Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 10.3, 10.4
 class BuddyWelcomeScreen extends StatelessWidget {
@@ -24,13 +26,17 @@ class BuddyWelcomeScreen extends StatelessWidget {
           child: Column(
             children: [
               // FlowFit logo in header (subtle)
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'FlowFit',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: const Color(0xFF3B82F6), // Primary Blue
-                    fontWeight: FontWeight.bold,
+              Semantics(
+                header: true,
+                label: 'FlowFit',
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    'FlowFit',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: const Color(0xFF3B82F6), // Primary Blue
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -38,45 +44,61 @@ class BuddyWelcomeScreen extends StatelessWidget {
               const Spacer(),
 
               // Animated Buddy character in Ocean Blue
-              BuddyIdleAnimation(
-                child: BuddyCharacterWidget(
-                  color: const Color(0xFF4ECDC4), // Ocean Blue
-                  size: 200,
+              Semantics(
+                label:
+                    'Animated Buddy character in ocean blue color, gently bobbing',
+                image: true,
+                child: BuddyIdleAnimation(
+                  child: const BuddyCharacterWidget(
+                    color: Color(0xFF4ECDC4), // Ocean Blue
+                    size: 200,
+                  ),
                 ),
               ),
 
               const SizedBox(height: 32),
 
-              // Large heading "Meet Your Buddy!"
-              Text(
-                'Meet Your Buddy!',
-                style: theme.textTheme.displaySmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF314158), // FlowFit text color
+              // Large heading "Meet Your Fitness Buddy!"
+              Semantics(
+                header: true,
+                child: Text(
+                  'Meet Your\nFitness Buddy!',
+                  style: theme.textTheme.displaySmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF314158), // FlowFit text color
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
 
               const SizedBox(height: 16),
 
-              // Friendly tagline
-              Text(
-                'Your new fitness best friend',
-                style: theme.textTheme.titleLarge?.copyWith(
-                  color: Colors.grey[600],
+              // Friendly whale tagline
+              Semantics(
+                label:
+                    'Your new whale companion will help you stay active and have fun!',
+                child: Text(
+                  'Your new whale companion will help you\nstay active and have fun! 🐋',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: Colors.grey[600],
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
 
               const Spacer(),
 
-              // Primary button "Meet Your Buddy"
-              OnboardingButton(
-                text: 'Meet Your Buddy',
-                onPressed: () {
-                  Navigator.pushNamed(context, '/buddy-color-selection');
-                },
-                isPrimary: true,
+              // Primary button "LET'S GO!"
+              Semantics(
+                button: true,
+                label: 'Let\'s go button. Tap to start meeting your Buddy',
+                child: OnboardingButton(
+                  label: 'LET\'S GO!',
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/buddy-intro');
+                  },
+                  isPrimary: true,
+                ),
               ),
 
               const SizedBox(height: 16),

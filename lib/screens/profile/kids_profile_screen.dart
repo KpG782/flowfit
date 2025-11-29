@@ -12,7 +12,6 @@ class KidsProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final authState = ref.watch(authNotifierProvider);
     final userId = authState.user?.id;
 
@@ -29,8 +28,8 @@ class KidsProfileScreen extends ConsumerWidget {
       backgroundColor: const Color(0xFFF1F6FD),
       body: SafeArea(
         child: profileAsync.when(
-          data: (profile) => profile == null 
-              ? _buildEmptyState(context) 
+          data: (profile) => profile == null
+              ? _buildEmptyState(context)
               : _buildKidsProfileContent(context, profile, userId),
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, stack) => _buildErrorState(context),
@@ -48,10 +47,7 @@ class KidsProfileScreen extends ConsumerWidget {
           const SizedBox(height: 16),
           const Text('Oops! Something went wrong'),
           const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text('Try Again'),
-          ),
+          ElevatedButton(onPressed: () {}, child: const Text('Try Again')),
         ],
       ),
     );
@@ -64,16 +60,28 @@ class KidsProfileScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(SolarIconsOutline.userCircle, size: 80, color: Color(0xFF3B82F6)),
+            const Icon(
+              SolarIconsOutline.userCircle,
+              size: 80,
+              color: Color(0xFF3B82F6),
+            ),
             const SizedBox(height: 24),
-            const Text('Let\'s Get Started!', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            const Text(
+              'Let\'s Get Started!',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 12),
-            const Text('Meet your new fitness buddy!', textAlign: TextAlign.center),
+            const Text(
+              'Meet your new whale companion! ðŸ‹',
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () {},
-              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF4CAF50)),
-              child: const Text('Meet Your Buddy!'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF4CAF50),
+              ),
+              child: const Text('Meet Your Whale Buddy!'),
             ),
           ],
         ),
@@ -81,7 +89,11 @@ class KidsProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildKidsProfileContent(BuildContext context, UserProfile profile, String userId) {
+  Widget _buildKidsProfileContent(
+    BuildContext context,
+    UserProfile profile,
+    String userId,
+  ) {
     // Mock Buddy profile
     final buddyProfile = BuddyProfile(
       id: 'buddy-1',
@@ -90,16 +102,29 @@ class KidsProfileScreen extends ConsumerWidget {
       color: 'blue',
       level: 5,
       xp: 350,
-      happiness: 80,
-      health: 90,
       unlockedColors: ['blue', 'teal', 'green'],
-      unlockedAccessories: {'hats': ['cap'], 'clothes': ['basic'], 'shoes': [], 'extras': []},
-      currentAccessories: {'hat': 'cap', 'clothes': 'basic', 'shoes': null, 'extra': null},
-      currentBackground: 'home',
-      stage: 'kid',
+      accessories: {
+        'unlocked': {
+          'hats': ['cap'],
+          'clothes': ['basic'],
+          'shoes': [],
+          'extras': [],
+        },
+        'current': {
+          'hat': 'cap',
+          'clothes': 'basic',
+          'shoes': null,
+          'extra': null,
+        },
+        'background': 'home',
+      },
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );
+
+    // Calculate happiness and health from level and xp
+    final happiness = 80;
+    final health = 90;
 
     return SingleChildScrollView(
       child: Column(
@@ -110,7 +135,14 @@ class KidsProfileScreen extends ConsumerWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('My Profile', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF314158))),
+                const Text(
+                  'My Profile',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF314158),
+                  ),
+                ),
                 IconButton(
                   icon: const Icon(SolarIconsOutline.settings),
                   onPressed: () => Navigator.pushNamed(context, '/settings'),
@@ -130,12 +162,138 @@ class KidsProfileScreen extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
-                Expanded(child: _buildStatCard('í²š', 'Happy', '${buddyProfile.happiness}%')),
+                Expanded(
+                  child: _buildStatCard(
+                    'ï¿½ï¿½ï¿½',
+                    'Happy',
+                    '${buddyProfile.happiness}%',
+                  ),
+                ),
                 const SizedBox(width: 12),
-                Expanded(child: _buildStatCard('âš¡', 'Energy', '${buddyProfile.health}%')),
+                Expanded(
+                  child: _buildStatCard(
+                    'âš¡',
+                    'Energy',
+                    '${buddyProfile.health}%',
+                  ),
+                ),
               ],
             ),
           ),
+          const SizedBox(height: 32),
+
+          // Wellness Goals Section (from onboarding)
+          if (profile.wellnessGoals != null &&
+              profile.wellnessGoals!.isNotEmpty) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                'My Wellness Goals ðŸŽ¯',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF314158),
+                    ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: profile.wellnessGoals!.map((goal) {
+                  final goalData = _getGoalData(goal);
+                  return Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF4ECDC4).withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: const Color(0xFF4ECDC4).withValues(alpha: 0.3),
+                      ),
+                    ),
+                    child: Text(
+                      '${goalData['emoji']} ${goalData['title']}',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+            const SizedBox(height: 24),
+          ],
+
+          // Quick Actions Section
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              'Quick Actions',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF314158),
+                  ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          _buildActionTile(
+            context,
+            'Customize ${buddyProfile.name}',
+            SolarIconsOutline.palette,
+            const Color(0xFF4ECDC4),
+            () => Navigator.pushNamed(context, '/buddy-customization'),
+          ),
+          _buildActionTile(
+            context,
+            'Notifications',
+            SolarIconsOutline.bell,
+            const Color(0xFF3B82F6),
+            () => Navigator.pushNamed(context, '/notification-settings'),
+          ),
+          _buildActionTile(
+            context,
+            'Privacy & Safety',
+            SolarIconsOutline.shieldCheck,
+            const Color(0xFF10B981),
+            () => Navigator.pushNamed(context, '/privacy-policy'),
+          ),
+
+          const SizedBox(height: 24),
+
+          // Account Section
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              'Account',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF314158),
+                  ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          if (profile.nickname != null)
+            _buildInfoTile(context, 'Nickname', profile.nickname!),
+          _buildActionTile(
+            context,
+            'Help & Support',
+            SolarIconsOutline.questionCircle,
+            const Color(0xFFF59E0B),
+            () => Navigator.pushNamed(context, '/help-support'),
+          ),
+          _buildActionTile(
+            context,
+            'Logout',
+            SolarIconsOutline.logout,
+            Colors.red,
+            () => _handleLogout(context, ref),
+          ),
+
           const SizedBox(height: 32),
         ],
       ),
@@ -162,7 +320,10 @@ class KidsProfileScreen extends ConsumerWidget {
           const SizedBox(height: 8),
           Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
           const SizedBox(height: 4),
-          Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text(
+            value,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
         ],
       ),
     );

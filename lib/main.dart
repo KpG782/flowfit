@@ -62,7 +62,19 @@ import 'screens/workout/resistance/resistance_summary_screen.dart';
 import 'screens/wellness/wellness_tracker_page.dart';
 import 'screens/wellness/wellness_onboarding_screen.dart';
 import 'screens/wellness/wellness_settings_screen.dart';
-import 'widgets/debug_route_menu.dart';
+// Buddy onboarding screens
+import 'screens/onboarding/buddy_welcome_screen.dart';
+import 'screens/onboarding/buddy_intro_screen.dart';
+import 'screens/onboarding/buddy_hatch_screen.dart';
+import 'screens/onboarding/buddy_color_selection_screen.dart';
+import 'screens/onboarding/buddy_naming_screen.dart';
+import 'screens/onboarding/goal_selection_screen.dart';
+import 'screens/onboarding/notification_permission_screen.dart';
+import 'screens/onboarding/buddy_ready_screen.dart';
+import 'screens/onboarding/buddy_profile_setup_screen.dart';
+import 'screens/onboarding/buddy_completion_screen.dart';
+// Buddy profile screens
+import 'screens/profile/buddy_customization_screen.dart';
 
 Future<void> main() async {
   // Ensure Flutter bindings are initialized before async operations
@@ -79,10 +91,10 @@ Future<void> main() async {
 
   // Initialize deep link handler
   DeepLinkHandler().initialize();
-  
+
   // Initialize SharedPreferences for wellness state persistence
   final sharedPreferences = await SharedPreferences.getInstance();
-  
+
   runApp(
     ProviderScope(
       overrides: [
@@ -199,25 +211,47 @@ class FlowFitPhoneApp extends StatelessWidget {
           '/nutrition-goals': (context) => const NutritionGoalsScreen(),
           '/about-us': (context) => const AboutUsScreen(),
           // Workout flow routes
-          '/workout/select-type': (context) => const WorkoutTypeSelectionScreen(),
+          '/workout/select-type': (context) =>
+              const WorkoutTypeSelectionScreen(),
           '/workout/running/setup': (context) => const RunningSetupScreen(),
           '/workout/running/active': (context) => const ActiveRunningScreen(),
           '/workout/running/summary': (context) => const RunningSummaryScreen(),
           '/workout/running/share': (context) {
-            final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+            final args =
+                ModalRoute.of(context)?.settings.arguments
+                    as Map<String, dynamic>?;
             final session = args?['session'];
             return ShareAchievementScreen(session: session);
           },
           '/workout/walking/options': (context) => const WalkingOptionsScreen(),
-          '/workout/walking/mission': (context) => const MissionCreationScreen(missionType: MissionType.target),
+          '/workout/walking/mission': (context) =>
+              const MissionCreationScreen(missionType: MissionType.target),
           '/workout/walking/active': (context) => const ActiveWalkingScreen(),
           '/workout/walking/summary': (context) => const WalkingSummaryScreen(),
-          '/workout/resistance/select-split': (context) => const SplitSelectionScreen(),
-          '/workout/resistance/active': (context) => const ActiveResistanceScreen(),
-          '/workout/resistance/summary': (context) => const ResistanceSummaryScreen(),
+          '/workout/resistance/select-split': (context) =>
+              const SplitSelectionScreen(),
+          '/workout/resistance/active': (context) =>
+              const ActiveResistanceScreen(),
+          '/workout/resistance/summary': (context) =>
+              const ResistanceSummaryScreen(),
           '/wellness-tracker': (context) => const WellnessTrackerPage(),
           '/wellness-onboarding': (context) => const WellnessOnboardingScreen(),
           '/wellness-settings': (context) => const WellnessSettingsScreen(),
+          // Buddy onboarding flow (8-screen whale-themed)
+          '/buddy-welcome': (context) => const BuddyWelcomeScreen(),
+          '/buddy-intro': (context) => const BuddyIntroScreen(),
+          '/buddy-hatch': (context) => const BuddyHatchScreen(),
+          '/buddy-color-selection': (context) =>
+              const BuddyColorSelectionScreen(),
+          '/buddy-naming': (context) => const BuddyNamingScreen(),
+          '/goal-selection': (context) => const GoalSelectionScreen(),
+          '/notification-permission': (context) =>
+              const NotificationPermissionScreen(),
+          '/buddy-ready': (context) => const BuddyReadyScreen(),
+          '/buddy_profile_setup': (context) => const BuddyProfileSetupScreen(),
+          '/buddy-completion': (context) => const BuddyCompletionScreen(),
+          // Buddy customization
+          '/buddy-customization': (context) => const BuddyCustomizationScreen(),
         },
       ),
     );

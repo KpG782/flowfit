@@ -8,11 +8,13 @@ import '../../widgets/buddy_idle_animation.dart';
 import '../../widgets/onboarding_button.dart';
 import '../../theme/app_theme.dart';
 
-/// Screen for naming the Buddy companion
+/// Screen for naming the Buddy companion - Step 5 of 8
 ///
-/// This screen allows users to give their Buddy a unique name with
-/// validation and helpful suggestions. The Buddy is displayed in the
+/// This screen allows users to give their whale Buddy a unique name with
+/// validation and helpful whale-themed suggestions. The Buddy is displayed in the
 /// color selected in the previous screen.
+///
+/// Whale theme: "What do you want to name your baby whale?"
 class BuddyNamingScreen extends ConsumerStatefulWidget {
   const BuddyNamingScreen({super.key});
 
@@ -25,13 +27,23 @@ class _BuddyNamingScreenState extends ConsumerState<BuddyNamingScreen> {
   final FocusNode _nameFocusNode = FocusNode();
   String? _errorMessage;
 
-  // Subtask 7.3: Name suggestions
+  // Whale-themed name suggestions
   static const List<String> nameSuggestions = [
-    'Sparky',
-    'Flash',
-    'Star',
-    'Buddy',
-    'Ace',
+    'Bubbles',
+    'Splash',
+    'Wave',
+    'Marina',
+    'Ocean',
+    'Finn',
+    'Luna',
+    'Neptune',
+    'Coral',
+    'Pearl',
+    'Moby',
+    'Tide',
+    'Azure',
+    'Blue',
+    'Aqua',
   ];
 
   @override
@@ -75,8 +87,8 @@ class _BuddyNamingScreenState extends ConsumerState<BuddyNamingScreen> {
     // Save name to provider
     ref.read(buddyOnboardingProvider.notifier).setBuddyName(name);
 
-    // Navigate to profile setup screen
-    Navigator.of(context).pushNamed('/buddy_profile_setup');
+    // Navigate to goal selection screen (Step 6 of whale onboarding)
+    Navigator.of(context).pushNamed('/goal-selection');
   }
 
   @override
@@ -134,26 +146,45 @@ class _BuddyNamingScreenState extends ConsumerState<BuddyNamingScreen> {
 
   /// Subtask 7.1: Display BuddyCharacterWidget in selected color
   Widget _buildBuddyDisplay(Color selectedColor) {
-    return Center(
-      child: BuddyIdleAnimation(
-        child: BuddyCharacterWidget(
-          color: selectedColor,
-          size: 160.0,
-          showFace: true,
+    return Semantics(
+      label: 'Your Buddy character in the color you selected',
+      image: true,
+      child: Center(
+        child: BuddyIdleAnimation(
+          child: BuddyCharacterWidget(
+            color: selectedColor,
+            size: 160.0,
+            showFace: true,
+          ),
         ),
       ),
     );
   }
 
-  /// Subtask 7.1: Add prompt "What will you call your buddy?"
+  /// Whale-themed prompt
   Widget _buildPrompt() {
-    return Text(
-      'What will you call your buddy?',
-      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-        color: AppTheme.text,
-        fontWeight: FontWeight.bold,
+    return Semantics(
+      header: true,
+      child: Column(
+        children: [
+          Text(
+            'What do you want to name your baby whale?',
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              color: AppTheme.text,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'You can change this later.',
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: AppTheme.darkGray),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
-      textAlign: TextAlign.center,
     );
   }
 
@@ -163,8 +194,9 @@ class _BuddyNamingScreenState extends ConsumerState<BuddyNamingScreen> {
   /// - Style with rounded border and padding
   Widget _buildNameInput() {
     return Semantics(
-      label: 'Buddy name input field',
+      label: 'Buddy name input field. Enter a name between 1 and 20 characters',
       textField: true,
+      hint: 'Type a name for your Buddy',
       child: TextField(
         controller: _nameController,
         focusNode: _nameFocusNode,
@@ -233,52 +265,62 @@ class _BuddyNamingScreenState extends ConsumerState<BuddyNamingScreen> {
   /// - Make suggestions tappable to auto-fill
   /// - Style as chips or small buttons
   Widget _buildNameSuggestions() {
-    return Column(
-      children: [
-        Text(
-          'Or pick a suggestion:',
-          style: Theme.of(
-            context,
-          ).textTheme.bodyMedium?.copyWith(color: AppTheme.darkGray),
-        ),
-        const SizedBox(height: 16),
-        Wrap(
-          spacing: 12,
-          runSpacing: 12,
-          alignment: WrapAlignment.center,
-          children: nameSuggestions.map((suggestion) {
-            return Semantics(
-              label: 'Suggestion: $suggestion',
-              button: true,
-              child: InkWell(
-                onTap: () => _onSuggestionTap(suggestion),
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppTheme.lightGray,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: AppTheme.darkGray.withValues(alpha: 0.2),
-                      width: 1.5,
+    return Semantics(
+      label: 'Name suggestions',
+      child: Column(
+        children: [
+          Text(
+            'Or pick a suggestion:',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: AppTheme.darkGray,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            alignment: WrapAlignment.center,
+            children: nameSuggestions.map((suggestion) {
+              return Semantics(
+                label: 'Name suggestion: $suggestion',
+                button: true,
+                hint: 'Tap to use this name',
+                child: InkWell(
+                  onTap: () => _onSuggestionTap(suggestion),
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    constraints: const BoxConstraints(
+                      minWidth: 48,
+                      minHeight: 48,
                     ),
-                  ),
-                  child: Text(
-                    suggestion,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: AppTheme.text,
-                      fontWeight: FontWeight.w600,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppTheme.lightGray,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: AppTheme.darkGray.withValues(alpha: 0.2),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        suggestion,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: AppTheme.text,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          }).toList(),
-        ),
-      ],
+              );
+            }).toList(),
+          ),
+        ],
+      ),
     );
   }
 

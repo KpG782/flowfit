@@ -80,6 +80,33 @@ class BuddyProfile {
     };
   }
 
+  /// Create a copy of this profile with updated fields
+  BuddyProfile copyWith({
+    String? id,
+    String? userId,
+    String? name,
+    String? color,
+    int? level,
+    int? xp,
+    List<String>? unlockedColors,
+    Map<String, dynamic>? accessories,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return BuddyProfile(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      name: name ?? this.name,
+      color: color ?? this.color,
+      level: level ?? this.level,
+      xp: xp ?? this.xp,
+      unlockedColors: unlockedColors ?? this.unlockedColors,
+      accessories: accessories ?? this.accessories,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   @override
   String toString() {
     return 'BuddyProfile(id: $id, name: $name, color: $color, level: $level)';

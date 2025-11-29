@@ -42,56 +42,68 @@ class OnboardingButton extends StatelessWidget {
     }
 
     if (isPrimary) {
-      return SizedBox(
-        height: 56, // Minimum 48px for accessibility, using 56px for comfort
-        child: ElevatedButton(
-          onPressed: onPressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: isEnabled ? buttonColor : Colors.grey.shade300,
-            foregroundColor: isEnabled ? Colors.white : Colors.grey.shade500,
-            disabledBackgroundColor: Colors.grey.shade300,
-            disabledForegroundColor: Colors.grey.shade500,
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+      return Semantics(
+        button: true,
+        enabled: isEnabled,
+        label: label,
+        hint: isEnabled ? 'Double tap to activate' : 'Button is disabled',
+        child: SizedBox(
+          height: 56, // Minimum 48px for accessibility, using 56px for comfort
+          child: ElevatedButton(
+            onPressed: onPressed,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isEnabled ? buttonColor : Colors.grey.shade300,
+              foregroundColor: isEnabled ? Colors.white : Colors.grey.shade500,
+              disabledBackgroundColor: Colors.grey.shade300,
+              disabledForegroundColor: Colors.grey.shade500,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              minimumSize: const Size(48, 56), // Ensure minimum touch target
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            minimumSize: const Size(48, 56), // Ensure minimum touch target
-          ),
-          child: Text(
-            label,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              letterSpacing: -0.8,
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                letterSpacing: -0.8,
+              ),
             ),
           ),
         ),
       );
     } else {
       // Secondary button (outlined style)
-      return SizedBox(
-        height: 56,
-        child: OutlinedButton(
-          onPressed: onPressed,
-          style: OutlinedButton.styleFrom(
-            foregroundColor: isEnabled ? buttonColor : Colors.grey.shade400,
-            side: BorderSide(
-              color: isEnabled ? buttonColor : Colors.grey.shade300,
-              width: 2,
+      return Semantics(
+        button: true,
+        enabled: isEnabled,
+        label: label,
+        hint: isEnabled ? 'Double tap to activate' : 'Button is disabled',
+        child: SizedBox(
+          height: 56,
+          child: OutlinedButton(
+            onPressed: onPressed,
+            style: OutlinedButton.styleFrom(
+              foregroundColor: isEnabled ? buttonColor : Colors.grey.shade400,
+              side: BorderSide(
+                color: isEnabled ? buttonColor : Colors.grey.shade300,
+                width: 2,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              minimumSize: const Size(48, 56), // Ensure minimum touch target
             ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            minimumSize: const Size(48, 56), // Ensure minimum touch target
-          ),
-          child: Text(
-            label,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              letterSpacing: -0.8,
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                letterSpacing: -0.8,
+              ),
             ),
           ),
         ),

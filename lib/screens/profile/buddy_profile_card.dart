@@ -6,8 +6,8 @@ import '../../widgets/buddy_idle_animation.dart';
 
 /// Buddy Profile Card Widget
 ///
-/// Displays the user's Buddy companion with:
-/// - Animated Buddy character in current color
+/// Displays the user's whale Buddy companion with:
+/// - Animated whale Buddy character in current color
 /// - Buddy name and level
 /// - XP progress bar
 /// - Quick access to customization

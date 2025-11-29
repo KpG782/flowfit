@@ -7,6 +7,7 @@ import 'health/health_screen.dart';
 import 'track/track_screen.dart';
 import 'progress/progress_screen.dart';
 import 'profile/profile_screen.dart';
+import 'profile/kids_profile_screen.dart';
 // Keep tab imports for future use
 // ignore: unused_import
 import 'dashboard/home_tab.dart';
@@ -29,13 +30,30 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = [
-    const HomeScreen(),
-    const HealthScreen(),
-    const TrackScreen(),
-    const ProgressScreen(),
-    const ProfileScreen(),
-  ];
+  List<Widget> _getScreens() {
+    final authState = ref.watch(authNotifierProvider);
+    final userId = authState.user?.id;
+    
+    // Default to adult profile
+    Widget profileScreen = const ProfileScreen();
+    
+    if (userId != null) {
+      final profileAsync = ref.watch(profileNotifierProvider(userId));
+      profileAsync.whenData((profile) {
+        if (profile?.isKidsMode == true) {
+          profileScreen = const KidsProfileScreen();
+        }
+      });
+    }
+    
+    return [
+      const HomeScreen(),
+      const HealthScreen(),
+      const TrackScreen(),
+      const ProgressScreen(),
+      profileScreen,
+    ];
+  }
 
   @override
   void initState() {
@@ -53,7 +71,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     final initialTab = args?['initialTab'] as int?;
 
-    if (initialTab != null && initialTab >= 0 && initialTab < _screens.length) {
+    if (initialTab != null && initialTab >= 0 && initialTab < 5) {
       setState(() {
         _currentIndex = initialTab;
       });
@@ -75,6 +93,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bottomPadding = MediaQuery.of(context).padding.bottom;
+    final screens = _getScreens();
 
     // Listen for auth state changes
     ref.listen(authNotifierProvider, (previous, next) {
@@ -87,7 +106,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     });
 
     return Scaffold(
-      body: _screens[_currentIndex],
+      body: screens[_currentIndex],
       bottomNavigationBar: Container(
         padding: EdgeInsets.only(bottom: bottomPadding),
         decoration: BoxDecoration(

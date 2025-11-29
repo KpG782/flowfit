@@ -88,19 +88,19 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
           // Profile complete, go to dashboard
           Navigator.pushReplacementNamed(context, '/dashboard');
         } else {
-          // Profile incomplete, go to survey
+          // Profile incomplete, go to whale-themed buddy onboarding
           Navigator.pushReplacementNamed(
             context,
-            '/survey_intro',
+            '/buddy-welcome',
             arguments: {'userId': updatedAuthState.user!.id},
           );
         }
       } catch (e) {
-        // Error checking profile, assume incomplete and go to survey
+        // Error checking profile, assume incomplete and go to buddy onboarding
         if (mounted) {
           Navigator.pushReplacementNamed(
             context,
-            '/survey_intro',
+            '/buddy-welcome',
             arguments: {'userId': updatedAuthState.user!.id},
           );
         }
