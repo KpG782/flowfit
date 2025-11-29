@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 
-/// Unified page header widget for all tab pages
+/// Kid-friendly page header widget for FlowFit Kids
 /// 
 /// Features:
+/// - Bright, colorful gradient background
+/// - Large, bold text for easy reading
+/// - Rounded corners for friendly appearance
 /// - Consistent styling across all tabs
-/// - Page title display
-/// - Optional subtitle for additional context
 /// - No back button (tabs use bottom navigation)
 /// 
 /// Usage:
 /// ```dart
 /// PageHeader(
-///   title: 'Health',
-///   subtitle: 'Track your daily wellness',
+///   title: 'My Buddy',
+///   subtitle: 'Buddy is excited to play with you today! 🐾',
 /// )
 /// ```
 class PageHeader extends StatelessWidget {
@@ -32,15 +33,27 @@ class PageHeader extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+      padding: const EdgeInsets.fromLTRB(24, 20, 24, 20),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        border: Border(
-          bottom: BorderSide(
-            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2),
-            width: 1,
-          ),
+        gradient: LinearGradient(
+          colors: [
+            Colors.lightBlue[200]!,
+            Colors.blue[300]!,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(24),
+          bottomRight: Radius.circular(24),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.blue.withValues(alpha: 0.15),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: SafeArea(
         bottom: false,
@@ -55,15 +68,18 @@ class PageHeader extends StatelessWidget {
                     title,
                     style: theme.textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface,
+                      color: Colors.blue[800],
+                      fontSize: 28,
                     ),
                   ),
                   if (subtitle != null) ...[
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 8),
                     Text(
                       subtitle!,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        color: Colors.blue[700],
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:solar_icons/solar_icons.dart';
 import '../presentation/providers/providers.dart';
 import 'home/home_screen.dart';
-import 'health/health_screen.dart';
-import 'track/track_screen.dart';
-import 'progress/progress_screen.dart';
-import 'profile/profile_screen.dart';
+import 'quests/quests_screen.dart';
+import 'play/play_screen.dart';
+import 'rewards/rewards_screen.dart';
+import 'potato/potato_screen.dart';
 // Keep tab imports for future use
 // ignore: unused_import
 import 'dashboard/home_tab.dart';
@@ -31,10 +30,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   final List<Widget> _screens = [
     const HomeScreen(),
-    const HealthScreen(),
-    const TrackScreen(),
-    const ProgressScreen(),
-    const ProfileScreen(),
+    const QuestsScreen(), // Fitness challenges and daily quests
+    const PlayScreen(),   // Activities and workouts (renamed from Track)
+    const RewardsScreen(), // Achievements and rewards (renamed from Progress)
+    const PotatoScreen(),  // User profile with pet buddy (renamed from Profile)
   ];
 
   @override
@@ -73,7 +72,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     // Listen for auth state changes
@@ -91,12 +89,23 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       bottomNavigationBar: Container(
         padding: EdgeInsets.only(bottom: bottomPadding),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
+          gradient: LinearGradient(
+            colors: [
+              Colors.blue[50]!,
+              Colors.purple[50]!,
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 8,
-              offset: const Offset(0, -2),
+              color: Colors.blue.withValues(alpha: 0.2),
+              blurRadius: 12,
+              offset: const Offset(0, -4),
             ),
           ],
         ),
@@ -104,42 +113,101 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           currentIndex: _currentIndex,
           onTap: (index) => setState(() => _currentIndex = index),
           type: BottomNavigationBarType.fixed,
-          backgroundColor: theme.colorScheme.surface,
-          selectedItemColor: theme.colorScheme.primary,
-          unselectedItemColor: theme.colorScheme.onSurfaceVariant,
-          selectedLabelStyle: theme.textTheme.bodySmall?.copyWith(
-            fontWeight: FontWeight.w600,
+          backgroundColor: Colors.transparent,
+          selectedItemColor: Colors.orange[600],
+          unselectedItemColor: Colors.grey[500],
+          selectedLabelStyle: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 13,
           ),
-          unselectedLabelStyle: theme.textTheme.bodySmall,
-          selectedFontSize: 12,
-          unselectedFontSize: 12,
-          iconSize: 24,
+          unselectedLabelStyle: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 11,
+          ),
+          selectedFontSize: 13,
+          unselectedFontSize: 11,
+          iconSize: 32,
           elevation: 0, // We handle elevation with Container shadow
-          items: const [
+          items: [
             BottomNavigationBarItem(
-              icon: Icon(SolarIconsOutline.home2),
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: _currentIndex == 0 ? Colors.orange[100] : Colors.transparent,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.home_rounded,
+                  size: 28,
+                  color: _currentIndex == 0 ? Colors.orange[600] : Colors.grey[500],
+                ),
+              ),
               label: 'Home',
-              tooltip: 'Home',
+              tooltip: 'Home - Daily Goals',
             ),
             BottomNavigationBarItem(
-              icon: Icon(SolarIconsOutline.heartPulse),
-              label: 'Health',
-              tooltip: 'Health',
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: _currentIndex == 1 ? Colors.blue[100] : Colors.transparent,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.assignment_rounded,
+                  size: 28,
+                  color: _currentIndex == 1 ? Colors.blue[600] : Colors.grey[500],
+                ),
+              ),
+              label: 'Quests',
+              tooltip: 'Fitness Quests & Challenges',
             ),
             BottomNavigationBarItem(
-              icon: Icon(SolarIconsOutline.mapPointWave),
-              label: 'Track',
-              tooltip: 'Track',
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: _currentIndex == 2 ? Colors.green[100] : Colors.transparent,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.sports_gymnastics_rounded,
+                  size: 28,
+                  color: _currentIndex == 2 ? Colors.green[600] : Colors.grey[500],
+                ),
+              ),
+              label: 'Play',
+              tooltip: 'Activities & Workouts',
             ),
             BottomNavigationBarItem(
-              icon: Icon(SolarIconsOutline.chartSquare),
-              label: 'Progress',
-              tooltip: 'Progress',
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: _currentIndex == 3 ? Colors.purple[100] : Colors.transparent,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.emoji_events_rounded,
+                  size: 28,
+                  color: _currentIndex == 3 ? Colors.purple[600] : Colors.grey[500],
+                ),
+              ),
+              label: 'Rewards',
+              tooltip: 'Achievements & Rewards',
             ),
             BottomNavigationBarItem(
-              icon: Icon(SolarIconsOutline.userCircle),
-              label: 'Profile',
-              tooltip: 'Profile',
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: _currentIndex == 4 ? Colors.pink[100] : Colors.transparent,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.account_circle_rounded,
+                  size: 28,
+                  color: _currentIndex == 4 ? Colors.pink[600] : Colors.grey[500],
+                ),
+              ),
+              label: 'Potato',
+              tooltip: 'Your Profile & Pet Buddy',
             ),
           ],
         ),
