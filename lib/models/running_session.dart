@@ -1,6 +1,7 @@
 import 'package:latlong2/latlong.dart';
 import 'workout_session.dart';
 import 'mood_rating.dart';
+import 'activity_mode_detection.dart';
 
 /// Goal type for running workouts
 enum GoalType {
@@ -48,6 +49,15 @@ class RunningSession extends WorkoutSession {
   
   /// Total steps counted during workout
   final int? steps;
+  
+  /// AI Activity mode detections throughout workout
+  final List<ActivityModeDetection>? activityModeHistory;
+  
+  /// Average activity mode probabilities [stress, cardio, strength]
+  final List<double>? avgActivityProbabilities;
+  
+  /// Dominant activity mode during workout
+  final String? dominantActivityMode;
 
   RunningSession({
     required super.id,
@@ -62,6 +72,9 @@ class RunningSession extends WorkoutSession {
     this.routePolyline,
     this.elevationGain,
     this.steps,
+    this.activityModeHistory,
+    this.avgActivityProbabilities,
+    this.dominantActivityMode,
     super.endTime,
     super.durationSeconds,
     super.preMood,

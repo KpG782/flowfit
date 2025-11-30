@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../providers/dashboard_providers.dart';
 import '../../models/daily_stats.dart';
 import '../../models/recent_activity.dart';
+import '../../widgets/quick_mood_check_bottom_sheet.dart';
 
 class TrackScreen extends ConsumerWidget {
   const TrackScreen({super.key});
@@ -258,7 +258,19 @@ class TrackScreen extends ConsumerWidget {
           width: double.infinity,
           height: 56,
           child: ElevatedButton(
-            onPressed: () => context.go('/active'),
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (bottomSheetContext) => QuickMoodCheckBottomSheet(
+                  onMoodSelected: () {
+                    // Navigate to workout type selection after mood is selected
+                    Navigator.of(context).pushNamed('/workout/select-type');
+                  },
+                ),
+              );
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF2D82E8), // Blue color
               foregroundColor: Colors.white,
@@ -278,7 +290,7 @@ class TrackScreen extends ConsumerWidget {
           width: double.infinity,
           height: 56,
           child: OutlinedButton(
-            onPressed: () => context.go('/active?type=run'),
+            onPressed: () => Navigator.of(context).pushNamed('/workout/running/setup'),
             style: OutlinedButton.styleFrom(
               backgroundColor: Colors.transparent,
               foregroundColor: const Color(0xFF2D82E8),
@@ -299,7 +311,7 @@ class TrackScreen extends ConsumerWidget {
           width: double.infinity,
           height: 56,
           child: OutlinedButton(
-            onPressed: () => context.go('/active?type=walk'),
+            onPressed: () => Navigator.of(context).pushNamed('/workout/walking/options'),
             style: OutlinedButton.styleFrom(
               backgroundColor: Colors.transparent,
               foregroundColor: const Color(0xFF2D82E8),
