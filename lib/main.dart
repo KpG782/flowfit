@@ -228,6 +228,21 @@ class FlowFitPhoneApp extends StatelessWidget {
           '/wellness-tracker': (context) => const WellnessTrackerPage(),
           '/wellness-onboarding': (context) => const WellnessOnboardingScreen(),
           '/wellness-settings': (context) => const WellnessSettingsScreen(),
+          // Buddy onboarding flow (8-screen whale-themed for kids)
+          '/buddy-welcome': (context) => const BuddyWelcomeScreen(),
+          '/buddy-intro': (context) => const BuddyIntroScreen(),
+          '/buddy-hatch': (context) => const BuddyHatchScreen(),
+          '/buddy-color-selection': (context) =>
+              const BuddyColorSelectionScreen(),
+          '/buddy-naming': (context) => const BuddyNamingScreen(),
+          '/goal-selection': (context) => const GoalSelectionScreen(),
+          '/notification-permission': (context) =>
+              const NotificationPermissionScreen(),
+          '/buddy-ready': (context) => const BuddyReadyScreen(),
+          '/buddy_profile_setup': (context) => const BuddyProfileSetupScreen(),
+          '/buddy-completion': (context) => const BuddyCompletionScreen(),
+          // Buddy customization
+          '/buddy-customization': (context) => const BuddyCustomizationScreen(),
         },
       ),
     );

@@ -65,7 +65,13 @@ class SurveyCompletionHandler {
       UserProfile profile;
       try {
         profile = UserProfile.fromSurveyData(userId, surveyData);
-        _logger.info('Successfully converted survey data to profile');
+
+        // This is a kids app (7-12), so always set is_kids_mode = true
+        profile = profile.copyWith(isKidsMode: true);
+
+        _logger.info(
+          'Successfully converted survey data to profile (kids mode)',
+        );
         // Requirement 5.2: Metadata is included in fromSurveyData
         // (createdAt, updatedAt timestamps)
       } catch (e, stackTrace) {

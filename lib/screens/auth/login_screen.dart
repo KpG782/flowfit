@@ -30,7 +30,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   void _checkAuthState() {
     final authState = ref.read(authNotifierProvider);
-    
+
     // If already authenticated, redirect to dashboard
     if (authState.user != null && mounted) {
       Navigator.of(context).pushReplacementNamed('/dashboard');
@@ -48,10 +48,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     // Validate form fields
     if (_formKey.currentState!.validate()) {
       // Call authNotifier to sign in
-      await ref.read(authNotifierProvider.notifier).signIn(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-      );
+      await ref
+          .read(authNotifierProvider.notifier)
+          .signIn(
+            email: _emailController.text.trim(),
+            password: _passwordController.text,
+          );
     }
   }
 
@@ -60,31 +62,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     // Listen to auth state changes
     final authState = ref.watch(authNotifierProvider);
     final isLoading = authState.status == AuthStatus.loading;
-    
+
     // Listen for auth state changes and navigate accordingly
     ref.listen<AuthState>(authNotifierProvider, (previous, next) async {
       if (next.status == AuthStatus.authenticated && next.user != null) {
-        // Check if user has completed survey
+        // Check if user has completed onboarding
         try {
           final hasCompletedSurvey = await ref
               .read(profileRepositoryProvider)
               .hasCompletedSurvey(next.user!.id);
-          
+
           if (!mounted) return;
-          
+
           if (hasCompletedSurvey) {
-            // Navigate to dashboard if survey is complete
+            // Navigate to dashboard if onboarding is complete
             Navigator.pushReplacementNamed(context, '/dashboard');
           } else {
-            // Navigate to survey if not complete
+            // Navigate to age gate to choose onboarding flow (kids or adult)
             Navigator.pushReplacementNamed(
               context,
-              '/survey_intro',
-              arguments: {
-                'name': next.user!.fullName ?? 'there',
-                'email': next.user!.email,
-                'userId': next.user!.id,
-              },
+              '/age-gate',
+              arguments: {'userId': next.user!.id},
             );
           }
         } catch (e) {
@@ -102,7 +100,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         );
       }
     });
-    
+
     return Scaffold(
       backgroundColor: const Color(0xFFF2F7FF),
       body: SafeArea(

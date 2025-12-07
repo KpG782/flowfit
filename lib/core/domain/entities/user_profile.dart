@@ -13,11 +13,15 @@ class UserProfile {
   final String? weightUnit;
   final String? activityLevel;
   final List<String>? goals;
+  final List<String>? wellnessGoals; // Whale onboarding wellness goals
+  final bool? notificationsEnabled; // Whale onboarding notification preference
   final int? dailyCalorieTarget;
   final int? dailyStepsTarget;
   final int? dailyActiveMinutesTarget;
   final double? dailyWaterTarget;
   final String? profileImagePath;
+  final String? nickname;
+  final bool isKidsMode;
   final DateTime createdAt;
   final DateTime updatedAt;
   final bool isSynced;
@@ -33,11 +37,15 @@ class UserProfile {
     this.weightUnit,
     this.activityLevel,
     this.goals,
+    this.wellnessGoals,
+    this.notificationsEnabled,
     this.dailyCalorieTarget,
     this.dailyStepsTarget,
     this.dailyActiveMinutesTarget,
     this.dailyWaterTarget,
     this.profileImagePath,
+    this.nickname,
+    this.isKidsMode = true,
     required this.createdAt,
     required this.updatedAt,
     this.isSynced = false,
@@ -61,6 +69,16 @@ class UserProfile {
       goals: (json['goals'] as List<dynamic>?)
           ?.map((e) => e.toString())
           .toList(),
+      wellnessGoals:
+          (json['wellnessGoals'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          (json['wellness_goals'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList(),
+      notificationsEnabled:
+          json['notificationsEnabled'] as bool? ??
+          json['notifications_enabled'] as bool?,
       dailyCalorieTarget:
           json['dailyCalorieTarget'] as int? ??
           json['daily_calorie_target'] as int?,
@@ -76,6 +94,9 @@ class UserProfile {
       profileImagePath:
           json['profileImagePath'] as String? ??
           json['profile_image_url'] as String?,
+      nickname: json['nickname'] as String?,
+      isKidsMode:
+          json['isKidsMode'] as bool? ?? json['is_kids_mode'] as bool? ?? false,
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'] as String)
           : (json['created_at'] != null
@@ -104,11 +125,15 @@ class UserProfile {
       'weightUnit': weightUnit,
       'activityLevel': activityLevel,
       'goals': goals,
+      'wellnessGoals': wellnessGoals,
+      'notificationsEnabled': notificationsEnabled,
       'dailyCalorieTarget': dailyCalorieTarget,
       'dailyStepsTarget': dailyStepsTarget,
       'dailyActiveMinutesTarget': dailyActiveMinutesTarget,
       'dailyWaterTarget': dailyWaterTarget,
       'profileImagePath': profileImagePath,
+      'nickname': nickname,
+      'isKidsMode': isKidsMode,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       'isSynced': isSynced,
@@ -128,11 +153,15 @@ class UserProfile {
       'weight_unit': weightUnit,
       'activity_level': activityLevel,
       'goals': goals,
+      'wellness_goals': wellnessGoals,
+      'notifications_enabled': notificationsEnabled,
       'daily_calorie_target': dailyCalorieTarget,
       'daily_steps_target': dailyStepsTarget,
       'daily_active_minutes_target': dailyActiveMinutesTarget,
       'daily_water_target': dailyWaterTarget,
       'profile_image_url': profileImagePath,
+      'nickname': nickname,
+      'is_kids_mode': isKidsMode,
       'updated_at': updatedAt.toIso8601String(),
     };
   }
@@ -189,11 +218,15 @@ class UserProfile {
     String? weightUnit,
     String? activityLevel,
     List<String>? goals,
+    List<String>? wellnessGoals,
+    bool? notificationsEnabled,
     int? dailyCalorieTarget,
     int? dailyStepsTarget,
     int? dailyActiveMinutesTarget,
     double? dailyWaterTarget,
     String? profileImagePath,
+    String? nickname,
+    bool? isKidsMode,
     DateTime? createdAt,
     DateTime? updatedAt,
     bool? isSynced,
@@ -209,12 +242,16 @@ class UserProfile {
       weightUnit: weightUnit ?? this.weightUnit,
       activityLevel: activityLevel ?? this.activityLevel,
       goals: goals ?? this.goals,
+      wellnessGoals: wellnessGoals ?? this.wellnessGoals,
+      notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
       dailyCalorieTarget: dailyCalorieTarget ?? this.dailyCalorieTarget,
       dailyStepsTarget: dailyStepsTarget ?? this.dailyStepsTarget,
       dailyActiveMinutesTarget:
           dailyActiveMinutesTarget ?? this.dailyActiveMinutesTarget,
       dailyWaterTarget: dailyWaterTarget ?? this.dailyWaterTarget,
       profileImagePath: profileImagePath ?? this.profileImagePath,
+      nickname: nickname ?? this.nickname,
+      isKidsMode: isKidsMode ?? this.isKidsMode,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       isSynced: isSynced ?? this.isSynced,

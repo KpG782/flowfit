@@ -1,92 +1,185 @@
-# Onboarding Survey Flow
+# Onboarding Flow - FlowFit Kids
 
-## Survey Steps
+## ⚠️ DEPRECATED: Adult Survey Flow
 
-The onboarding survey consists of 5 screens (0-4):
+The adult survey flow (Steps 0-4) has been replaced with the **Whale-Themed Buddy Onboarding** for kids aged 7-12.
 
-### Step 0: Survey Intro (`survey_intro_screen.dart`)
+### Old Survey Steps (REMOVED - Adult-focused, not kid-friendly)
 
-- **Route**: `/survey_intro`
-- **Purpose**: Welcome screen explaining the survey
+❌ **Survey Intro** - Welcome screen with features
+❌ **Basic Info** - Age (13-120), Gender (not inclusive)
+❌ **Body Measurements** - Height, Weight (triggers body image issues)
+❌ **Activity Goals** - Too complex for kids
+❌ **Daily Targets** - Calorie/macro tracking (harmful for children)
+
+**Reason for Removal**: COPPA compliance, child safety, kid-friendly UX required.
+
+---
+
+## ✅ NEW: Whale-Themed Buddy Onboarding (8 Screens)
+
+**Target Audience**: Kids aged 7-12
+**Theme**: Ocean whale companion
+**Duration**: ~90 seconds
+**COPPA Compliant**: Minimal data collection
+
+### Step 1: Buddy Welcome (`buddy_welcome_screen.dart`)
+
+- **Route**: `/buddy-welcome`
+- **Purpose**: First impression with animated whale buddy
 - **Features**:
-  - Animated heart icon
-  - Feature preview cards
-  - Progress indicator (0/4)
-  - Skip option to dashboard
-- **Next**: `/survey_basic_info`
+  - Animated bouncing whale (Ocean Blue #4ECDC4)
+  - "Meet Your Fitness Buddy!" heading
+  - "Your new whale companion..." subtitle
+  - Large "LET'S GO!" button
+- **Navigation**: → `/buddy-intro`
 
-### Step 1: Basic Info (`survey_basic_info_screen.dart`)
+### Step 2: Buddy Intro (`buddy_intro_screen.dart`)
 
-- **Route**: `/survey_basic_info`
-- **Purpose**: Collect age and gender
-- **Data Collected**:
-  - Age (13-120)
-  - Gender (Male/Female/Other)
-- **Backend**: Saves to `surveyNotifierProvider`
-- **Validation**: `validateBasicInfo()`
-- **Next**: `/survey_body_measurements`
+- **Route**: `/buddy-intro`
+- **Purpose**: Whale asks for user's name (conversational)
+- **Speech Bubble**: "Splash splash, thanks for finding me. If my name is Bubbles, what's your name?"
+- **Input**: "Name for Bubbles' friend..."
+- **Features**:
+  - Auto-focus text field
+  - Skip button (top-right)
+  - Disabled next until input
+- **Backend**: `setUserName(name)` → state
+- **Navigation**: → `/buddy-hatch`
 
-### Step 2: Body Measurements (`survey_body_measurements_screen.dart`)
+### Step 3: Buddy Hatch (`buddy_hatch_screen.dart`)
 
-- **Route**: `/survey_body_measurements`
-- **Purpose**: Collect height and weight
-- **Data Collected**:
-  - Height (cm/ft)
-  - Weight (kg/lbs)
-- **Backend**: Saves to `surveyNotifierProvider`
-- **Validation**: `validateBodyMeasurements()`
-- **Next**: `/survey_activity_goals`
+- **Route**: `/buddy-hatch`
+- **Purpose**: Celebration micro-interaction
+- **Message**: "You found a baby whale! 🐋"
+- **Animation**: Scale + fade with elastic curve
+- **Duration**: Auto-advance after 2 seconds
+- **Navigation**: → `/buddy-color-selection`
 
-### Step 3: Activity & Goals (`survey_activity_goals_screen.dart`)
+### Step 4: Color Selection (`buddy_color_selection_screen.dart`)
 
-- **Route**: `/survey_activity_goals`
-- **Purpose**: Collect activity level and fitness goals
-- **Data Collected**:
-  - Activity Level (Sedentary/Moderately Active/Very Active)
-  - Goals (Lose Weight/Maintain/Build Muscle/Improve Cardio)
-- **Backend**: Saves to `surveyNotifierProvider`
-- **Validation**: `validateActivityGoals()`
-- **Next**: `/survey_daily_targets`
+- **Route**: `/buddy-color-selection`
+- **Purpose**: Choose whale color from 8 options
+- **Title**: "Choose your Whale Color!"
+- **Subtitle**: "Whales are gentle, playful, and smart..."
+- **Colors**: Blue, Teal, Green, Purple, Yellow, Orange, Pink, Gray
+- **Layout**: Circular egg pattern around central whale
+- **Backend**: `selectColor(color)` → state
+- **Navigation**: → `/buddy-naming`
 
-### Step 4: Daily Targets (`survey_daily_targets_screen.dart`)
+### Step 5: Buddy Naming (`buddy_naming_screen.dart`)
 
-- **Route**: `/survey_daily_targets`
-- **Purpose**: Set daily calorie and macro targets
-- **Data Collected**:
-  - Daily calorie target
-  - Macro split (Protein/Carbs/Fats)
-- **Backend**: Saves to `surveyNotifierProvider` and Supabase
-- **Validation**: `validateDailyTargets()`
-- **Next**: `/onboarding1` or `/dashboard`
+- **Route**: `/buddy-naming`
+- **Purpose**: Name the whale buddy
+- **Title**: "What do you want to name your baby whale?"
+- **Subtitle**: "You can change this later."
+- **Name Suggestions** (15 whale-themed):
+  - Bubbles, Splash, Wave, Marina, Ocean
+  - Finn, Luna, Neptune, Coral, Pearl
+  - Moby, Tide, Azure, Blue, Aqua
+- **Features**:
+  - Shuffle button
+  - Validation: 2-20 characters
+- **Backend**: `setBuddyName(name)` → state
+- **Navigation**: → `/goal-selection`
 
-## Reusable Components
+### Step 6: Goal Selection (`goal_selection_screen.dart`) 🆕
 
-### `SurveyAppBar` (`lib/widgets/survey_app_bar.dart`)
+- **Route**: `/goal-selection`
+- **Purpose**: Select wellness goals (multi-select)
+- **Title**: "What areas would you like support with?"
+- **Progress**: ●●●●●●○○ (step 6 of 8)
+- **Goals** (5 cards with emojis):
+  - 🎯 Boost focus and productivity
+  - 🪥 Stay fresh and clean
+  - 👟 Be more active
+  - 🏔️ Manage stress and anxiety
+  - ☎️ Strengthen social skills
+- **Features**:
+  - Multi-select cards
+  - Green checkmark (selected) / Gray plus (unselected)
+  - Buddy with lightbulb 💡
+- **Backend**: `toggleGoal(goalId)` → state
+- **Navigation**: → `/notification-permission`
 
-- Consistent back button
-- Custom color (#314158)
-- Reusable across all survey screens
+### Step 7: Notification Permission (`notification_permission_screen.dart`) 🆕
 
-### `SurveyProgressIndicator` (`lib/widgets/survey_app_bar.dart`)
+- **Route**: `/notification-permission`
+- **Purpose**: Request notification permission (optional)
+- **Title**: "Get reminders from {BuddyName}"
+- **Preview Card**:
+  - "From Bubbles • now"
+  - "Remember to drink water! 💧"
+- **Buttons**:
+  - "TURN ON NOTIFICATIONS" (green)
+  - "Maybe later" (gray, outline)
+- **Backend**: `setNotificationPermission(granted)` → state
+- **Permission**: Uses `permission_handler` package
+- **Navigation**: → `/buddy-ready`
 
-- Shows current step (1-4)
-- Filled segments for completed steps
-- Gray segments for remaining steps
+### Step 8: Buddy Ready (`buddy_ready_screen.dart`) 🆕
 
-## Backend Integration
+- **Route**: `/buddy-ready`
+- **Purpose**: Celebration & completion
+- **Speech Bubble**:
+  - "Wow! When you take care of yourself,"
+  - "you take care of me too!"
+  - "Let's swim together! 🌊"
+- **Stat Gain**: "😍 Bubbles gained +5.9 Compassion"
+- **Features**:
+  - Buddy holding heart ❤️
+  - Gradient stat card with animation
+  - "START ADVENTURE!" button
+- **Backend**: `completeOnboarding(userId)` → Supabase
+- **Navigation**: → `/dashboard`
 
-All survey screens use **Riverpod** for state management:
+---
+
+## Backend Integration (Riverpod)
+
+All screens use `buddyOnboardingProvider` for state management:
 
 ```dart
-// Save data
-ref.read(surveyNotifierProvider.notifier).updateSurveyData('key', value);
+// Set user name (step 2)
+ref.read(buddyOnboardingProvider.notifier).setUserName(name);
 
-// Validate
-final error = ref.read(surveyNotifierProvider.notifier).validateBasicInfo();
+// Select color (step 4)
+ref.read(buddyOnboardingProvider.notifier).selectColor('blue');
 
-// Access data
-final surveyState = ref.watch(surveyNotifierProvider);
-final age = surveyState.surveyData['age'];
+// Set buddy name (step 5)
+ref.read(buddyOnboardingProvider.notifier).setBuddyName('Bubbles');
+
+// Toggle goal (step 6)
+ref.read(buddyOnboardingProvider.notifier).toggleGoal('focus');
+
+// Set notification permission (step 7)
+ref.read(buddyOnboardingProvider.notifier).setNotificationPermission(true);
+
+// Complete onboarding (step 8)
+await ref.read(buddyOnboardingProvider.notifier).completeOnboarding(userId);
+
+// Access state
+final state = ref.watch(buddyOnboardingProvider);
+final progress = state.progress; // 0.0 to 1.0
+final currentStep = state.currentStep; // 0-7
+```
+
+## State Model (`BuddyOnboardingState`)
+
+```dart
+class BuddyOnboardingState {
+  final int currentStep;              // 0-7
+  final String? userName;             // Step 2
+  final String? selectedColor;        // Step 4 (default: 'blue')
+  final String? buddyName;            // Step 5
+  final String? userNickname;         // Optional
+  final int? userAge;                 // Optional (7-12)
+  final List<String> selectedGoals;   // Step 6
+  final bool notificationsGranted;    // Step 7
+  final bool isComplete;              // After step 8
+
+  double get progress => (currentStep + 1) / 8;
+}
 ```
 
 ## Navigation Flow
