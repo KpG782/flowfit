@@ -38,12 +38,6 @@ class _ActiveRunningScreenState extends ConsumerState<ActiveRunningScreen> {
   
   // Real-time heart rate from watch
   int? _currentHeartRate;
-  
-  // Coaching notification tracking
-  String? _lastActivityMode;
-  DateTime? _activityModeStartTime;
-  Timer? _coachingNotificationTimer;
-  Set<String> _shownNotifications = {};
 
   @override
   void initState() {
@@ -131,137 +125,11 @@ class _ActiveRunningScreenState extends ConsumerState<ActiveRunningScreen> {
       await viewModel.classify(bufferCopy);
       print('✅ AI detection completed');
       
-      // Check for activity mode changes and schedule coaching notifications
-      final currentActivity = viewModel.currentActivity;
-      if (currentActivity != null) {
-        _handleActivityModeChange(currentActivity.label);
-      }
-      
       // Schedule next detection
       _scheduleNextDetection(15);
     } catch (e) {
       print('❌ Detection failed: $e');
       _scheduleNextDetection(10);
-    }
-  }
-  
-  /// Handle activity mode changes and schedule coaching notifications
-  void _handleActivityModeChange(String newMode) {
-    // If mode changed, reset timer
-    if (_lastActivityMode != newMode) {
-      print('🔄 Activity mode changed: $_lastActivityMode → $newMode');
-      _lastActivityMode = newMode;
-      _activityModeStartTime = DateTime.now();
-      
-      // Cancel any pending notification
-      _coachingNotificationTimer?.cancel();
-      
-      // Schedule notification for 10 seconds in this mode
-      _coachingNotificationTimer = Timer(const Duration(seconds: 10), () {
-        if (mounted && _lastActivityMode == newMode) {
-          _showCoachingNotification(newMode);
-        }
-      });
-    }
-  }
-  
-  /// Show coaching notification based on activity mode
-  void _showCoachingNotification(String mode) {
-    // Create unique key for this notification to avoid duplicates
-    final notificationKey = '$mode-${DateTime.now().minute}';
-    
-    // Don't show if already shown in this minute
-    if (_shownNotifications.contains(notificationKey)) {
-      return;
-    }
-    _shownNotifications.add(notificationKey);
-    
-    // Clean up old notifications (keep only last 5)
-    if (_shownNotifications.length > 5) {
-      _shownNotifications.remove(_shownNotifications.first);
-    }
-    
-    String title;
-    String message;
-    IconData icon;
-    Color color;
-    
-    switch (mode) {
-      case 'Stress':
-        title = '🔥 High Intensity Detected!';
-        message = 'You\'re pushing hard! Consider slowing down to avoid burnout. Take deep breaths.';
-        icon = SolarIconsBold.fire;
-        color = const Color(0xFFE53935);
-        break;
-      case 'Cardio':
-        title = '❤️ Perfect Cardio Zone!';
-        message = 'Great pace! You\'re in the optimal zone for cardiovascular fitness. Keep it up!';
-        icon = SolarIconsBold.heart;
-        color = const Color(0xFFFF9800);
-        break;
-      case 'Strength':
-      case 'Calm':
-        title = '😊 Easy Pace Detected';
-        message = 'You\'re taking it easy. Feel free to pick up the pace if you want more intensity!';
-        icon = SolarIconsBold.smileCircle;
-        color = const Color(0xFF4CAF50);
-        break;
-      default:
-        return; // Don't show notification for unknown modes
-    }
-    
-    // Show snackbar notification
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(icon, color: Colors.white, size: 24),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      message,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: color,
-          duration: const Duration(seconds: 5),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          margin: const EdgeInsets.all(16),
-        ),
-      );
-      
-      print('💬 Coaching notification shown: $title');
     }
   }
 
@@ -271,7 +139,6 @@ class _ActiveRunningScreenState extends ConsumerState<ActiveRunningScreen> {
     _sensorSubscription?.cancel();
     _heartRateSubscription?.cancel();
     _detectionTimer?.cancel();
-    _coachingNotificationTimer?.cancel();
     _mapController?.dispose();
     super.dispose();
   }
@@ -605,7 +472,7 @@ class _ActiveRunningScreenState extends ConsumerState<ActiveRunningScreen> {
                 'Speed',
                 _formatPace(session.avgPace),
                 '/km',
-                SolarIconsBold.runningRound,  // Running person = speed (intuitive)
+                SolarIconsBold.speedometer,  // Speedometer = speed (intuitive)
                 const Color(0xFF4CAF50),
               ),
             ],
@@ -935,23 +802,22 @@ class _ActiveRunningScreenState extends ConsumerState<ActiveRunningScreen> {
     final modeLabel = activity.label.toUpperCase();
     final confidence = activity.confidence;
     
-      // Define colors and icons for each mode (kid-friendly & intuitive)
+    // Define colors and icons for each mode
     Color modeColor = Colors.green;
-    IconData modeIcon = SolarIconsBold.smileCircle;  // Happy face for calm
+    IconData modeIcon = SolarIconsBold.leaf;
     
     switch (activity.label) {
       case 'Stress':
-        modeColor = const Color(0xFFE53935);  // Bright red
-        modeIcon = SolarIconsBold.fire;  // Fire = intense/hot
+        modeColor = Colors.red;
+        modeIcon = SolarIconsBold.danger;
         break;
       case 'Cardio':
-        modeColor = const Color(0xFFFF9800);  // Bright orange
-        modeIcon = SolarIconsBold.heart;  // Heart = cardio (universal)
+        modeColor = Colors.orange;
+        modeIcon = SolarIconsBold.heartPulse;
         break;
       case 'Strength':
-      case 'Calm':
-        modeColor = const Color(0xFF4CAF50);  // Bright green
-        modeIcon = SolarIconsBold.smileCircle;  // Smile = good/calm
+        modeColor = Colors.green;
+        modeIcon = SolarIconsBold.leaf;
         break;
     }
     
@@ -1060,30 +926,30 @@ class _ActiveRunningScreenState extends ConsumerState<ActiveRunningScreen> {
           ),
           const SizedBox(height: 12),
           
-          // Stress metric (High intensity)
+          // Stress metric
           _buildProbabilityBar(
-            'High Intensity',
+            'Stress',
             stressProb,
-            const Color(0xFFE53935),
-            SolarIconsBold.fire,  // Fire = hot/intense
+            Colors.red,
+            SolarIconsBold.danger,
           ),
           const SizedBox(height: 8),
           
-          // Cardio metric (Medium intensity)
+          // Cardio metric
           _buildProbabilityBar(
-            'Cardio Zone',
+            'Cardio',
             cardioProb,
-            const Color(0xFFFF9800),
-            SolarIconsBold.heart,  // Heart = cardio
+            Colors.orange,
+            SolarIconsBold.heartPulse,
           ),
           const SizedBox(height: 8),
           
-          // Strength/Calm metric (Low intensity)
+          // Strength metric
           _buildProbabilityBar(
-            'Easy Pace',
+            'Strength',
             strengthProb,
-            const Color(0xFF4CAF50),
-            SolarIconsBold.smileCircle,  // Smile = easy/comfortable
+            Colors.green,
+            SolarIconsBold.leaf,
           ),
         ],
       ),
