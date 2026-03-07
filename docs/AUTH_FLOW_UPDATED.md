@@ -1,4 +1,4 @@
-# Updated Authentication & Onboarding Flow
+﻿# Updated Authentication & Onboarding Flow
 
 ## Complete User Journey
 
@@ -115,7 +115,7 @@ await Supabase.instance.client.auth.resend(
 
 **Shows**:
 
-- Personalized greeting: "Let's personalize FlowFit for you, [Name]!"
+- Personalized greeting: "Let's personalize Pulsify for you, [Name]!"
 - Quick setup overview (2 minutes)
 - 4 survey steps preview
 - Skip option

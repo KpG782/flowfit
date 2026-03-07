@@ -1,4 +1,4 @@
-# FlowFit Quick Start Guide
+﻿# Pulsify Quick Start Guide
 
 ## ✅ What's Been Fixed & Implemented
 
@@ -20,7 +20,7 @@
 - ✅ Welcome screen
 - ✅ Login screen with validation
 - ✅ Sign up screen with strong password requirements
-- ✅ Reusable theme system (FlowFit Style Guide)
+- ✅ Reusable theme system (Pulsify Style Guide)
 
 ### 4. Enhanced UI
 - ✅ Display HR, HRV, and IBI values
@@ -160,7 +160,7 @@ _syncManager.startPeriodicSync(
 
 ## 🎨 Theme System
 
-### Colors (FlowFit Style Guide)
+### Colors (Pulsify Style Guide)
 ```dart
 AppTheme.primaryBlue  // #3B82F6
 AppTheme.lightBlue    // #5DADE2

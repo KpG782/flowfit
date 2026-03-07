@@ -1,4 +1,4 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+﻿import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // This file demonstrates the Riverpod code generation setup
 // Run: flutter pub run build_runner build --delete-conflicting-outputs
@@ -10,7 +10,7 @@ part 'example_provider.g.dart';
 /// This will be replaced with actual providers in later tasks
 @riverpod
 String exampleMessage(ExampleMessageRef ref) {
-  return 'FlowFit Clean Architecture Setup Complete';
+  return 'Pulsify Clean Architecture Setup Complete';
 }
 
 /// Example async provider

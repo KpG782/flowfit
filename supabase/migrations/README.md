@@ -1,6 +1,6 @@
-# Supabase Database Migrations
+﻿# Supabase Database Migrations
 
-This directory contains SQL migration files for setting up the FlowFit database schema in Supabase.
+This directory contains SQL migration files for setting up the Pulsify database schema in Supabase.
 
 ## Migration Files
 

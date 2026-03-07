@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flowfit/screens/home/widgets/stats_section.dart';
-import 'package:flowfit/providers/dashboard_providers.dart';
-import 'package:flowfit/core/providers/providers.dart' as core_providers;
-import 'package:flowfit/domain/entities/heart_rate_data.dart';
-import 'package:flowfit/models/daily_stats.dart';
+import 'package:pulsify/screens/home/widgets/stats_section.dart';
+import 'package:pulsify/providers/dashboard_providers.dart';
+import 'package:pulsify/core/providers/providers.dart' as core_providers;
+import 'package:pulsify/domain/entities/heart_rate_data.dart';
+import 'package:pulsify/models/daily_stats.dart';
 
 void main() {
   group('StatsSection', () {

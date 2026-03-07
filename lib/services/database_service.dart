@@ -1,4 +1,4 @@
-import 'package:sqflite/sqflite.dart';
+﻿import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/tracked_data.dart';
 
@@ -13,7 +13,7 @@ class DatabaseService {
   /// Get database instance
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDB('flowfit.db');
+    _database = await _initDB('pulsify.db');
     return _database!;
   }
 

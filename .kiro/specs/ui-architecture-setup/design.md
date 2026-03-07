@@ -1,8 +1,8 @@
-# Design Document
+﻿# Design Document
 
 ## Overview
 
-This design document outlines the architecture for FlowFit's UI-only implementation with complete navigation flows, mock data repositories, and clean architecture patterns. The system will provide a fully functional user interface ready for backend integration while preserving the existing watch-to-phone heart rate streaming functionality.
+This design document outlines the architecture for Pulsify's UI-only implementation with complete navigation flows, mock data repositories, and clean architecture patterns. The system will provide a fully functional user interface ready for backend integration while preserving the existing watch-to-phone heart rate streaming functionality.
 
 The architecture follows clean architecture principles with clear separation between domain (business logic), data (repositories), and presentation (UI) layers. Riverpod will manage state and dependency injection, making it easy to swap mock implementations with real backend services.
 

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solar_icons/solar_icons.dart';
 import '../../../theme/app_theme.dart';
@@ -79,7 +79,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 // Logo
                 Center(
                   child: SvgPicture.asset(
-                    'assets/flowfit_logo_header.svg',
+                    'assets/pulsify_logo_header.svg',
                     height: 32,
                   ),
                 ),

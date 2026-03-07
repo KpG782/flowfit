@@ -1,16 +1,16 @@
-# Copilot / AI Agent Instructions for FlowFit
+﻿# Copilot / AI Agent Instructions for Pulsify
 
-This file gives concise, actionable guidance to AI coding agents working on FlowFit. Keep edits short and focused — this project prioritizes robust watch ↔ phone sensor data, native Samsung Health integration, and Supabase sync.
+This file gives concise, actionable guidance to AI coding agents working on Pulsify. Keep edits short and focused — this project prioritizes robust watch ↔ phone sensor data, native Samsung Health integration, and Supabase sync.
 
 ## Big picture (what matters)
-- FlowFit is a Flutter app with two entry points:
+- Pulsify is a Flutter app with two entry points:
   - `lib/main_wear.dart` — Galaxy Watch (Wear OS) UI and sensors
   - `lib/main.dart` — Android Phone companion UI
 - Native Android code handles Samsung Health SDK, then sends data to Flutter via MethodChannel/EventChannel:
-  - Flutter -> Android MethodChannel (watch): `com.flowfit.watch/data`
-  - Android -> Flutter EventChannel (watch heart rate): `com.flowfit.watch/heartrate`
-  - Phone listener channels: `com.flowfit.phone/data` and `com.flowfit.phone/heartrate` (Flutter # side)
-- Native manager implementation is in `android/app/src/main/kotlin/com/example/flowfit/HealthTrackingManager.kt` and the Flutter bridge is `lib/services/watch_bridge.dart`.
+  - Flutter -> Android MethodChannel (watch): `com.pulsify.watch/data`
+  - Android -> Flutter EventChannel (watch heart rate): `com.pulsify.watch/heartrate`
+  - Phone listener channels: `com.pulsify.phone/data` and `com.pulsify.phone/heartrate` (Flutter # side)
+- Native manager implementation is in `android/app/src/main/kotlin/com/example/Pulsify/HealthTrackingManager.kt` and the Flutter bridge is `lib/services/watch_bridge.dart`.
 - Data flows:
   - Sensor reading (native Samsung Health) -> HealthTrackingManager -> EventChannel -> Flutter `WatchBridgeService` -> UI / Supabase
   - Watch messages can transfer via Wearable Data Layer to the Phone app which uses `PhoneDataListener` to receive data
@@ -42,7 +42,7 @@ This file gives concise, actionable guidance to AI coding agents working on Flow
 ## Key files to review before making changes
 - Flutter entry points: `lib/main.dart`, `lib/main_wear.dart`
 - Flutter bridging and services: `lib/services/watch_bridge.dart`, `lib/services/phone_data_listener.dart`, `lib/services/supabase_service.dart`
-- Android native integration: `android/app/src/main/kotlin/com/example/flowfit/MainActivity.kt`, `HealthTrackingManager.kt`
+- Android native integration: `android/app/src/main/kotlin/com/example/Pulsify/MainActivity.kt`, `HealthTrackingManager.kt`
 - Models: `lib/models/heart_rate_data.dart`, `lib/models/sensor_status.dart`, `lib/models/sensor_error.dart`
 - UI grouped by platform: `lib/screens/wear/` (watch) and `lib/screens/` (phone)
 - Tests: `test/services/watch_bridge_test.dart` (use as canonical example for mocking Method/Event channels)
@@ -65,7 +65,7 @@ This file gives concise, actionable guidance to AI coding agents working on Flow
 
 ## Conventions & implementation patterns
 - Always use `MethodChannel` for request/response and `EventChannel` for streaming sensor data. See `WatchBridgeService` and `MainActivity.kt` for exact naming and method names.
-  - Methods exposed via `com.flowfit.watch/data`:
+  - Methods exposed via `com.pulsify.watch/data`:
     - `requestPermission`, `checkPermission`, `connectWatch`, `disconnectWatch`, `isWatchConnected`, `startHeartRate`, `stopHeartRate`, `getCurrentHeartRate`
 - Error mapping: Platform exceptions are mapped to a `SensorError` with `SensorErrorCode` (e.g., `PERMISSION_DENIED`, `SERVICE_UNAVAILABLE`, `TIMEOUT`). Ensure new platform errors are mapped accordingly.
 - Use `Logger` package for debug output instead of prints; follow `WatchBridgeService` for logger setup.
@@ -79,7 +79,7 @@ This file gives concise, actionable guidance to AI coding agents working on Flow
 - UI code must be under `lib/features/<feature>/presentation` and rely on domain use-cases and provider/view-model patterns (the repo uses `Provider`).
 
 ## Native Android notes
-- `HealthTrackingManager` handles Samsung Health SDK and sends heart-rate data via EventChannel sink (`com.flowfit.watch/heartrate`). If you add new features requiring native changes:
+- `HealthTrackingManager` handles Samsung Health SDK and sends heart-rate data via EventChannel sink (`com.pulsify.watch/heartrate`). If you add new features requiring native changes:
   - Update `HealthTrackingManager.kt` and add method handlers in `MainActivity.kt`.
   - Add or update AAR dependencies in `android/app/libs` and `android/app/build.gradle.kts`.
   - Keep AndroidManifest permission declarations: `BODY_SENSORS`, `FOREGROUND_SERVICE`, `WAKE_LOCK`, `ACTIVITY_RECOGNITION`.
@@ -117,7 +117,7 @@ Follow feature-first steps below as an alternative to the 'generic' flow above:
 
 ## Helpful examples
 - See `test/services/watch_bridge_test.dart` — canonical tests for method channel behavior and event streams.
-- See `android/app/src/main/kotlin/com/example/flowfit/MainActivity.kt` — method names and EventChannel usage directly correspond to Flutter service methods.
+- See `android/app/src/main/kotlin/com/example/Pulsify/MainActivity.kt` — method names and EventChannel usage directly correspond to Flutter service methods.
 
 ---
 If anything in these instructions is unclear, incomplete, or you want more examples (e.g., expand test examples or add CI steps), please ask and I will refine the file.

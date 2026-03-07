@@ -1,4 +1,4 @@
-# Wellness Tracker UI Fixes
+﻿# Wellness Tracker UI Fixes
 
 ## Issues Fixed
 
@@ -61,7 +61,7 @@ FlutterMap(
   children: [
     TileLayer(
       urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-      userAgentPackageName: 'com.flowfit.app',
+      userAgentPackageName: 'com.pulsify.app',
       tileProvider: NetworkTileProvider(),
     ),
     // Routes drawn first (underneath markers)

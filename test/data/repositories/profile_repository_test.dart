@@ -1,5 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flowfit/domain/exceptions/auth_exceptions.dart';
+﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:pulsify/domain/exceptions/auth_exceptions.dart';
 
 void main() {
   group('ProfileRepository Retry Logic', () {

@@ -1,13 +1,13 @@
-# FlowFit Authentication Flow Setup
+﻿# Pulsify Authentication Flow Setup
 
 ## Overview
-Complete authentication flow with loading screen, welcome screen, login, and signup screens following the FlowFit Style Guide.
+Complete authentication flow with loading screen, welcome screen, login, and signup screens following the Pulsify Style Guide.
 
 ## Created Files
 
 ### 1. Theme System
 **File:** `lib/theme/app_theme.dart`
-- Reusable theme based on FlowFit Style Guide
+- Reusable theme based on Pulsify Style Guide
 - Colors: Primary Blue (#3B82F6), Light Blue (#5DADE2), Cyan (#5DD9E2)
 - Font: General Sans (configured, needs font files)
 - Light and Dark theme support
@@ -18,7 +18,7 @@ Complete authentication flow with loading screen, welcome screen, login, and sig
 - Animated splash screen with gradient background
 - Fade and scale animations
 - 3-second delay before navigating to welcome screen
-- Shows FlowFit logo and loading indicator
+- Shows Pulsify logo and loading indicator
 
 ### 3. Welcome Screen
 **File:** `lib/screens/auth/welcome_screen.dart`

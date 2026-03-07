@@ -1,4 +1,4 @@
-# SmartWatch to Phone Live Data Flow - Kotlin Implementation
+﻿# SmartWatch to Phone Live Data Flow - Kotlin Implementation
 
 ## 🎯 Overview
 This document details the comprehensive flow of real-time heart rate and IBI (Inter-Beat Interval) data transmission from a Samsung smartwatch (Wear OS) to an Android phone using Kotlin, highlighting the **critical importance of health permissions**.
@@ -15,7 +15,7 @@ The Wear OS app REQUIRES explicit health sensor permissions before any heart rat
 
 ### **Wear Module (Smartwatch) - Permission Implementation**
 
-**Location:** `wear/src/main/java/com/flowfit/presentation/ui/Permission.kt`
+**Location:** `wear/src/main/java/com/Pulsify/presentation/ui/Permission.kt`
 
 ```kotlin
 @OptIn(ExperimentalPermissionsApi::class)
@@ -142,7 +142,7 @@ fun Permission(
 
 ### **PHASE 1: Permission Request & Setup (WEAR)**
 
-**Location:** `wear/src/main/java/com/flowfit/presentation/MainActivity.kt`
+**Location:** `wear/src/main/java/com/Pulsify/presentation/MainActivity.kt`
 
 ```kotlin
 @AndroidEntryPoint
@@ -191,7 +191,7 @@ class MainActivity : ComponentActivity() {
 
 ### **PHASE 2: Samsung Health Service Connection (WEAR)**
 
-**Location:** `wear/src/main/java/com/flowfit/presentation/MainViewModel.kt`
+**Location:** `wear/src/main/java/com/Pulsify/presentation/MainViewModel.kt`
 
 ```kotlin
 fun setUpTracking() {
@@ -234,7 +234,7 @@ fun setUpTracking() {
 
 ### **PHASE 3: Heart Rate Tracking Initiation (WEAR)**
 
-**Location:** `wear/src/main/java/com/flowfit/presentation/MainViewModel.kt`
+**Location:** `wear/src/main/java/com/Pulsify/presentation/MainViewModel.kt`
 
 ```kotlin
 fun startTracking() {
@@ -276,7 +276,7 @@ fun startTracking() {
 
 ### **PHASE 4: Real-Time Data Collection (WEAR)**
 
-**Location:** `wear/src/main/java/com/flowfit/data/TrackingRepositoryImpl.kt`
+**Location:** `wear/src/main/java/com/Pulsify/data/TrackingRepositoryImpl.kt`
 
 ```kotlin
 override suspend fun track(): Flow<TrackerMessage> = callbackFlow {
@@ -345,7 +345,7 @@ override suspend fun track(): Flow<TrackerMessage> = callbackFlow {
 
 **Data Structure (COMMON):**
 
-**Location:** `common/src/main/java/com/flowfit/data/TrackedData.kt`
+**Location:** `common/src/main/java/com/Pulsify/data/TrackedData.kt`
 
 ```kotlin
 @Serializable
@@ -359,7 +359,7 @@ data class TrackedData(
 
 ### **PHASE 5: Data Transmission to Phone (WEAR)**
 
-**Location:** `wear/src/main/java/com/flowfit/domain/SendMessageUseCase.kt`
+**Location:** `wear/src/main/java/com/Pulsify/domain/SendMessageUseCase.kt`
 
 ```kotlin
 private const val MESSAGE_PATH = "/msg"
@@ -391,7 +391,7 @@ class SendMessageUseCase @Inject constructor(
 
 **Node Discovery Process:**
 
-**Location:** `wear/src/main/java/com/flowfit/domain/GetCapableNodes.kt`
+**Location:** `wear/src/main/java/com/Pulsify/domain/GetCapableNodes.kt`
 
 ```kotlin
 private const val CAPABILITY = "wear"
@@ -410,7 +410,7 @@ class GetCapableNodes @Inject constructor(
 
 **Message Sending:**
 
-**Location:** `wear/src/main/java/com/flowfit/data/MessageRepositoryImpl.kt`
+**Location:** `wear/src/main/java/com/Pulsify/data/MessageRepositoryImpl.kt`
 
 ```kotlin
 override suspend fun sendMessage(message: String, node: Node, messagePath: String): Boolean {
@@ -449,7 +449,7 @@ override suspend fun sendMessage(message: String, node: Node, messagePath: Strin
 
 ### **PHASE 6: Message Reception on Phone (MOBILE)**
 
-**Location:** `mobile/src/main/java/com/flowfit/mobile/data/DataListenerService.kt`
+**Location:** `mobile/src/main/java/com/Pulsify/mobile/data/DataListenerService.kt`
 
 ```kotlin
 private const val TAG = "DataListenerService"
@@ -488,7 +488,7 @@ class DataListenerService : WearableListenerService() {
 
 ```xml
 <service
-    android:name="com.flowfit.mobile.data.DataListenerService"
+    android:name="com.Pulsify.mobile.data.DataListenerService"
     android:exported="true">
     <intent-filter>
         <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
@@ -514,7 +514,7 @@ class DataListenerService : WearableListenerService() {
 
 ### **PHASE 7: Data Decoding & Display (MOBILE)**
 
-**Location:** `mobile/src/main/java/com/flowfit/mobile/presentation/MainActivity.kt`
+**Location:** `mobile/src/main/java/com/Pulsify/mobile/presentation/MainActivity.kt`
 
 ```kotlin
 @Composable
@@ -533,7 +533,7 @@ fun TheApp(intent: Intent?) {
 
 **Decoding Logic:**
 
-**Location:** `mobile/src/main/java/com/flowfit/mobile/presentation/HelpFunctions.kt`
+**Location:** `mobile/src/main/java/com/Pulsify/mobile/presentation/HelpFunctions.kt`
 
 ```kotlin
 class HelpFunctions {
@@ -826,7 +826,7 @@ If you want to compare with Flutter method channels:
 
 1. **Create Platform Channel in Flutter**
    ```dart
-   static const platform = MethodChannel('com.flowfit/health');
+   static const platform = MethodChannel('com.Pulsify/health');
    ```
 
 2. **On Native Side (Kotlin):**
@@ -847,22 +847,22 @@ If you want to compare with Flutter method channels:
 ## 📄 File Reference
 
 ### **WEAR Module Key Files:**
-- `wear/src/main/java/com/flowfit/presentation/ui/Permission.kt` - **PERMISSION HANDLING**
-- `wear/src/main/java/com/flowfit/presentation/MainActivity.kt` - Entry point
-- `wear/src/main/java/com/flowfit/presentation/MainViewModel.kt` - State management
-- `wear/src/main/java/com/flowfit/data/TrackingRepositoryImpl.kt` - Samsung Health SDK
-- `wear/src/main/java/com/flowfit/data/MessageRepositoryImpl.kt` - Wearable messages
-- `wear/src/main/java/com/flowfit/domain/SendMessageUseCase.kt` - Send logic
+- `wear/src/main/java/com/Pulsify/presentation/ui/Permission.kt` - **PERMISSION HANDLING**
+- `wear/src/main/java/com/Pulsify/presentation/MainActivity.kt` - Entry point
+- `wear/src/main/java/com/Pulsify/presentation/MainViewModel.kt` - State management
+- `wear/src/main/java/com/Pulsify/data/TrackingRepositoryImpl.kt` - Samsung Health SDK
+- `wear/src/main/java/com/Pulsify/data/MessageRepositoryImpl.kt` - Wearable messages
+- `wear/src/main/java/com/Pulsify/domain/SendMessageUseCase.kt` - Send logic
 - `wear/src/main/AndroidManifest.xml` - **PERMISSION DECLARATIONS**
 
 ### **MOBILE Module Key Files:**
-- `mobile/src/main/java/com/flowfit/mobile/data/DataListenerService.kt` - Message receiver
-- `mobile/src/main/java/com/flowfit/mobile/presentation/MainActivity.kt` - UI display
-- `mobile/src/main/java/com/flowfit/mobile/presentation/HelpFunctions.kt` - JSON decoder
+- `mobile/src/main/java/com/Pulsify/mobile/data/DataListenerService.kt` - Message receiver
+- `mobile/src/main/java/com/Pulsify/mobile/presentation/MainActivity.kt` - UI display
+- `mobile/src/main/java/com/Pulsify/mobile/presentation/HelpFunctions.kt` - JSON decoder
 - `mobile/src/main/AndroidManifest.xml` - Service registration
 
 ### **COMMON Module Key Files:**
-- `common/src/main/java/com/flowfit/data/TrackedData.kt` - Shared data model
+- `common/src/main/java/com/Pulsify/data/TrackedData.kt` - Shared data model
 
 ---
 
@@ -890,7 +890,7 @@ adb -s <phone_device> logcat | grep -E "DataListenerService|MainActivity"
 
 ### **Check Permissions:**
 ```bash
-adb shell dumpsys package com.flowfit.app | grep permission
+adb shell dumpsys package com.pulsify.app | grep permission
 ```
 
 ---

@@ -1,6 +1,6 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flowfit/features/activity_classifier/domain/activity.dart';
-import 'package:flowfit/features/activity_classifier/domain/classify_activity_usecase.dart';
+﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:pulsify/features/activity_classifier/domain/activity.dart';
+import 'package:pulsify/features/activity_classifier/domain/classify_activity_usecase.dart';
 
 /// Mock implementation of ActivityClassifierRepository for testing
 class MockActivityClassifierRepository

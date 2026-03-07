@@ -1,7 +1,7 @@
-import 'package:flutter_test/flutter_test.dart';
+﻿import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
-import 'package:flowfit/presentation/notifiers/profile_notifier.dart';
+import 'package:pulsify/presentation/notifiers/profile_notifier.dart';
 
 @GenerateMocks([ProfileNotifier])
 import 'profile_refresh_property_test.mocks.dart';
@@ -51,11 +51,10 @@ void main() {
           {'userId': 'user-3', 'shouldSucceed': false}, // Test failure case
           {'userId': 'user-4', 'shouldSucceed': true},
           {'userId': 'user-5', 'shouldSucceed': false},
-        ];
+      ];
 
-        for (final testCase in testCases) {
-          final userId = testCase['userId'] as String;
-          final shouldSucceed = testCase['shouldSucceed'] as bool;
+      for (final testCase in testCases) {
+        final shouldSucceed = testCase['shouldSucceed'] as bool;
 
           // Arrange: Create mock notifier
           final mockNotifier = MockProfileNotifier();
@@ -93,7 +92,6 @@ void main() {
       ];
 
       for (final testCase in testCases) {
-        final userId = testCase['userId'] as String;
         final refreshCount = testCase['refreshCount'] as int;
 
         // Arrange

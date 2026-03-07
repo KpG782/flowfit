@@ -1,4 +1,4 @@
-# Quick Setup for Supabase Email Verification
+﻿# Quick Setup for Supabase Email Verification
 
 ## 🚀 5-Minute Setup
 
@@ -17,8 +17,8 @@ Add these URLs in the **Redirect URLs** section:
 ```
 http://localhost:3000
 http://localhost:3000/auth/callback
-flowfit://auth/callback
-flowfit://email-verification
+Pulsify://auth/callback
+Pulsify://email-verification
 ```
 
 ### 3. Email Template
@@ -27,7 +27,7 @@ Go to **Authentication** → **Email Templates** → **Confirm signup**
 
 **Subject:**
 ```
-Confirm Your FlowFit Signup ⚡
+Confirm Your Pulsify Signup ⚡
 ```
 
 **Body:**
@@ -53,14 +53,14 @@ The app will:
 
 Update Site URL to your production domain:
 ```
-https://flowfit.app
+https://pulsify.app
 ```
 
 And add production redirect URLs:
 ```
-https://flowfit.app
-https://flowfit.app/auth/callback
-flowfit://auth/callback
+https://pulsify.app
+https://pulsify.app/auth/callback
+Pulsify://auth/callback
 ```
 
 ## 📱 Mobile Deep Links

@@ -1,4 +1,4 @@
-# Requirements Document
+﻿# Requirements Document
 
 ## Introduction
 
@@ -6,7 +6,7 @@ This feature addresses the navigation bar overflow issue on devices with system 
 
 ## Glossary
 
-- **Navigation Bar**: The bottom navigation component in the FlowFit app that provides access to Home, Health, Track, Progress, and Profile tabs
+- **Navigation Bar**: The bottom navigation component in the Pulsify app that provides access to Home, Health, Track, Progress, and Profile tabs
 - **System UI Insets**: The safe area padding required to avoid overlapping with system navigation bars, gesture indicators, or notches
 - **MediaQuery**: Flutter's mechanism for accessing device screen information and safe area insets
 - **SafeArea**: Flutter widget that automatically applies padding to avoid system UI intrusions

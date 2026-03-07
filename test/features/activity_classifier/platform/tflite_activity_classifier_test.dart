@@ -1,5 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flowfit/features/activity_classifier/platform/tflite_activity_classifier.dart';
+﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:pulsify/features/activity_classifier/platform/tflite_activity_classifier.dart';
 
 void main() {
   group('TFLiteActivityClassifier', () {

@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flowfit/core/domain/repositories/profile_repository.dart';
+import 'package:pulsify/core/domain/repositories/profile_repository.dart';
 import 'package:solar_icons/solar_icons.dart';
 
 void main() {

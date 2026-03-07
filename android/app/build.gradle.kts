@@ -1,4 +1,4 @@
-plugins {
+﻿plugins {
     id("com.android.application")
     id("kotlin-android")
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0"
@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.flowfit"
+    namespace = "com.example.pulsify"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -24,7 +24,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.flowfit"
+        applicationId = "com.example.pulsify"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 30  // Required for Wear OS 3.0+ and Samsung Health Sensor API (article recommends 23, but 30 needed for Samsung Health)

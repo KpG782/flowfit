@@ -1,8 +1,8 @@
-import 'package:flutter_test/flutter_test.dart';
+﻿import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flowfit/providers/dashboard_providers.dart';
-import 'package:flowfit/models/daily_stats.dart';
-import 'package:flowfit/models/recent_activity.dart';
+import 'package:pulsify/providers/dashboard_providers.dart';
+import 'package:pulsify/models/daily_stats.dart';
+import 'package:pulsify/models/recent_activity.dart';
 
 void main() {
   group('Dashboard Providers', () {

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wear_plus/wear_plus.dart';
 import 'dart:async';
@@ -114,7 +114,7 @@ class _WearHeartRateScreenState extends State<WearHeartRateScreen>
   /// Triggers animation when sensor data is transmitted to phone
   /// Requirements: 5.4, 3.5
   void _setupTransmissionListener() {
-    const transmissionChannel = EventChannel('com.flowfit.watch/transmission');
+    const transmissionChannel = EventChannel('com.pulsify.watch/transmission');
     
     _transmissionSubscription = transmissionChannel.receiveBroadcastStream().listen(
       (event) {

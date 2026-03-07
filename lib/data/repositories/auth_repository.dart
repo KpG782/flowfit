@@ -1,4 +1,4 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
+﻿import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../domain/entities/user.dart' as domain;
 import '../../domain/repositories/i_auth_repository.dart';
 import '../../domain/exceptions/auth_exceptions.dart' as domain_exceptions;
@@ -52,7 +52,7 @@ class AuthRepository implements IAuthRepository {
         email: email,
         password: password,
         data: userMetadata,
-        emailRedirectTo: 'com.example.flowfit://auth-callback',
+        emailRedirectTo: 'com.example.pulsify://auth-callback',
       );
 
       if (response.user == null) {

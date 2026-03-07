@@ -1,6 +1,6 @@
-{
-    "name": "flowfit",
-    "short_name": "flowfit",
+﻿{
+    "name": "Pulsify",
+    "short_name": "Pulsify",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

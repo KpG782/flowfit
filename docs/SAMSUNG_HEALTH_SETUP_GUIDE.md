@@ -1,6 +1,6 @@
-# Samsung Health Sensor Integration Setup Guide
+﻿# Samsung Health Sensor Integration Setup Guide
 
-This guide explains how to set up and use the Samsung Health Sensor SDK integration in your FlowFit app.
+This guide explains how to set up and use the Samsung Health Sensor SDK integration in your Pulsify app.
 
 ## Prerequisites
 
@@ -193,7 +193,7 @@ class HeartRateData {
 - Try restarting the watch
 
 **"Permission Denied"**
-- Go to Settings → Apps → FlowFit → Permissions
+- Go to Settings → Apps → Pulsify → Permissions
 - Enable "Body sensors" permission
 
 **"Sensor Not Supported"**

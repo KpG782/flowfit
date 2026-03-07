@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:async';
 
@@ -80,7 +80,7 @@ class _LoadingScreenState extends State<LoadingScreen>
                   );
                 },
                 child: SvgPicture.asset(
-                  'assets/flowfit_logo.svg',
+                  'assets/pulsify_logo.svg',
                   width: 120,
                   height: 120,
                 ),
@@ -94,7 +94,7 @@ class _LoadingScreenState extends State<LoadingScreen>
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 48.0),
                   child: Text(
-                    'FlowFit',
+                    'Pulsify',
                     style: Theme.of(context).textTheme.displayMedium?.copyWith(
                       color: const Color(0xFF3183E8), // Brand Blue
                       fontWeight: FontWeight.bold,

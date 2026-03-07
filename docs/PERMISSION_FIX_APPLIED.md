@@ -1,4 +1,4 @@
-# Permission Fix Applied - November 25, 2025
+﻿# Permission Fix Applied - November 25, 2025
 
 ## Problem Identified
 
@@ -100,7 +100,7 @@ Future<void> _checkConnection() async {
 
 ### First Launch
 1. App opens → "Checking permissions..." status
-2. System permission dialog appears: "Allow FlowFit to access body sensors?"
+2. System permission dialog appears: "Allow Pulsify to access body sensors?"
 3. User taps "Allow"
 4. "Connecting..." status
 5. "Ready" status - connection successful
@@ -119,7 +119,7 @@ Future<void> _checkConnection() async {
 
 1. **Uninstall the app** to reset permissions:
    ```bash
-   adb uninstall com.example.flowfit
+   adb uninstall com.example.pulsify
    ```
 
 2. **Rebuild and install**:
@@ -162,7 +162,7 @@ Added `if (!mounted) return;` checks before all `setState()` calls to prevent er
 ## Related Documentation
 
 - `SMARTWATCH_TO_PHONE_DATA_FLOW.md` - Explains why permissions are critical
-- `android/app/src/main/kotlin/com/example/flowfit/MainActivity.kt` - Native permission handlers
+- `android/app/src/main/kotlin/com/example/Pulsify/MainActivity.kt` - Native permission handlers
 - `android/app/src/main/AndroidManifest.xml` - Permission declarations
 
 ## Next Steps

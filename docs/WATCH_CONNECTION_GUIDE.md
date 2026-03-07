@@ -1,4 +1,4 @@
-# Watch Connection Troubleshooting Guide
+﻿# Watch Connection Troubleshooting Guide
 
 ## Quick Fix Checklist
 
@@ -10,10 +10,10 @@
 ### 2. Check App Installation
 ```bash
 # Verify watch app is installed
-adb -s SM_R930 shell pm list packages | findstr flowfit
+adb -s SM_R930 shell pm list packages | findstr Pulsify
 
 # Verify phone app is installed  
-adb -s 22101320G shell pm list packages | findstr flowfit
+adb -s 22101320G shell pm list packages | findstr Pulsify
 ```
 
 ### 3. Test Connection
@@ -124,6 +124,6 @@ PhoneDataListener: Heart rate: 72 BPM
 
 If still having issues:
 1. Check `adb devices` shows both devices
-2. Verify permissions in Settings → Apps → FlowFit
+2. Verify permissions in Settings → Apps → Pulsify
 3. Restart both devices
 4. Re-pair watch in Galaxy Wearable app

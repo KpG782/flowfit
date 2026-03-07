@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:solar_icons/solar_icons.dart';
 import '../../../providers/dashboard_providers.dart';
@@ -6,7 +6,7 @@ import '../../../providers/dashboard_providers.dart';
 /// HomeHeader widget displays the app branding and notification indicator
 /// 
 /// Features:
-/// - App branding ("FlowFit")
+/// - App branding ("Pulsify")
 /// - Notification bell icon with badge
 /// - Badge displays count (or "9+" for counts > 9)
 /// - Navigation to notifications screen on tap
@@ -27,7 +27,7 @@ class HomeHeader extends ConsumerWidget implements PreferredSizeWidget {
       backgroundColor: theme.colorScheme.surface,
       elevation: 0,
       title: Text(
-        'FlowFit',
+        'Pulsify',
         style: theme.textTheme.headlineMedium?.copyWith(
           fontWeight: FontWeight.bold,
           color: theme.colorScheme.onSurface,

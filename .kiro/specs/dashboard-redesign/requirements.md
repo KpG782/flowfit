@@ -1,12 +1,12 @@
-# Requirements Document
+﻿# Requirements Document
 
 ## Introduction
 
-The FlowFit Dashboard Redesign aims to create a cleaner, more focused home screen experience that emphasizes user activity tracking and quick access to workout features. The redesign will implement a 5-item bottom navigation system, display daily activity statistics in an intuitive card-based layout, provide prominent call-to-action buttons for starting workouts, and show recent activity history. The system will use Riverpod for state management and maintain consistency with the app's existing theme system (app_theme.dart) while incorporating Solar Icons as the primary icon library.
+The Pulsify Dashboard Redesign aims to create a cleaner, more focused home screen experience that emphasizes user activity tracking and quick access to workout features. The redesign will implement a 5-item bottom navigation system, display daily activity statistics in an intuitive card-based layout, provide prominent call-to-action buttons for starting workouts, and show recent activity history. The system will use Riverpod for state management and maintain consistency with the app's existing theme system (app_theme.dart) while incorporating Solar Icons as the primary icon library.
 
 ## Glossary
 
-- **Dashboard**: The main home screen of the FlowFit application that displays activity summaries and navigation
+- **Dashboard**: The main home screen of the Pulsify application that displays activity summaries and navigation
 - **Bottom Navigation Bar**: A persistent navigation component at the bottom of the screen with 5 items (Home, Health, Track, Progress, Profile)
 - **Stats Card**: A visual component displaying a specific fitness metric (steps, calories, active time) with progress indicators
 - **CTA Section**: Call-to-action section containing buttons for initiating workout activities

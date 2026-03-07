@@ -1,10 +1,10 @@
-import 'package:flutter_test/flutter_test.dart';
+﻿import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flowfit/core/data/repositories/profile_repository_impl.dart';
-import 'package:flowfit/core/domain/entities/user_profile.dart';
-import 'package:flowfit/core/domain/repositories/profile_repository.dart';
-import 'package:flowfit/core/exceptions/profile_exceptions.dart';
+import 'package:pulsify/core/data/repositories/profile_repository_impl.dart';
+import 'package:pulsify/core/domain/entities/user_profile.dart';
+import 'package:pulsify/core/domain/repositories/profile_repository.dart';
+import 'package:pulsify/core/exceptions/profile_exceptions.dart';
 
 /// Simple mock for Supabase client (not used in local storage tests)
 class MockSupabaseClient extends SupabaseClient {

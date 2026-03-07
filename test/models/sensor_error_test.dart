@@ -1,6 +1,6 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flowfit/models/sensor_error.dart';
-import 'package:flowfit/models/sensor_error_code.dart';
+﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:pulsify/models/sensor_error.dart';
+import 'package:pulsify/models/sensor_error_code.dart';
 
 void main() {
   group('SensorError', () {

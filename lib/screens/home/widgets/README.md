@@ -1,6 +1,6 @@
-# Home Screen Widgets
+﻿# Home Screen Widgets
 
-This directory contains modular widgets for the FlowFit dashboard home screen.
+This directory contains modular widgets for the Pulsify dashboard home screen.
 
 ## Available Widgets
 
@@ -8,7 +8,7 @@ This directory contains modular widgets for the FlowFit dashboard home screen.
 App header with branding and notification indicator.
 
 **Features:**
-- App branding ("FlowFit")
+- App branding ("Pulsify")
 - Notification bell icon with badge
 - Badge displays count (or "9+" for counts > 9)
 - Navigation to notifications screen on tap

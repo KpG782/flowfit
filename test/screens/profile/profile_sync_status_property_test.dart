@@ -1,15 +1,15 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flowfit/screens/profile/profile_screen.dart';
-import 'package:flowfit/presentation/providers/profile_providers.dart';
-import 'package:flowfit/presentation/notifiers/profile_notifier.dart';
-import 'package:flowfit/core/domain/repositories/profile_repository.dart';
-import 'package:flowfit/core/domain/entities/user_profile.dart';
-import 'package:flowfit/presentation/providers/providers.dart'
+import 'package:pulsify/screens/profile/profile_screen.dart';
+import 'package:pulsify/presentation/providers/profile_providers.dart';
+import 'package:pulsify/presentation/notifiers/profile_notifier.dart';
+import 'package:pulsify/core/domain/repositories/profile_repository.dart';
+import 'package:pulsify/core/domain/entities/user_profile.dart';
+import 'package:pulsify/presentation/providers/providers.dart'
     hide profileRepositoryProvider;
-import 'package:flowfit/domain/repositories/i_auth_repository.dart';
-import 'package:flowfit/domain/entities/user.dart';
+import 'package:pulsify/domain/repositories/i_auth_repository.dart';
+import 'package:pulsify/domain/entities/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:solar_icons/solar_icons.dart';
 
 class TermsOfServiceScreen extends StatelessWidget {
@@ -61,13 +61,13 @@ class TermsOfServiceScreen extends StatelessWidget {
             _buildSection(
               context,
               'Acceptance of Terms',
-              'By accessing and using FlowFit, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to these terms, please do not use our service.',
+              'By accessing and using Pulsify, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to these terms, please do not use our service.',
             ),
             const SizedBox(height: 20),
             _buildSection(
               context,
               'Use License',
-              'Permission is granted to temporarily download one copy of FlowFit for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title.',
+              'Permission is granted to temporarily download one copy of Pulsify for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title.',
             ),
             const SizedBox(height: 20),
             _buildSection(
@@ -79,31 +79,31 @@ class TermsOfServiceScreen extends StatelessWidget {
             _buildSection(
               context,
               'Health Information',
-              'FlowFit provides fitness and health tracking features. The information provided is for general informational purposes only and should not be considered medical advice. Always consult with a healthcare professional before starting any fitness program.',
+              'Pulsify provides fitness and health tracking features. The information provided is for general informational purposes only and should not be considered medical advice. Always consult with a healthcare professional before starting any fitness program.',
             ),
             const SizedBox(height: 20),
             _buildSection(
               context,
               'Data Collection',
-              'We collect and process your personal data in accordance with our Privacy Policy. By using FlowFit, you consent to such processing and you warrant that all data provided by you is accurate.',
+              'We collect and process your personal data in accordance with our Privacy Policy. By using Pulsify, you consent to such processing and you warrant that all data provided by you is accurate.',
             ),
             const SizedBox(height: 20),
             _buildSection(
               context,
               'Prohibited Uses',
-              'You may not use FlowFit for any illegal or unauthorized purpose. You must not transmit any worms, viruses, or any code of a destructive nature.',
+              'You may not use Pulsify for any illegal or unauthorized purpose. You must not transmit any worms, viruses, or any code of a destructive nature.',
             ),
             const SizedBox(height: 20),
             _buildSection(
               context,
               'Limitation of Liability',
-              'FlowFit shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of or inability to use the service.',
+              'Pulsify shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of or inability to use the service.',
             ),
             const SizedBox(height: 20),
             _buildSection(
               context,
               'Modifications',
-              'FlowFit reserves the right to modify or replace these Terms at any time. We will provide notice of any significant changes by posting the new Terms on this page.',
+              'Pulsify reserves the right to modify or replace these Terms at any time. We will provide notice of any significant changes by posting the new Terms on this page.',
             ),
             const SizedBox(height: 20),
             _buildSection(
@@ -143,7 +143,7 @@ class TermsOfServiceScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'legal@flowfit.com',
+                    'legal@pulsify.com',
                     style: theme.textTheme.bodyLarge?.copyWith(
                       color: theme.colorScheme.primary,
                       fontWeight: FontWeight.w600,

@@ -1,18 +1,16 @@
-import 'package:flutter/services.dart';
+﻿import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flowfit/services/phone_data_listener.dart';
-import 'package:flowfit/models/sensor_error.dart';
-import 'package:flowfit/models/sensor_error_code.dart';
-import 'package:flowfit/models/sensor_batch.dart';
+import 'package:pulsify/services/phone_data_listener.dart';
+import 'package:pulsify/models/sensor_error.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('PhoneDataListener', () {
     late PhoneDataListener service;
-    const methodChannel = MethodChannel('com.flowfit.phone/data');
-    const eventChannel = EventChannel('com.flowfit.phone/heartrate');
-    const sensorBatchEventChannel = EventChannel('com.flowfit.phone/sensor_data');
+    const methodChannel = MethodChannel('com.pulsify.phone/data');
+    const eventChannel = EventChannel('com.pulsify.phone/heartrate');
+    const sensorBatchEventChannel = EventChannel('com.pulsify.phone/sensor_data');
 
     setUp(() {
       service = PhoneDataListener();
@@ -43,7 +41,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success(testData);
-              return null;
             },
           ),
         );
@@ -77,7 +74,6 @@ void main() {
             onListen: (arguments, events) {
               events.success(testData1);
               events.success(testData2);
-              return null;
             },
           ),
         );
@@ -97,7 +93,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success(null);
-              return null;
             },
           ),
         );
@@ -121,7 +116,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success('invalid string data');
-              return null;
             },
           ),
         );
@@ -151,7 +145,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success(invalidData);
-              return null;
             },
           ),
         );
@@ -181,7 +174,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success(invalidData);
-              return null;
             },
           ),
         );
@@ -211,7 +203,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success(invalidData);
-              return null;
             },
           ),
         );
@@ -241,7 +232,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success(invalidData);
-              return null;
             },
           ),
         );
@@ -271,7 +261,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success(invalidData);
-              return null;
             },
           ),
         );
@@ -302,7 +291,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success(invalidData);
-              return null;
             },
           ),
         );
@@ -333,7 +321,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success(testData);
-              return null;
             },
           ),
         );
@@ -358,7 +345,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success(invalidData);
-              return null;
             },
           ),
         );
@@ -379,11 +365,9 @@ void main() {
           eventChannel,
           MockStreamHandler.inline(
             onListen: (arguments, events) {
-              return null;
             },
             onCancel: (arguments) {
               cancelCalled = true;
-              return null;
             },
           ),
         );
@@ -403,7 +387,6 @@ void main() {
           if (methodCall.method == 'startListening') {
             return true;
           }
-          return null;
         });
 
         final result = await service.startListening();
@@ -416,7 +399,6 @@ void main() {
           if (methodCall.method == 'startListening') {
             return false;
           }
-          return null;
         });
 
         final result = await service.startListening();
@@ -432,7 +414,6 @@ void main() {
               message: 'Failed to start',
             );
           }
-          return null;
         });
 
         final result = await service.startListening();
@@ -445,9 +426,7 @@ void main() {
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .setMockMethodCallHandler(methodChannel, (MethodCall methodCall) async {
           if (methodCall.method == 'stopListening') {
-            return null;
           }
-          return null;
         });
 
         await expectLater(service.stopListening(), completes);
@@ -462,7 +441,6 @@ void main() {
               message: 'Failed to stop',
             );
           }
-          return null;
         });
 
         // Should not throw, just log the error
@@ -477,7 +455,6 @@ void main() {
           if (methodCall.method == 'isWatchConnected') {
             return true;
           }
-          return null;
         });
 
         final result = await service.isWatchConnected();
@@ -490,7 +467,6 @@ void main() {
           if (methodCall.method == 'isWatchConnected') {
             return false;
           }
-          return null;
         });
 
         final result = await service.isWatchConnected();
@@ -506,7 +482,6 @@ void main() {
               message: 'Failed to check',
             );
           }
-          return null;
         });
 
         final result = await service.isWatchConnected();
@@ -535,7 +510,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success(testData);
-              return null;
             },
           ),
         );
@@ -569,7 +543,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success(testData);
-              return null;
             },
           ),
         );
@@ -597,7 +570,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success(null);
-              return null;
             },
           ),
         );
@@ -621,7 +593,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success('invalid string data');
-              return null;
             },
           ),
         );
@@ -653,7 +624,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success(invalidData);
-              return null;
             },
           ),
         );
@@ -685,7 +655,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success(invalidData);
-              return null;
             },
           ),
         );
@@ -721,7 +690,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success(invalidData);
-              return null;
             },
           ),
         );
@@ -754,7 +722,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success(invalidData);
-              return null;
             },
           ),
         );
@@ -787,7 +754,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success(invalidData);
-              return null;
             },
           ),
         );
@@ -820,7 +786,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success(invalidData);
-              return null;
             },
           ),
         );

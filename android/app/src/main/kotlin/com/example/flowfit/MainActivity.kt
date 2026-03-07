@@ -1,4 +1,4 @@
-package com.example.flowfit
+﻿package com.example.pulsify
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -29,9 +29,9 @@ class MainActivity: FlutterActivity() {
         private const val TAG = "MainActivity"
     }
     
-    private val CHANNEL = "com.flowfit.watch/data"
-    private val EVENT_CHANNEL = "com.flowfit.watch/heartrate"
-    private val TRANSMISSION_EVENT_CHANNEL = "com.flowfit.watch/transmission"
+    private val CHANNEL = "com.pulsify.watch/data"
+    private val EVENT_CHANNEL = "com.pulsify.watch/heartrate"
+    private val TRANSMISSION_EVENT_CHANNEL = "com.pulsify.watch/transmission"
     private val PERMISSION_REQUEST_CODE = 1001
     
     private var pendingPermissionResult: MethodChannel.Result? = null
@@ -72,7 +72,7 @@ class MainActivity: FlutterActivity() {
             val powerManager = getSystemService(POWER_SERVICE) as PowerManager
             wakeLock = powerManager.newWakeLock(
                 PowerManager.PARTIAL_WAKE_LOCK,
-                "FlowFit::HeartRateTracking"
+                "Pulsify::HeartRateTracking"
             ).apply {
                 // Set reference counted to false so we can manually control it
                 setReferenceCounted(false)
@@ -163,7 +163,7 @@ class MainActivity: FlutterActivity() {
             Log.w(TAG, "GeneratedPluginRegistrant.registerWith failed, continuing: ${'$'}e")
         }
                 // Geofence method and event channels for native background integration
-                MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.flowfit.geofence/native").setMethodCallHandler { call, result ->
+                MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.pulsify.geofence/native").setMethodCallHandler { call, result ->
                     when (call.method) {
                         "registerGeofence" -> {
                             // Arguments: id, latitude, longitude, radius
@@ -185,7 +185,7 @@ class MainActivity: FlutterActivity() {
                     }
                 }
 
-                EventChannel(flutterEngine.dartExecutor.binaryMessenger, "com.flowfit.geofence/events").setStreamHandler(
+                EventChannel(flutterEngine.dartExecutor.binaryMessenger, "com.pulsify.geofence/events").setStreamHandler(
                     object : EventChannel.StreamHandler {
                         override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
                             // Store event sink to send geofence enter/exit notifications from native side
@@ -216,7 +216,7 @@ class MainActivity: FlutterActivity() {
         }
         
         // Watch-to-Phone sync method channel
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.flowfit.watch/sync").setMethodCallHandler { call, result ->
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.pulsify.watch/sync").setMethodCallHandler { call, result ->
             when (call.method) {
                 "sendHeartRateToPhone" -> sendHeartRateToPhone(call, result)
                 "sendBatchToPhone" -> sendBatchToPhone(result)
@@ -255,7 +255,7 @@ class MainActivity: FlutterActivity() {
         )
         
         // Phone data listener method channel (phone side - control listening)
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.flowfit.phone/data").setMethodCallHandler { call, result ->
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.pulsify.phone/data").setMethodCallHandler { call, result ->
             when (call.method) {
                 "startListening" -> {
                     // The PhoneDataListenerService is already running as a background service
@@ -289,7 +289,7 @@ class MainActivity: FlutterActivity() {
         }
         
         // Phone data listener event channel (phone side - receives from watch)
-        EventChannel(flutterEngine.dartExecutor.binaryMessenger, "com.flowfit.phone/heartrate").setStreamHandler(
+        EventChannel(flutterEngine.dartExecutor.binaryMessenger, "com.pulsify.phone/heartrate").setStreamHandler(
             object : EventChannel.StreamHandler {
                 override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
                     PhoneDataListenerService.eventSink = events
@@ -304,7 +304,7 @@ class MainActivity: FlutterActivity() {
         )
         
         // Sensor batch event channel (phone side - receives accelerometer + HR batches from watch)
-        EventChannel(flutterEngine.dartExecutor.binaryMessenger, "com.flowfit.phone/sensor_data").setStreamHandler(
+        EventChannel(flutterEngine.dartExecutor.binaryMessenger, "com.pulsify.phone/sensor_data").setStreamHandler(
             object : EventChannel.StreamHandler {
                 override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
                     PhoneDataListenerService.sensorBatchEventSink = events

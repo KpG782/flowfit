@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-import 'package:flowfit/features/wellness/presentation/maps_page_wrapper.dart';
-import 'package:flowfit/features/wellness/presentation/maps_page.dart';
-import 'package:flowfit/features/wellness/data/geofence_repository.dart';
-import 'package:flowfit/features/wellness/services/geofence_service.dart';
-import 'package:flowfit/features/wellness/domain/geofence_mission.dart';
-import 'package:flowfit/features/wellness/services/notification_service.dart';
+import 'package:pulsify/features/wellness/presentation/maps_page_wrapper.dart';
+import 'package:pulsify/features/wellness/presentation/maps_page.dart';
+import 'package:pulsify/features/wellness/data/geofence_repository.dart';
+import 'package:pulsify/features/wellness/services/geofence_service.dart';
+import 'package:pulsify/features/wellness/domain/geofence_mission.dart';
+import 'package:pulsify/features/wellness/services/notification_service.dart';
 
 void main() {
   testWidgets('MapsPageWrapper listens to notification taps and requests focus', (WidgetTester tester) async {

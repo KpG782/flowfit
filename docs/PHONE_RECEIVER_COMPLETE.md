@@ -1,4 +1,4 @@
-# Phone App - Data Receiver Implementation ✅
+﻿# Phone App - Data Receiver Implementation ✅
 
 ## What Was Implemented
 
@@ -7,7 +7,7 @@ The phone app is now fully set up to receive heart rate data from the Galaxy Wat
 ### Files Created/Modified
 
 #### 1. PhoneDataListenerService.kt ✅
-**Location**: `android/app/src/main/kotlin/com/example/flowfit/PhoneDataListenerService.kt`
+**Location**: `android/app/src/main/kotlin/com/example/Pulsify/PhoneDataListenerService.kt`
 
 **Purpose**: Android service that listens for messages from the watch
 
@@ -41,7 +41,7 @@ The phone app is now fully set up to receive heart rate data from the Galaxy Wat
 **Updated**: Added event channel for phone data listener
 
 **Added**:
-- Event channel: `com.flowfit.phone/heartrate`
+- Event channel: `com.pulsify.phone/heartrate`
 - Connects `PhoneDataListenerService.eventSink` to Flutter
 - Logs when data listener is registered
 
@@ -162,12 +162,12 @@ adb -s 6ece264d shell dumpsys activity services | findstr PhoneDataListener
 
 ### View Phone Logs
 ```bash
-adb -s 6ece264d logcat | findstr "PhoneDataListener\|FlowFit"
+adb -s 6ece264d logcat | findstr "PhoneDataListener\|Pulsify"
 ```
 
 ### View Watch Logs
 ```bash
-adb -s adb-RFAX21TD0NA-FFYRNh._adb-tls-connect._tcp logcat | findstr "WatchToPhoneSync\|FlowFit"
+adb -s adb-RFAX21TD0NA-FFYRNh._adb-tls-connect._tcp logcat | findstr "WatchToPhoneSync\|Pulsify"
 ```
 
 ### Check Wearable Connection
@@ -224,7 +224,7 @@ BPM
 ### Phone Screen
 ```
 ┌─────────────────────────┐
-│ FlowFit          [✓]    │
+│ Pulsify          [✓]    │
 ├─────────────────────────┤
 │  ❤️ Current Heart Rate  │
 │                         │

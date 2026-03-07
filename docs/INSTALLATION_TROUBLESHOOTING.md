@@ -1,4 +1,4 @@
-# Installation Troubleshooting Guide
+﻿# Installation Troubleshooting Guide
 
 ## Current Issues and Solutions
 
@@ -56,7 +56,7 @@
 - Removed async connection logic
 - Direct synchronous connection
 
-**File**: `android/app/src/main/kotlin/com/example/flowfit/HealthTrackingManager.kt`
+**File**: `android/app/src/main/kotlin/com/example/Pulsify/HealthTrackingManager.kt`
 
 ## Installation Methods
 
@@ -105,7 +105,7 @@ Before attempting installation:
 - [ ] Developer options enabled on watch
 - [ ] ADB debugging enabled on watch
 - [ ] Watch has sufficient battery (>20%)
-- [ ] Previous version uninstalled (if any): `adb -s 6ece264d uninstall com.example.flowfit`
+- [ ] Previous version uninstalled (if any): `adb -s 6ece264d uninstall com.example.pulsify`
 
 ## Verification Steps
 
@@ -113,18 +113,18 @@ After installation:
 
 1. **Check app is installed**:
    ```bash
-   adb -s 6ece264d shell pm list packages | findstr flowfit
+   adb -s 6ece264d shell pm list packages | findstr Pulsify
    ```
-   Should show: `package:com.example.flowfit`
+   Should show: `package:com.example.pulsify`
 
 2. **Launch app**:
    ```bash
-   adb -s 6ece264d shell am start -n com.example.flowfit/.MainActivity
+   adb -s 6ece264d shell am start -n com.example.pulsify/.MainActivity
    ```
 
 3. **View logs**:
    ```bash
-   adb -s 6ece264d logcat | findstr "FlowFit MainActivity HealthTrackingManager"
+   adb -s 6ece264d logcat | findstr "Pulsify MainActivity HealthTrackingManager"
    ```
 
 ## Common Error Messages
@@ -136,7 +136,7 @@ After installation:
 ### "INSTALL_FAILED_UPDATE_INCOMPATIBLE"
 ```bash
 # Uninstall old version first
-adb -s 6ece264d uninstall com.example.flowfit
+adb -s 6ece264d uninstall com.example.pulsify
 # Then reinstall
 flutter run -d 6ece264d
 ```
@@ -187,8 +187,8 @@ When installing, watch will show:
 
 ```
 Install app?
-FlowFit
-com.example.flowfit
+Pulsify
+com.example.pulsify
 
 [Cancel]  [Install]
 ```
@@ -204,7 +204,7 @@ If you miss it:
 
 1. **Open app on watch**:
    - Swipe up from watch face
-   - Find "FlowFit" icon
+   - Find "Pulsify" icon
    - Tap to open
 
 2. **Grant permissions**:
@@ -226,7 +226,7 @@ If you miss it:
 adb -s 6ece264d logcat
 
 # Filtered logs
-adb -s 6ece264d logcat | findstr "FlowFit MainActivity HealthTrackingManager"
+adb -s 6ece264d logcat | findstr "Pulsify MainActivity HealthTrackingManager"
 
 # Save logs to file
 adb -s 6ece264d logcat > watch_logs.txt
@@ -251,7 +251,7 @@ If not present:
 ```bash
 # Complete clean reinstall
 flutter clean
-adb -s 6ece264d uninstall com.example.flowfit
+adb -s 6ece264d uninstall com.example.pulsify
 flutter pub get
 flutter run -d 6ece264d
 ```
@@ -276,16 +276,16 @@ adb devices
 adb -s 6ece264d install -r build\app\outputs\flutter-apk\app-debug.apk
 
 # Uninstall app
-adb -s 6ece264d uninstall com.example.flowfit
+adb -s 6ece264d uninstall com.example.pulsify
 
 # Launch app
-adb -s 6ece264d shell am start -n com.example.flowfit/.MainActivity
+adb -s 6ece264d shell am start -n com.example.pulsify/.MainActivity
 
 # View logs
-adb -s 6ece264d logcat | findstr "FlowFit"
+adb -s 6ece264d logcat | findstr "Pulsify"
 
 # Check installed packages
-adb -s 6ece264d shell pm list packages | findstr flowfit
+adb -s 6ece264d shell pm list packages | findstr Pulsify
 
 # Check Samsung Health
 adb -s 6ece264d shell pm list packages | findstr samsung.android.service.health

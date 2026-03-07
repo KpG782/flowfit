@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../services/watch_bridge.dart';
 
@@ -124,7 +124,7 @@ class _SensorPermissionRationaleScreenState
 
                 // Explanation text
                 const Text(
-                  'FlowFit needs access to body sensors and activity recognition to track your heart rate and movement for accurate activity classification.',
+                  'Pulsify needs access to body sensors and activity recognition to track your heart rate and movement for accurate activity classification.',
                   style: TextStyle(
                     fontSize: 14, // Meets minimum 14sp for body text
                     color: Colors.white70,

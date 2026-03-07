@@ -1,4 +1,4 @@
-# Map Missions Setup - Complete ✅
+﻿# Map Missions Setup - Complete ✅
 
 ## What Was Done
 
@@ -52,10 +52,10 @@ Dashboard → Track Tab → Map Missions Button → Map Missions
 ---
 
 ### 4. ✅ Fixed Plugin Registration
-**File**: `android/app/src/main/kotlin/com/example/flowfit/MainActivity.kt`
+**File**: `android/app/src/main/kotlin/com/example/Pulsify/MainActivity.kt`
 
 **Fixed**:
-- Added missing method channel `com.flowfit.phone/data`
+- Added missing method channel `com.pulsify.phone/data`
 - Registered `startListening`, `stopListening`, `isWatchConnected` methods
 - Fixed MissingPluginException error
 
@@ -270,7 +270,7 @@ lib/features/activity_classifier/presentation/
 lib/screens/home/widgets/
   └── cta_section.dart (added map button)
 
-android/app/src/main/kotlin/com/example/flowfit/
+android/app/src/main/kotlin/com/example/Pulsify/
   └── MainActivity.kt (fixed plugin)
 
 docs/

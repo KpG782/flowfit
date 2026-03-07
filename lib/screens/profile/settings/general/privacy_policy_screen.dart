@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:solar_icons/solar_icons.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
@@ -61,19 +61,19 @@ class PrivacyPolicyScreen extends StatelessWidget {
             _buildSection(
               context,
               'Our Commitment',
-              'FlowFit is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and share your personal information.',
+              'Pulsify is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and share your personal information.',
             ),
             const SizedBox(height: 20),
             _buildSection(
               context,
               'Your Agreement',
-              'By using FlowFit, you agree to the terms of this policy. We collect information you provide, such as your name, email, and fitness data.',
+              'By using Pulsify, you agree to the terms of this policy. We collect information you provide, such as your name, email, and fitness data.',
             ),
             const SizedBox(height: 20),
             _buildSection(
               context,
               'How We Use Your Information',
-              'We use this information to personalize your experience, improve our services, and communicate with you. We may share your information with service providers who assist us in operating FlowFit.',
+              'We use this information to personalize your experience, improve our services, and communicate with you. We may share your information with service providers who assist us in operating Pulsify.',
             ),
             const SizedBox(height: 20),
             _buildSection(
@@ -132,7 +132,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'support@flowfit.com',
+                    'support@pulsify.com',
                     style: theme.textTheme.bodyLarge?.copyWith(
                       color: theme.colorScheme.primary,
                       fontWeight: FontWeight.w600,

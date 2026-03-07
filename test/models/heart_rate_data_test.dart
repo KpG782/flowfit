@@ -1,6 +1,6 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flowfit/models/heart_rate_data.dart';
-import 'package:flowfit/models/sensor_status.dart';
+﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:pulsify/models/heart_rate_data.dart';
+import 'package:pulsify/models/sensor_status.dart';
 
 void main() {
   group('HeartRateData', () {

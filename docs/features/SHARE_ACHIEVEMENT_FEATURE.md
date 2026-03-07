@@ -1,4 +1,4 @@
-# Share Achievement Feature - Strava Style
+﻿# Share Achievement Feature - Strava Style
 
 ## Summary
 Added a Strava-style share achievement feature that allows users to create beautiful shareable images of their workout with GPS route overlay and custom background images.
@@ -26,7 +26,7 @@ Added a Strava-style share achievement feature that allows users to create beaut
   - Custom image from gallery
 - White text overlay with stats
 - GPS route map with orange polyline
-- FlowFit branding at bottom
+- Pulsify branding at bottom
 
 **Stats Displayed:**
 - Distance (km)
@@ -76,7 +76,7 @@ FlutterMap with interaction disabled
 2. Dark gradient overlay (30-70% opacity)
 3. Stats at top (Distance, Pace, Time)
 4. GPS route map in center
-5. FlowFit branding at bottom
+5. Pulsify branding at bottom
 
 **Controls:**
 - "Add Background Image" button
@@ -122,7 +122,7 @@ FlutterMap with interaction disabled
 │  │                 │    │
 │  └─────────────────┘    │
 │                         │
-│  🔥 FLOWFIT             │ ← Branding
+│  🔥 Pulsify             │ ← Branding
 └─────────────────────────┘
 ```
 
@@ -219,5 +219,5 @@ Running Summary
 - High-quality PNG image (3x pixel ratio)
 - All stats clearly visible
 - GPS route displayed correctly
-- FlowFit branding present
+- Pulsify branding present
 - Shareable on all social platforms

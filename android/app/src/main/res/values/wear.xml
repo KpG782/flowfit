@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 
         Capability declaration for Wearable Data Layer
-        This tells the watch that this phone app can receive FlowFit data
+        This tells the watch that this phone app can receive Pulsify data
         The capability name MUST match what WatchToPhoneSyncManager looks for
     -->
     <string-array name="android_wear_capabilities">
-        <item>flowfit_phone_app</item>
+        <item>pulsify_phone_app</item>
     </string-array>
 </resources>

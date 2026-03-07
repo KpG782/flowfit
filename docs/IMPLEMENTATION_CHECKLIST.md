@@ -1,4 +1,4 @@
-# Samsung Health Sensor Implementation Checklist
+﻿# Samsung Health Sensor Implementation Checklist
 
 ## ✅ Already Completed
 
@@ -111,7 +111,7 @@ adb logcat MainActivity:D HealthTrackingManager:D *:S
 - Solution: Call `connectToWatch()` before `startHeartRateTracking()`
 
 **Issue: "Permission denied"**
-- Solution: Check Settings → Apps → FlowFit → Permissions
+- Solution: Check Settings → Apps → Pulsify → Permissions
 
 **Issue: "Sensor not supported"**
 - Solution: Device doesn't support continuous HR tracking (need Watch4+)

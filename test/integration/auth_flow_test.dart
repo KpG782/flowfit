@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flowfit/main.dart';
-import 'package:flowfit/presentation/providers/providers.dart';
-import 'package:flowfit/domain/entities/auth_state.dart';
+import 'package:pulsify/main.dart';
+import 'package:pulsify/presentation/providers/providers.dart';
+import 'package:pulsify/domain/entities/auth_state.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flowfit/secrets.dart';
+import 'package:pulsify/secrets.dart';
 
 /// Integration tests for complete authentication flows.
 /// 
@@ -32,12 +32,12 @@ void main() {
       'INTEGRATION: Complete signup → survey → dashboard flow',
       (WidgetTester tester) async {
         // Generate unique test email
-        final testEmail = 'test_${DateTime.now().millisecondsSinceEpoch}@flowfit.test';
+        final testEmail = 'test_${DateTime.now().millisecondsSinceEpoch}@Pulsify.test';
         const testPassword = 'TestPassword123!';
         const testName = 'Test User';
 
         // Build the app
-        await tester.pumpWidget(const ProviderScope(child: FlowFitPhoneApp()));
+        await tester.pumpWidget(const ProviderScope(child: PulsifyPhoneApp()));
         await tester.pumpAndSettle();
 
         // Should start at splash screen, then navigate to welcome
@@ -180,11 +180,11 @@ void main() {
       'INTEGRATION: Signup with duplicate email shows error',
       (WidgetTester tester) async {
         // Use a known existing email (you'll need to create this manually first)
-        const existingEmail = 'existing@flowfit.test';
+        const existingEmail = 'existing@Pulsify.test';
         const testPassword = 'TestPassword123!';
         const testName = 'Test User';
 
-        await tester.pumpWidget(const ProviderScope(child: FlowFitPhoneApp()));
+        await tester.pumpWidget(const ProviderScope(child: PulsifyPhoneApp()));
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         // Navigate to signup
@@ -236,7 +236,7 @@ void main() {
         const testPassword = 'TestPassword123!';
         const testName = 'Test User';
 
-        await tester.pumpWidget(const ProviderScope(child: FlowFitPhoneApp()));
+        await tester.pumpWidget(const ProviderScope(child: PulsifyPhoneApp()));
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         // Navigate to signup

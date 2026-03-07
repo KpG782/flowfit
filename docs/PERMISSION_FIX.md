@@ -1,4 +1,4 @@
-# Permission Fix for Samsung Health SDK Connection
+﻿# Permission Fix for Samsung Health SDK Connection
 
 ## 🔴 Problem Identified
 
@@ -98,7 +98,7 @@ flutter run -d adb-RFAX21TD0NA-FFYRNh._adb-tls-connect._tcp -t lib/main_wear.dar
 
 ### Step 2: Expected Behavior
 
-1. **App launches** → See FlowFit dashboard
+1. **App launches** → See Pulsify dashboard
 2. **Tap "Heart Rate" button** → See permission dialog (first time only)
 3. **Grant permission** → Permission wrapper disappears
 4. **See heart rate screen** → Connection should succeed immediately
@@ -202,7 +202,7 @@ If it still doesn't work after granting permission, check:
 
 3. **Permission actually granted?**
    ```bash
-   adb shell dumpsys package com.example.flowfit | grep "android.permission.BODY_SENSORS"
+   adb shell dumpsys package com.example.pulsify | grep "android.permission.BODY_SENSORS"
    ```
 
 ## 🎉 Summary

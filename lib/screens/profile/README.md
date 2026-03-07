@@ -1,6 +1,6 @@
-# Profile Module
+﻿# Profile Module
 
-This module contains all profile and settings-related screens for the FlowFit app.
+This module contains all profile and settings-related screens for the Pulsify app.
 
 ## Structure
 
@@ -99,7 +99,7 @@ Profile Tab (dashboard_screen.dart)
 
 #### About Us Screen
 
-- FlowFit branding and mission
+- Pulsify branding and mission
 - **Hackathon Development Team:**
   - Jam Emmanuel Villarosa - ML/AI Engineer & Project Leader
   - Ken Patrick Garcia - Full-stack Engineer

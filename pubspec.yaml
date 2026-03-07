@@ -1,4 +1,4 @@
-name: flowfit
+﻿name: Pulsify
 description: A health and fitness tracking application
 
 environment:
@@ -67,8 +67,8 @@ flutter:
   assets:
     - assets/model/activity_tracker.tflite
     - assets/images/
-    - assets/flowfit_logo.svg
-    - assets/flowfit_logo_header.svg
+    - assets/pulsify_logo.svg
+    - assets/pulsify_logo_header.svg
   uses-material-design: true # FIX: Enable material icons
   fonts:
     - family: GeneralSans

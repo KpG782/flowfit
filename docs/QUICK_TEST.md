@@ -1,4 +1,4 @@
-# Quick Test Guide
+﻿# Quick Test Guide
 
 ## 🚀 Test in 3 Steps
 
@@ -35,7 +35,7 @@ adb -s SM_R930 logcat | findstr "WatchToPhoneSync"
 ### On Watch
 ```
 ┌──────────────┐
-│   FlowFit    │
+│   Pulsify    │
 │   ❤️ Icon    │
 │              │
 │  ┌────────┐  │

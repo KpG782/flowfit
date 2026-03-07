@@ -1,4 +1,4 @@
-# Latest Improvements - Watch UI & Connection
+﻿# Latest Improvements - Watch UI & Connection
 
 ## What Changed
 
@@ -59,7 +59,7 @@ Created comprehensive guides:
 - `lib/screens/wear/wear_heart_rate_screen.dart` - Cleaner UI, better connection handling
 
 ### Kotlin Files
-- `android/app/src/main/kotlin/com/example/flowfit/WatchToPhoneSyncManager.kt` - Enhanced logging and multi-node support
+- `android/app/src/main/kotlin/com/example/Pulsify/WatchToPhoneSyncManager.kt` - Enhanced logging and multi-node support
 
 ### Documentation
 - `docs/WATCH_CONNECTION_GUIDE.md` - New troubleshooting guide
@@ -106,7 +106,7 @@ adb -s 22101320G logcat | findstr "PhoneDataListener"
 ```
 BEFORE:                    AFTER:
 ┌──────────────┐          ┌──────────────┐
-│   FlowFit    │          │   FlowFit    │
+│   Pulsify    │          │   Pulsify    │
 │   ❤️ Icon    │          │   ❤️ Icon    │
 ├──────────────┤          │              │
 │ ❤️ Heart Rate│          │              │
@@ -174,8 +174,8 @@ If you still have connection issues:
 
 4. **Verify installation:**
    ```bash
-   adb -s SM_R930 shell pm list packages | findstr flowfit
-   adb -s 22101320G shell pm list packages | findstr flowfit
+   adb -s SM_R930 shell pm list packages | findstr Pulsify
+   adb -s 22101320G shell pm list packages | findstr Pulsify
    ```
 
 ## Technical Details

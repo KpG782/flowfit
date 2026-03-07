@@ -1,7 +1,7 @@
-# Wear OS Heart Rate Monitor - Implementation Plan
+﻿# Wear OS Heart Rate Monitor - Implementation Plan
 
 ## 🎯 Overview
-This plan updates your FlowFit Wear OS app to have a streamlined heart rate monitoring interface with direct phone sync capability, following Wear OS best practices.
+This plan updates your Pulsify Wear OS app to have a streamlined heart rate monitoring interface with direct phone sync capability, following Wear OS best practices.
 
 ## ✅ Phase 1: UI Components (COMPLETED)
 
@@ -129,7 +129,7 @@ flutter run -d adb-RFAX21TD0NA-FFYRNh._adb-tls-connect._tcp -t lib/main_wear.dar
 
 ## 🎯 Example Usage Flow
 
-1. **User opens FlowFit on watch**
+1. **User opens Pulsify on watch**
    - Dashboard shows with heart icon
    - Swipe/rotate to heart rate page
 
@@ -231,7 +231,7 @@ Already configured in AndroidManifest.xml:
 flutter run -d adb-RFAX21TD0NA-FFYRNh._adb-tls-connect._tcp -t lib/main_wear.dart
 
 # Watch logs
-adb -s adb-RFAX21TD0NA-FFYRNh._adb-tls-connect._tcp logcat | findstr "FlowFit"
+adb -s adb-RFAX21TD0NA-FFYRNh._adb-tls-connect._tcp logcat | findstr "Pulsify"
 
 # Hot reload (after making changes)
 # Press 'r' in terminal

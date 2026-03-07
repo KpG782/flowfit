@@ -1,8 +1,8 @@
-# Migration Guide: Clean Architecture with Riverpod
+﻿# Migration Guide: Clean Architecture with Riverpod
 
 ## Overview
 
-This guide helps you migrate existing FlowFit screens to use the new clean architecture with Riverpod.
+This guide helps you migrate existing Pulsify screens to use the new clean architecture with Riverpod.
 
 ## Before & After Examples
 
@@ -237,7 +237,7 @@ After migrating a screen:
 void main() {
   runApp(
     const ProviderScope(
-      child: FlowFitPhoneApp(),
+      child: PulsifyPhoneApp(),
     ),
   );
 }

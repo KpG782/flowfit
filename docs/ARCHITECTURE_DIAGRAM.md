@@ -1,4 +1,4 @@
-# FlowFit Architecture Diagram
+﻿# Pulsify Architecture Diagram
 
 ## Complete System Architecture
 

@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flowfit/features/wellness/domain/geofence_mission.dart';
-import 'package:flowfit/features/wellness/presentation/widgets/focus_mission_overlay.dart';
+import 'package:pulsify/features/wellness/domain/geofence_mission.dart';
+import 'package:pulsify/features/wellness/presentation/widgets/focus_mission_overlay.dart';
 
 void main() {
   testWidgets('FocusMissionOverlay shows title, distance and buttons', (WidgetTester tester) async {

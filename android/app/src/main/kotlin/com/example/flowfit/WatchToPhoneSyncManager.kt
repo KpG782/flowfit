@@ -1,4 +1,4 @@
-package com.example.flowfit
+﻿package com.example.pulsify
 
 import android.content.Context
 import android.util.Log
@@ -17,7 +17,7 @@ class WatchToPhoneSyncManager(private val context: Context) {
         private const val TAG = "WatchToPhoneSync"
         private const val MESSAGE_PATH = "/heart_rate"
         private const val BATCH_PATH = "/heart_rate_batch"
-        private const val CAPABILITY_NAME = "flowfit_phone_app"
+        private const val CAPABILITY_NAME = "pulsify_phone_app"
     }
 
     private val messageClient: MessageClient by lazy {
@@ -173,10 +173,10 @@ class WatchToPhoneSyncManager(private val context: Context) {
             val connectedNodes = nodeClient.connectedNodes.await()
             
             if (connectedNodes.isEmpty()) {
-                Log.w(TAG, "No connected nodes - ensure phone is paired and has FlowFit installed")
+                Log.w(TAG, "No connected nodes - ensure phone is paired and has Pulsify installed")
                 Log.w(TAG, "Troubleshooting:")
                 Log.w(TAG, "  1. Check Bluetooth connection between watch and phone")
-                Log.w(TAG, "  2. Ensure FlowFit is installed on phone")
+                Log.w(TAG, "  2. Ensure Pulsify is installed on phone")
                 Log.w(TAG, "  3. Verify phone app has wear.xml capability declaration")
             } else {
                 Log.i(TAG, "Connected nodes:")
@@ -193,7 +193,7 @@ class WatchToPhoneSyncManager(private val context: Context) {
     }
 
     /**
-     * Get nodes with specific capability (phones with FlowFit installed)
+     * Get nodes with specific capability (phones with Pulsify installed)
      */
     private suspend fun getCapableNodes(): Set<Node> {
         return try {

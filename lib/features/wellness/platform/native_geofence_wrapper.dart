@@ -1,6 +1,6 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:native_geofence/native_geofence.dart' as ng;
-import 'package:flowfit/features/wellness/domain/geofence_mission.dart';
+import 'package:pulsify/features/wellness/domain/geofence_mission.dart';
 
 /// A small native_geofence wrapper that maps `GeofenceMission` to the plugin's Geofence
 /// and exposes a Dart Stream of plugin events. We register a top-level callback (entry point)
@@ -35,7 +35,7 @@ class NativeGeofenceWrapper {
       };
       // Default to shared callback name if not specified (not used currently)
       // Pass the top-level callback function for background handling.
-      await ng.NativeGeofenceManager.instance.createGeofence(zone, flowfitGeofenceCallback);
+      await ng.NativeGeofenceManager.instance.createGeofence(zone, pulsifyGeofenceCallback);
       return true;
     } catch (_) {
       return false;
@@ -66,7 +66,7 @@ class NativeGeofenceWrapper {
   // No per-geofence callback name required; we register a single global callback
 
   @pragma('vm:entry-point')
-  static Future<void> flowfitGeofenceCallback(dynamic params) async {
+  static Future<void> pulsifyGeofenceCallback(dynamic params) async {
     // Convert to standard map to publish on the stream.
     try {
       final missionId = params.id ?? params['id'] ?? params['missionId'];

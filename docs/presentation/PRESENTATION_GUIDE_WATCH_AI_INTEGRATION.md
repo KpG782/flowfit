@@ -1,4 +1,4 @@
-# Watch AI Integration - Presentation Guide (Layman's Terms)
+﻿# Watch AI Integration - Presentation Guide (Layman's Terms)
 
 ## 🎯 What We Built - The Big Picture
 
@@ -251,7 +251,7 @@ if (sensorBuffer.size >= 32) {
 // Acquire PARTIAL_WAKE_LOCK to keep CPU running
 val wakeLock = powerManager.newWakeLock(
     PowerManager.PARTIAL_WAKE_LOCK,
-    "FlowFit::HeartRateTracking"
+    "Pulsify::HeartRateTracking"
 )
 wakeLock.acquire(10*60*1000L) // 10 minutes
 
@@ -268,7 +268,7 @@ wakeLock.acquire(10*60*1000L) // 10 minutes
 #### Google Wearable Data Layer API:
 - **Protocol:** Bluetooth Low Energy (BLE)
 - **Transport:** MessageClient for small, time-sensitive data
-- **Discovery:** CapabilityClient to find phones with FlowFit installed
+- **Discovery:** CapabilityClient to find phones with Pulsify installed
 - **Reliability:** Automatic retry on connection loss
 
 #### Message Paths:
@@ -300,7 +300,7 @@ messageClient.sendMessage(
 ```kotlin
 // Method 1: Capability-based (preferred)
 val capabilityInfo = capabilityClient
-    .getCapability("flowfit_phone_app", FILTER_REACHABLE)
+    .getCapability("pulsify_phone_app", FILTER_REACHABLE)
     .await()
 val phoneNodes = capabilityInfo.nodes
 
@@ -353,7 +353,7 @@ class PhoneDataListenerService : WearableListenerService() {
 // In MainActivity.configureFlutterEngine()
 EventChannel(
     flutterEngine.dartExecutor.binaryMessenger,
-    "com.flowfit.phone/sensor_data"
+    "com.pulsify.phone/sensor_data"
 ).setStreamHandler(object : EventChannel.StreamHandler {
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
         // Store sink for PhoneDataListenerService to use
@@ -374,7 +374,7 @@ EventChannel(
 ```dart
 class PhoneDataListener {
   static const EventChannel _sensorBatchEventChannel =
-      EventChannel('com.flowfit.phone/sensor_data');
+      EventChannel('com.pulsify.phone/sensor_data');
   
   Stream<SensorBatch> get sensorBatchStream {
     return _sensorBatchEventChannel

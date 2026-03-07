@@ -1,5 +1,5 @@
--- ============================================================================
--- FlowFit User Profiles Database Schema
+﻿-- ============================================================================
+-- Pulsify User Profiles Database Schema
 -- Combined Migration File
 -- ============================================================================
 -- This file contains all migrations for setting up the user_profiles table

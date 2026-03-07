@@ -1,4 +1,4 @@
-# Supabase Dashboard Configuration for FlowFit
+﻿# Supabase Dashboard Configuration for Pulsify
 
 Quick reference for configuring your Supabase project for mobile deep linking.
 
@@ -9,14 +9,14 @@ Quick reference for configuring your Supabase project for mobile deep linking.
 ### Site URL
 Set this to your primary deep link:
 ```
-com.example.flowfit://auth-callback
+com.example.pulsify://auth-callback
 ```
 
 ### Redirect URLs
 Add these URLs (one per line):
 ```
-com.example.flowfit://auth-callback
-com.example.flowfit.dev://auth-callback
+com.example.pulsify://auth-callback
+com.example.pulsify.dev://auth-callback
 http://localhost:3000/**
 ```
 
@@ -30,11 +30,11 @@ http://localhost:3000/**
 
 Update the confirmation link to use the redirect URL:
 
-**Subject**: `Confirm Your FlowFit Account`
+**Subject**: `Confirm Your Pulsify Account`
 
 **Body (HTML)**:
 ```html
-<h2>Welcome to FlowFit!</h2>
+<h2>Welcome to Pulsify!</h2>
 
 <p>Thanks for signing up. Please confirm your email address by clicking the link below:</p>
 
@@ -49,14 +49,14 @@ Update the confirmation link to use the redirect URL:
 
 <p>This link will expire in 24 hours.</p>
 
-<p>If you didn't create an account with FlowFit, you can safely ignore this email.</p>
+<p>If you didn't create an account with Pulsify, you can safely ignore this email.</p>
 
-<p>Thanks,<br>The FlowFit Team</p>
+<p>Thanks,<br>The Pulsify Team</p>
 ```
 
 **Body (Plain Text)**:
 ```
-Welcome to FlowFit!
+Welcome to Pulsify!
 
 Thanks for signing up. Please confirm your email address by clicking the link below:
 
@@ -64,10 +64,10 @@ Thanks for signing up. Please confirm your email address by clicking the link be
 
 This link will expire in 24 hours.
 
-If you didn't create an account with FlowFit, you can safely ignore this email.
+If you didn't create an account with Pulsify, you can safely ignore this email.
 
 Thanks,
-The FlowFit Team
+The Pulsify Team
 ```
 
 ### Available Template Variables
@@ -106,7 +106,7 @@ While testing, you can temporarily:
 
 2. **Add Test Redirect URLs**
    ```
-   com.example.flowfit.dev://auth-callback
+   com.example.pulsify.dev://auth-callback
    http://localhost:3000/**
    ```
 

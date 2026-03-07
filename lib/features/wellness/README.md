@@ -1,6 +1,6 @@
-# Wellness Feature — Mission Engine (Geofence)
+﻿# Wellness Feature — Mission Engine (Geofence)
 
-This feature provides a unified geofence-based mission engine for wellness-focused features in FlowFit. It supports three primary mission types:
+This feature provides a unified geofence-based mission engine for wellness-focused features in Pulsify. It supports three primary mission types:
 
 - Target (Fitness): Accumulate distance as users move away from a starting point; reach a target distance to complete the mission.
 - Sanctuary (Mental): Reach a specific coordinate to trigger a mission "success" or journaling flow.

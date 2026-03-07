@@ -1,11 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:gotrue/gotrue.dart' as gotrue;
 import '../../theme/app_theme.dart';
-import '../../presentation/providers/providers.dart';
 import 'dart:async';
 
 class EmailVerificationScreen extends ConsumerStatefulWidget {
@@ -21,7 +19,7 @@ class _EmailVerificationScreenState extends ConsumerState<EmailVerificationScree
   Timer? _autoCheckTimer;
   int _resendCountdown = 0;
   Timer? _countdownTimer;
-  StreamSubscription<gotrue.AuthState>? _authSubscription;
+  StreamSubscription<AuthState>? _authSubscription;
 
   @override
   void initState() {
@@ -190,7 +188,6 @@ class _EmailVerificationScreenState extends ConsumerState<EmailVerificationScree
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     final email = args?['email'] as String? ?? 'your email';
-    final name = args?['name'] as String?;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF2F7FF),
@@ -204,7 +201,7 @@ class _EmailVerificationScreenState extends ConsumerState<EmailVerificationScree
               // Logo
               Center(
                 child: SvgPicture.asset(
-                  'assets/flowfit_logo_header.svg',
+                  'assets/pulsify_logo_header.svg',
                   height: 32,
                 ),
               ),

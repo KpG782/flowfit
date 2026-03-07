@@ -1,4 +1,4 @@
-# Verification Checklist: Is Your Heart Rate Tracking Working?
+﻿# Verification Checklist: Is Your Heart Rate Tracking Working?
 
 ## 📋 Based on Your Logs Analysis
 
@@ -36,7 +36,7 @@ Your logs show **SUCCESSFUL** heart rate tracking! Here's what's confirmed:
 
 ```dart
 // In your Flutter code (e.g., wear_dashboard.dart)
-EventChannel('com.flowfit.watch/heartrate')
+EventChannel('com.pulsify.watch/heartrate')
     .receiveBroadcastStream()
     .listen(
       (data) {
@@ -81,7 +81,7 @@ WatchToPhoneSync: Batch sent successfully
 
 **If you DON'T see this:**
 - Check Bluetooth connection between watch and phone
-- Verify phone has FlowFit app installed
+- Verify phone has Pulsify app installed
 - Check message path consistency (see below)
 
 ---
@@ -147,7 +147,7 @@ override fun onMessageReceived(messageEvent: MessageEvent) {
 
 ### Test 1: Check Permissions
 ```bash
-adb shell dumpsys package com.flowfit.app | grep permission
+adb shell dumpsys package com.pulsify.app | grep permission
 ```
 
 **Expected:**
@@ -199,7 +199,7 @@ adb -s [phone_device] logcat | grep PhoneDataListener
 **Solution:**
 ```dart
 // Ensure event channel is set up BEFORE starting tracking
-final eventChannel = EventChannel('com.flowfit.watch/heartrate');
+final eventChannel = EventChannel('com.pulsify.watch/heartrate');
 eventChannel.receiveBroadcastStream().listen((data) {
   setState(() {
     heartRate = data['bpm'];
@@ -227,7 +227,7 @@ adb shell dumpsys bluetooth_manager | grep "Connected devices"
 
 2. Verify phone app is installed:
 ```bash
-adb -s [phone_device] shell pm list packages | grep flowfit
+adb -s [phone_device] shell pm list packages | grep Pulsify
 ```
 
 3. Check message path in phone's AndroidManifest.xml matches watch's `MESSAGE_PATH`
@@ -243,20 +243,20 @@ WatchToPhoneSync: No connected nodes found
 
 **Solution:**
 1. Ensure watch and phone are paired via Bluetooth
-2. Install FlowFit on phone
+2. Install Pulsify on phone
 3. Add capability declaration to phone's `res/values/wear.xml`:
 
 ```xml
 <resources>
     <string-array name="android_wear_capabilities">
-        <item>flowfit_phone_app</item>
+        <item>pulsify_phone_app</item>
     </string-array>
 </resources>
 ```
 
 4. Verify capability name matches in `WatchToPhoneSyncManager.kt`:
 ```kotlin
-private const val CAPABILITY_NAME = "flowfit_phone_app"
+private const val CAPABILITY_NAME = "pulsify_phone_app"
 ```
 
 ---

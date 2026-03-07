@@ -1,4 +1,4 @@
-import Flutter
+﻿import Flutter
 import UIKit
 import CoreLocation
 
@@ -11,7 +11,7 @@ import CoreLocation
     GeneratedPluginRegistrant.register(with: self)
     // Setup Geofence method/event channels
     let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
-    let geofenceChannel = FlutterMethodChannel(name: "com.flowfit.geofence/native", binaryMessenger: controller.binaryMessenger)
+    let geofenceChannel = FlutterMethodChannel(name: "com.pulsify.geofence/native", binaryMessenger: controller.binaryMessenger)
     geofenceChannel.setMethodCallHandler({ (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
       switch call.method {
       case "registerGeofence":
@@ -24,7 +24,7 @@ import CoreLocation
       }
     })
 
-    let geofenceEvents = FlutterEventChannel(name: "com.flowfit.geofence/events", binaryMessenger: controller.binaryMessenger)
+    let geofenceEvents = FlutterEventChannel(name: "com.pulsify.geofence/events", binaryMessenger: controller.binaryMessenger)
     geofenceEvents.setStreamHandler(nil) // stubbed; iOS native implementation should add event sink
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

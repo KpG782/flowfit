@@ -1,8 +1,8 @@
-# Clean Architecture Setup - Summary
+﻿# Clean Architecture Setup - Summary
 
 ## ✅ Setup Complete
 
-FlowFit now has a fully functional clean architecture with Riverpod state management.
+Pulsify now has a fully functional clean architecture with Riverpod state management.
 
 ## What Was Fixed
 

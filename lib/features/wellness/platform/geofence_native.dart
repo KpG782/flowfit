@@ -1,11 +1,11 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/services.dart';
-import 'package:flowfit/features/wellness/domain/geofence_mission.dart';
+import 'package:pulsify/features/wellness/domain/geofence_mission.dart';
 import 'native_geofence_wrapper.dart' as ngw; // wrapper for native_geofence plugin
 
 class GeofenceNative {
-  static const MethodChannel _channel = MethodChannel('com.flowfit.geofence/native');
-  static const EventChannel _events = EventChannel('com.flowfit.geofence/events');
+  static const MethodChannel _channel = MethodChannel('com.pulsify.geofence/native');
+  static const EventChannel _events = EventChannel('com.pulsify.geofence/events');
 
   static Future<bool> register(GeofenceMission mission) async {
     try {

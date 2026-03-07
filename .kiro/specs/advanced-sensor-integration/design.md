@@ -1,8 +1,8 @@
-# Design Document: Advanced Sensor Integration
+﻿# Design Document: Advanced Sensor Integration
 
 ## Overview
 
-This design extends FlowFit's sensor capabilities by integrating three key technologies:
+This design extends Pulsify's sensor capabilities by integrating three key technologies:
 
 1. **WearOS Sensors Library** - Provides unified access to IMU sensors (accelerometer, gyroscope), GPS, and concurrent sensor data collection with background support
 2. **Android SensorManager** - Native access to environmental sensors (barometer for altitude, ambient light sensor)
@@ -25,7 +25,7 @@ The design maintains compatibility with the existing Samsung Health Sensor SDK i
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                      FlowFit Watch App                       │
+│                      Pulsify Watch App                       │
 ├─────────────────────────────────────────────────────────────┤
 │                                                               │
 │  ┌──────────────────────────────────────────────────────┐  │
@@ -113,7 +113,7 @@ Interface to WearOS Sensors library for IMU and GPS data.
 ```dart
 class WearOSSensorsBridge {
   static const MethodChannel _channel = 
-      MethodChannel('com.flowfit.wearos_sensors');
+      MethodChannel('com.Pulsify.wearos_sensors');
   
   // Start accelerometer tracking
   Future<bool> startAccelerometer({
@@ -150,7 +150,7 @@ Interface to Android SensorManager for environmental sensors.
 ```dart
 class NativeSensorsBridge {
   static const MethodChannel _channel = 
-      MethodChannel('com.flowfit.native_sensors');
+      MethodChannel('com.Pulsify.native_sensors');
   
   // Start barometer tracking
   Future<bool> startBarometer({
@@ -241,7 +241,7 @@ class SensorDataBuffer {
 Provides health data to watch faces via WearOS Complications API.
 
 ```kotlin
-class FlowFitComplicationService : ComplicationDataSourceService() {
+class PulsifyComplicationService : ComplicationDataSourceService() {
     
     override fun onComplicationRequest(
         request: ComplicationRequest,

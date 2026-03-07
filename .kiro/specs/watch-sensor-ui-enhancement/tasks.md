@@ -1,4 +1,4 @@
-# Implementation Plan
+﻿# Implementation Plan
 
 - [x] 1. Add Android permissions and dependencies
 
@@ -19,7 +19,7 @@
   - [x] 2.1 Implement WatchSensorService class with SensorEventListener
 
 
-    - Create WatchSensorService.kt in android/app/src/main/kotlin/com/example/flowfit/
+    - Create WatchSensorService.kt in android/app/src/main/kotlin/com/example/Pulsify/
     - Implement sensor registration at SENSOR_DELAY_GAME (~50Hz)
     - Add buffer for collecting 32 accelerometer samples
     - Add currentHeartRate property for storing latest BPM

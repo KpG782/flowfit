@@ -1,7 +1,7 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+﻿<manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Wear OS feature declaration -->
     <uses-feature android:name="android.hardware.type.watch" />
-    
+
     <!-- Permissions for Samsung Health Sensor API -->
     <!-- Location permissions for geofencing -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -18,8 +18,8 @@
     
     
     <application
-        android:name=".FlowFitApp"
-        android:label="FlowFit"
+        android:name=".PulsifyApp"
+        android:label="Pulsify"
         android:icon="@mipmap/ic_launcher">
         
         <!-- Wear OS metadata -->
@@ -63,12 +63,12 @@
                 
                 <!-- Production deep link -->
                 <data
-                    android:scheme="com.example.flowfit"
+                    android:scheme="com.example.pulsify"
                     android:host="auth-callback" />
                     
                 <!-- Development deep link -->
                 <data
-                    android:scheme="com.example.flowfit.dev"
+                    android:scheme="com.example.pulsify.dev"
                     android:host="auth-callback" />
             </intent-filter>
         </activity>

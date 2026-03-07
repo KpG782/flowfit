@@ -1,8 +1,8 @@
-# Email Verification Flow Documentation
+﻿# Email Verification Flow Documentation
 
 ## 📋 Overview
 
-FlowFit implements a seamless email verification flow that automatically checks verification status and guides users through the onboarding process.
+Pulsify implements a seamless email verification flow that automatically checks verification status and guides users through the onboarding process.
 
 ## 🔄 User Flow
 
@@ -127,7 +127,7 @@ if (next.status == AuthStatus.authenticated && next.user != null) {
 
 ### Subject Line
 ```
-Confirm Your FlowFit Signup ⚡
+Confirm Your Pulsify Signup ⚡
 ```
 
 ### Template Variables
@@ -137,7 +137,7 @@ Confirm Your FlowFit Signup ⚡
 
 ### Design
 - Modern, responsive HTML
-- FlowFit branding
+- Pulsify branding
 - Clear call-to-action button
 - Security information
 - Plain text fallback
@@ -148,14 +148,14 @@ Confirm Your FlowFit Signup ⚡
 
 **Site URL:**
 - Development: `http://localhost:3000`
-- Production: `https://flowfit.app`
+- Production: `https://pulsify.app`
 
 **Redirect URLs:**
 ```
 http://localhost:3000
 http://localhost:3000/auth/callback
-flowfit://auth/callback
-flowfit://email-verification
+Pulsify://auth/callback
+Pulsify://email-verification
 ```
 
 ### Email Template Location
@@ -251,7 +251,7 @@ SUPABASE_ANON_KEY=your_production_key
     <action android:name="android.intent.action.VIEW" />
     <category android:name="android.intent.category.DEFAULT" />
     <category android:name="android.intent.category.BROWSABLE" />
-    <data android:scheme="flowfit" android:host="auth" />
+    <data android:scheme="Pulsify" android:host="auth" />
 </intent-filter>
 ```
 
@@ -262,7 +262,7 @@ SUPABASE_ANON_KEY=your_production_key
     <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-            <string>flowfit</string>
+            <string>Pulsify</string>
         </array>
     </dict>
 </array>
@@ -326,4 +326,4 @@ SUPABASE_ANON_KEY=your_production_key
 For issues or questions:
 - Check troubleshooting section
 - Review setup guides
-- Contact: support@flowfit.app
+- Contact: support@pulsify.app

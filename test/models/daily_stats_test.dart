@@ -1,5 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flowfit/models/daily_stats.dart';
+﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:pulsify/models/daily_stats.dart';
 
 void main() {
   group('DailyStats', () {

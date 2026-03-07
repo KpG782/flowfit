@@ -1,4 +1,4 @@
-# Wear OS Integration - Quick Technical Summary
+﻿# Wear OS Integration - Quick Technical Summary
 
 ## 🎯 What You Need to Know for Presentation
 
@@ -217,13 +217,13 @@ Show badge:
 ## 📚 Code Locations
 
 ### Watch Side:
-- `android/app/src/main/kotlin/com/example/flowfit/WatchSensorService.kt`
-- `android/app/src/main/kotlin/com/example/flowfit/HealthTrackingManager.kt`
-- `android/app/src/main/kotlin/com/example/flowfit/WatchToPhoneSyncManager.kt`
+- `android/app/src/main/kotlin/com/example/Pulsify/WatchSensorService.kt`
+- `android/app/src/main/kotlin/com/example/Pulsify/HealthTrackingManager.kt`
+- `android/app/src/main/kotlin/com/example/Pulsify/WatchToPhoneSyncManager.kt`
 
 ### Phone Side:
-- `android/app/src/main/kotlin/com/example/flowfit/PhoneDataListenerService.kt`
-- `android/app/src/main/kotlin/com/example/flowfit/MainActivity.kt`
+- `android/app/src/main/kotlin/com/example/Pulsify/PhoneDataListenerService.kt`
+- `android/app/src/main/kotlin/com/example/Pulsify/MainActivity.kt`
 
 ### Flutter Side:
 - `lib/services/phone_data_listener.dart`

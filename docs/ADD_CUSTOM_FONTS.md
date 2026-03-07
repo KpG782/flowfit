@@ -1,6 +1,6 @@
-# Adding Custom Fonts to FlowFit
+﻿# Adding Custom Fonts to Pulsify
 
-This document explains how to add custom fonts such as "General Sans" to FlowFit so the UI uses them across the app.
+This document explains how to add custom fonts such as "General Sans" to Pulsify so the UI uses them across the app.
 
 ## Steps
 
@@ -50,7 +50,7 @@ ThemeData(
 
 ```dart
 Text(
-  'Hello FlowFit',
+  'Hello Pulsify',
   style: Theme.of(context).textTheme.displayLarge,
 )
 ```

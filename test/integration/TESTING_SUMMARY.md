@@ -1,8 +1,8 @@
-# Integration Testing Implementation Summary
+﻿# Integration Testing Implementation Summary
 
 ## Overview
 
-This document summarizes the integration testing implementation for the FlowFit authentication and onboarding system.
+This document summarizes the integration testing implementation for the Pulsify authentication and onboarding system.
 
 ## What Was Implemented
 

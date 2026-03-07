@@ -1,4 +1,4 @@
-# Implementation Plan
+﻿# Implementation Plan
 
 - [x] 1. Configure Android build system and manifest
 
@@ -143,7 +143,7 @@
 
 
 
-  - Create android/app/src/main/kotlin/com/example/flowfit/SamsungHealthManager.kt
+  - Create android/app/src/main/kotlin/com/example/Pulsify/SamsungHealthManager.kt
   - Implement connection management (connect, disconnect, isConnected)
   - Add ConnectionListener for Samsung Health service callbacks
   - Implement service availability check
@@ -211,7 +211,7 @@
 
 
 
-  - Create EventChannel in MainActivity for "com.flowfit.watch/heartrate"
+  - Create EventChannel in MainActivity for "com.pulsify.watch/heartrate"
   - Implement StreamHandler for heart rate data events
   - Connect SamsungHealthManager callbacks to EventChannel sink
   - Handle stream cancellation and cleanup
@@ -381,7 +381,7 @@
 
 
   - Create lib/services/phone_data_listener.dart for phone app
-  - Set up EventChannel listener for "com.flowfit.phone/heartrate"
+  - Set up EventChannel listener for "com.pulsify.phone/heartrate"
   - Implement JSON decoding with validation of required fields
   - Create Stream<HeartRateData> for phone UI to consume
   - Add error handling for malformed JSON
@@ -476,7 +476,7 @@
 
 
 
-  - Create android/app/src/main/kotlin/com/example/flowfit/TrackedData.kt
+  - Create android/app/src/main/kotlin/com/example/Pulsify/TrackedData.kt
   - Add @Serializable annotation for JSON encoding
   - Define hr: Int and ibi: ArrayList<Int> fields
   - Add kotlinx.serialization dependency to build.gradle.kts if needed

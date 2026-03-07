@@ -1,4 +1,4 @@
-# FlowFit Email Template Setup Guide
+﻿# Pulsify Email Template Setup Guide
 
 ## 📧 Email Verification Configuration
 
@@ -9,7 +9,7 @@ Based on your screenshot, you need to set the **Site URL** in Supabase Dashboard
 1. Go to **Authentication** → **URL Configuration**
 2. Set **Site URL** to your app's URL:
    - **Development**: `http://localhost:3000` (or your dev port)
-   - **Production**: `https://flowfit.app` (your actual domain)
+   - **Production**: `https://pulsify.app` (your actual domain)
 
 ### Step 2: Add Redirect URLs
 
@@ -19,20 +19,20 @@ Add these redirect URLs to the **Redirect URLs** section:
 ```
 http://localhost:3000
 http://localhost:3000/auth/callback
-flowfit://auth/callback
+Pulsify://auth/callback
 ```
 
 **For Production:**
 ```
-https://flowfit.app
-https://flowfit.app/auth/callback
-flowfit://auth/callback
+https://pulsify.app
+https://pulsify.app/auth/callback
+Pulsify://auth/callback
 ```
 
 **For Mobile Deep Linking:**
 ```
-flowfit://email-verification
-flowfit://auth/callback
+Pulsify://email-verification
+Pulsify://auth/callback
 ```
 
 ### Step 3: Configure Email Templates
@@ -43,7 +43,7 @@ flowfit://auth/callback
 
 #### Subject Line:
 ```
-Confirm Your FlowFit Signup ⚡
+Confirm Your Pulsify Signup ⚡
 ```
 
 #### Email Body (HTML):
@@ -76,8 +76,8 @@ For Flutter mobile app, configure deep linking:
     <action android:name="android.intent.action.VIEW" />
     <category android:name="android.intent.category.DEFAULT" />
     <category android:name="android.intent.category.BROWSABLE" />
-    <data android:scheme="flowfit" android:host="auth" />
-    <data android:scheme="flowfit" android:host="email-verification" />
+    <data android:scheme="Pulsify" android:host="auth" />
+    <data android:scheme="Pulsify" android:host="email-verification" />
 </intent-filter>
 ```
 
@@ -90,7 +90,7 @@ For Flutter mobile app, configure deep linking:
         <string>Editor</string>
         <key>CFBundleURLSchemes</key>
         <array>
-            <string>flowfit</string>
+            <string>Pulsify</string>
         </array>
     </dict>
 </array>
@@ -124,7 +124,7 @@ void initDeepLinks() {
 - Background: `#f2f7ff`
 
 ### Emojis Used:
-- ⚡ - FlowFit logo
+- ⚡ - Pulsify logo
 - 📧 - Email icon
 - ✓ - Checkmark
 - 🔒 - Security

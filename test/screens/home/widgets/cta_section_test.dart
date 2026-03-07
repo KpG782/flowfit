@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flowfit/screens/home/widgets/cta_section.dart';
+import 'package:pulsify/screens/home/widgets/cta_section.dart';
 import 'package:go_router/go_router.dart';
 
 void main() {

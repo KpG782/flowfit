@@ -1,6 +1,6 @@
-# Email Verification Setup - Quick Start
+﻿# Email Verification Setup - Quick Start
 
-This is your quick reference for setting up and testing email verification with deep linking in FlowFit.
+This is your quick reference for setting up and testing email verification with deep linking in Pulsify.
 
 ## What We've Set Up
 
@@ -17,14 +17,14 @@ Go to: https://supabase.com/dashboard/project/dnasghxxqwibwqnljvxr/auth/url-conf
 
 **Add these Redirect URLs**:
 ```
-com.example.flowfit://auth-callback
-com.example.flowfit.dev://auth-callback
+com.example.pulsify://auth-callback
+com.example.pulsify.dev://auth-callback
 http://localhost:3000/**
 ```
 
 **Set Site URL to**:
 ```
-com.example.flowfit://auth-callback
+com.example.pulsify://auth-callback
 ```
 
 ### 2. Update Email Template (1 min)
@@ -44,8 +44,8 @@ flutter run -d <your-device-id>
 
 # Test deep link opens app
 adb shell am start -W -a android.intent.action.VIEW \
-  -d "com.example.flowfit://auth-callback" \
-  com.example.flowfit
+  -d "com.example.pulsify://auth-callback" \
+  com.example.pulsify
 ```
 
 ## Testing Email Verification
@@ -62,8 +62,8 @@ adb shell am start -W -a android.intent.action.VIEW \
 ```bash
 # Simulate auth callback
 adb shell am start -W -a android.intent.action.VIEW \
-  -d "com.example.flowfit://auth-callback?type=signup&token=test" \
-  com.example.flowfit
+  -d "com.example.pulsify://auth-callback?type=signup&token=test" \
+  com.example.pulsify
 
 # Watch logs
 adb logcat | grep -i "deep link\|auth"
@@ -92,7 +92,7 @@ Make sure you're passing `emailRedirectTo`:
 final response = await Supabase.instance.client.auth.signUp(
   email: email,
   password: password,
-  emailRedirectTo: 'com.example.flowfit://auth-callback', // Add this!
+  emailRedirectTo: 'com.example.pulsify://auth-callback', // Add this!
 );
 ```
 
@@ -101,8 +101,8 @@ final response = await Supabase.instance.client.auth.signUp(
 ```bash
 # This should open your app
 adb shell am start -W -a android.intent.action.VIEW \
-  -d "com.example.flowfit://auth-callback" \
-  com.example.flowfit
+  -d "com.example.pulsify://auth-callback" \
+  com.example.pulsify
 ```
 
 If the app doesn't open, check AndroidManifest.xml.
@@ -131,7 +131,7 @@ If the app doesn't open, check AndroidManifest.xml.
 
 ### Before Production
 
-1. Update package name from `com.example.flowfit` to production package
+1. Update package name from `com.example.pulsify` to production package
 2. Update deep link schemes to match
 3. Remove development schemes
 4. Test on multiple devices

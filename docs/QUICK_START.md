@@ -1,4 +1,4 @@
-# Samsung Health Sensor - Quick Start Guide
+﻿# Samsung Health Sensor - Quick Start Guide
 
 ## 🚀 Ready to Test in 5 Minutes
 
@@ -17,8 +17,8 @@ flutter run -d <watch-device-id>
 Use the example widget or add this to your code:
 
 ```dart
-import 'package:flowfit/services/watch_bridge.dart';
-import 'package:flowfit/models/heart_rate_data.dart';
+import 'package:pulsify/services/watch_bridge.dart';
+import 'package:pulsify/models/heart_rate_data.dart';
 
 final watchBridge = WatchBridgeService();
 
@@ -59,7 +59,7 @@ Copy `lib/examples/heart_rate_example.dart` to see a complete working example wi
 | Problem | Solution |
 |---------|----------|
 | "Connection Failed" | Restart watch, check Samsung Health installed |
-| "Permission Denied" | Settings → Apps → FlowFit → Enable Body Sensors |
+| "Permission Denied" | Settings → Apps → Pulsify → Enable Body Sensors |
 | No heart rate data | Wear watch properly, tighten band |
 | "Sensor Not Supported" | Need Galaxy Watch4 or higher |
 

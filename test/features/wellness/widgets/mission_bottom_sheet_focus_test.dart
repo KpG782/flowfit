@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-import 'package:flowfit/features/wellness/presentation/widgets/mission_bottom_sheet.dart';
+import 'package:pulsify/features/wellness/presentation/widgets/mission_bottom_sheet.dart';
 // no additional imports required
-import 'package:flowfit/features/wellness/data/geofence_repository.dart';
-import 'package:flowfit/features/wellness/services/geofence_service.dart';
-import 'package:flowfit/features/wellness/domain/geofence_mission.dart';
+import 'package:pulsify/features/wellness/data/geofence_repository.dart';
+import 'package:pulsify/features/wellness/services/geofence_service.dart';
+import 'package:pulsify/features/wellness/domain/geofence_mission.dart';
 
 void main() {
   testWidgets('Pressing focus button starts focus overlay', (WidgetTester tester) async {

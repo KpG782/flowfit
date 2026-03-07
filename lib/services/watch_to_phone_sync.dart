@@ -1,4 +1,4 @@
-import 'package:flutter/services.dart';
+﻿import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import '../models/heart_rate_data.dart';
 import 'dart:convert';
@@ -7,7 +7,7 @@ import 'dart:convert';
 /// Uses Wearable Data Layer API (MessageClient)
 class WatchToPhoneSync {
   static const MethodChannel _methodChannel =
-      MethodChannel('com.flowfit.watch/sync');
+      MethodChannel('com.pulsify.watch/sync');
 
   final Logger _logger = Logger();
 

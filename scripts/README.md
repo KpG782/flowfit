@@ -1,6 +1,6 @@
-# FlowFit Build Scripts
+﻿# Pulsify Build Scripts
 
-Automated scripts for building and running FlowFit on different devices.
+Automated scripts for building and running Pulsify on different devices.
 
 ## 📜 Available Scripts
 
@@ -128,7 +128,7 @@ adb -s 6ece264d install -r build\app\outputs\flutter-apk\app-debug.apk
 flutter run -d 6ece264d
 
 # Uninstall
-adb -s 6ece264d uninstall com.example.flowfit
+adb -s 6ece264d uninstall com.example.pulsify
 ```
 
 ### Phone Commands
@@ -189,7 +189,7 @@ scripts\build_and_install.bat
 ### Successful Build
 ```
 ========================================
-FlowFit Build and Install Script
+Pulsify Build and Install Script
 ========================================
 
 Step 1: Cleaning previous builds...
@@ -241,7 +241,7 @@ Common issues:
 
 3. **Check logs regularly**
    ```bash
-   adb -s 6ece264d logcat | findstr "FlowFit"
+   adb -s 6ece264d logcat | findstr "Pulsify"
    ```
 
 ### Performance Tips
@@ -262,7 +262,7 @@ You can create your own scripts based on these templates:
 @echo off
 echo Cleaning and reinstalling...
 flutter clean
-adb -s 6ece264d uninstall com.example.flowfit
+adb -s 6ece264d uninstall com.example.pulsify
 flutter pub get
 flutter run -d 6ece264d
 ```
@@ -270,8 +270,8 @@ flutter run -d 6ece264d
 ### Example: Log Viewer Script
 ```batch
 @echo off
-echo Viewing FlowFit logs...
-adb -s 6ece264d logcat | findstr "FlowFit MainActivity HealthTrackingManager"
+echo Viewing Pulsify logs...
+adb -s 6ece264d logcat | findstr "Pulsify MainActivity HealthTrackingManager"
 ```
 
 ---

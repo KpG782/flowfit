@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flowfit/features/wellness/presentation/maps_page_wrapper.dart';
-import 'package:flowfit/screens/font_demo_screen.dart';
+import 'package:pulsify/features/wellness/presentation/maps_page_wrapper.dart';
+import 'package:pulsify/screens/font_demo_screen.dart';
 
 /// Application router configuration using go_router
 ///
-/// This file defines all routes and navigation flows for the FlowFit app.
+/// This file defines all routes and navigation flows for the Pulsify app.
 /// Routes are organized by feature and support nested navigation.
 class AppRouter {
   static final GoRouter router = GoRouter(

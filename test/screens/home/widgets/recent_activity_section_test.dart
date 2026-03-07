@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flowfit/screens/home/widgets/recent_activity_section.dart';
-import 'package:flowfit/providers/dashboard_providers.dart';
-import 'package:flowfit/models/recent_activity.dart';
+import 'package:pulsify/screens/home/widgets/recent_activity_section.dart';
+import 'package:pulsify/providers/dashboard_providers.dart';
+import 'package:pulsify/models/recent_activity.dart';
 
 void main() {
   group('RecentActivitySection', () {

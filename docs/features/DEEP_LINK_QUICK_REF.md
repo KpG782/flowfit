@@ -1,4 +1,4 @@
-# Deep Link Quick Reference
+﻿# Deep Link Quick Reference
 
 ## 🎯 What You Need to Do Now
 
@@ -8,13 +8,13 @@
 
 **Site URL**:
 ```
-com.example.flowfit://auth-callback
+com.example.pulsify://auth-callback
 ```
 
 **Redirect URLs** (add all three):
 ```
-com.example.flowfit://auth-callback
-com.example.flowfit.dev://auth-callback
+com.example.pulsify://auth-callback
+com.example.pulsify.dev://auth-callback
 http://localhost:3000/**
 ```
 
@@ -25,7 +25,7 @@ http://localhost:3000/**
 flutter run -d <device-id>
 
 # Test deep link
-adb shell am start -W -a android.intent.action.VIEW -d "com.example.flowfit://auth-callback" com.example.flowfit
+adb shell am start -W -a android.intent.action.VIEW -d "com.example.pulsify://auth-callback" com.example.pulsify
 ```
 
 ### 3. Test Email Flow (3 minutes)
@@ -42,7 +42,7 @@ adb shell am start -W -a android.intent.action.VIEW -d "com.example.flowfit://au
 adb logcat | grep -i "deep link\|auth"
 
 # Check if app opens
-adb shell am start -W -a android.intent.action.VIEW -d "com.example.flowfit://auth-callback" com.example.flowfit
+adb shell am start -W -a android.intent.action.VIEW -d "com.example.pulsify://auth-callback" com.example.pulsify
 ```
 
 ## 📚 Full Documentation

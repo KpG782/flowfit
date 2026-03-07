@@ -1,4 +1,4 @@
-# Deep Link Testing Guide
+﻿# Deep Link Testing Guide
 
 This guide shows you how to test deep linking without waiting for emails.
 
@@ -6,7 +6,7 @@ This guide shows you how to test deep linking without waiting for emails.
 
 - Android device or emulator connected
 - ADB (Android Debug Bridge) installed
-- FlowFit app installed on device
+- Pulsify app installed on device
 
 ## 1. Verify ADB Connection
 
@@ -27,11 +27,11 @@ Test if the app opens with a deep link:
 
 ```bash
 adb shell am start -W -a android.intent.action.VIEW \
-  -d "com.example.flowfit://auth-callback" \
-  com.example.flowfit
+  -d "com.example.pulsify://auth-callback" \
+  com.example.pulsify
 ```
 
-**Expected Result**: FlowFit app should open
+**Expected Result**: Pulsify app should open
 
 ### Test with Query Parameters
 
@@ -39,16 +39,16 @@ Simulate an auth callback with parameters:
 
 ```bash
 adb shell am start -W -a android.intent.action.VIEW \
-  -d "com.example.flowfit://auth-callback?type=signup&token=test123" \
-  com.example.flowfit
+  -d "com.example.pulsify://auth-callback?type=signup&token=test123" \
+  com.example.pulsify
 ```
 
 ### Test Development Scheme
 
 ```bash
 adb shell am start -W -a android.intent.action.VIEW \
-  -d "com.example.flowfit.dev://auth-callback?type=signup" \
-  com.example.flowfit
+  -d "com.example.pulsify.dev://auth-callback?type=signup" \
+  com.example.pulsify
 ```
 
 ## 3. Monitor App Logs
@@ -56,8 +56,8 @@ adb shell am start -W -a android.intent.action.VIEW \
 While testing, monitor the app logs to see debug output:
 
 ```bash
-# Filter for FlowFit logs
-adb logcat | grep -i "flutter\|flowfit"
+# Filter for Pulsify logs
+adb logcat | grep -i "flutter\|Pulsify"
 
 # Or more specific
 adb logcat | grep -i "deep link\|auth"
@@ -103,8 +103,8 @@ Look for successful authentication messages.
 
 ```bash
 adb shell am start -W -a android.intent.action.VIEW \
-  -d "com.example.flowfit://auth-callback?error=invalid_token&error_description=Token%20expired" \
-  com.example.flowfit
+  -d "com.example.pulsify://auth-callback?error=invalid_token&error_description=Token%20expired" \
+  com.example.pulsify
 ```
 
 **Expected**: App should handle error gracefully
@@ -113,8 +113,8 @@ adb shell am start -W -a android.intent.action.VIEW \
 
 ```bash
 adb shell am start -W -a android.intent.action.VIEW \
-  -d "com.example.flowfit://auth-callback" \
-  com.example.flowfit
+  -d "com.example.pulsify://auth-callback" \
+  com.example.pulsify
 ```
 
 **Expected**: App should not crash
@@ -125,7 +125,7 @@ Check that your intent filter is registered:
 
 ```bash
 # Dump app info
-adb shell dumpsys package com.example.flowfit | grep -A 20 "intent-filter"
+adb shell dumpsys package com.example.pulsify | grep -A 20 "intent-filter"
 ```
 
 **Look for**:
@@ -133,7 +133,7 @@ adb shell dumpsys package com.example.flowfit | grep -A 20 "intent-filter"
 Action: "android.intent.action.VIEW"
 Category: "android.intent.category.DEFAULT"
 Category: "android.intent.category.BROWSABLE"
-Scheme: "com.example.flowfit"
+Scheme: "com.example.pulsify"
 Host: "auth-callback"
 ```
 
@@ -142,16 +142,16 @@ Host: "auth-callback"
 For Android 12 and above, check if app links are verified:
 
 ```bash
-adb shell pm get-app-links com.example.flowfit
+adb shell pm get-app-links com.example.pulsify
 ```
 
 **Expected Output**:
 ```
-com.example.flowfit:
+com.example.pulsify:
   ID: <some-id>
   Signatures: [<signature>]
   Domain verification state:
-    com.example.flowfit: verified
+    com.example.pulsify: verified
 ```
 
 If not verified, you may need to add a Digital Asset Links file (for HTTPS URLs only).
@@ -163,10 +163,10 @@ If not verified, you may need to add a Digital Asset Links file (for HTTPS URLs 
 **Check**:
 ```bash
 # Verify app is installed
-adb shell pm list packages | grep flowfit
+adb shell pm list packages | grep Pulsify
 
 # Check if intent filter is registered
-adb shell dumpsys package com.example.flowfit | grep -A 10 "intent-filter"
+adb shell dumpsys package com.example.pulsify | grep -A 10 "intent-filter"
 ```
 
 **Solution**:
@@ -182,7 +182,7 @@ adb shell dumpsys package com.example.flowfit | grep -A 10 "intent-filter"
 - Try opening the link multiple times
 - Clear default app associations:
   ```bash
-  adb shell pm clear-package-preferred-activities com.example.flowfit
+  adb shell pm clear-package-preferred-activities com.example.pulsify
   ```
 - For custom schemes (not HTTPS), this is expected behavior on first use
 
@@ -205,34 +205,34 @@ Create a test script `test_deep_links.sh`:
 ```bash
 #!/bin/bash
 
-echo "Testing FlowFit Deep Links..."
+echo "Testing Pulsify Deep Links..."
 
 # Test 1: Basic deep link
 echo "Test 1: Basic deep link"
 adb shell am start -W -a android.intent.action.VIEW \
-  -d "com.example.flowfit://auth-callback" \
-  com.example.flowfit
+  -d "com.example.pulsify://auth-callback" \
+  com.example.pulsify
 sleep 2
 
 # Test 2: With parameters
 echo "Test 2: With auth parameters"
 adb shell am start -W -a android.intent.action.VIEW \
-  -d "com.example.flowfit://auth-callback?type=signup&token=test123" \
-  com.example.flowfit
+  -d "com.example.pulsify://auth-callback?type=signup&token=test123" \
+  com.example.pulsify
 sleep 2
 
 # Test 3: Development scheme
 echo "Test 3: Development scheme"
 adb shell am start -W -a android.intent.action.VIEW \
-  -d "com.example.flowfit.dev://auth-callback" \
-  com.example.flowfit
+  -d "com.example.pulsify.dev://auth-callback" \
+  com.example.pulsify
 sleep 2
 
 # Test 4: Error handling
 echo "Test 4: Error handling"
 adb shell am start -W -a android.intent.action.VIEW \
-  -d "com.example.flowfit://auth-callback?error=test_error" \
-  com.example.flowfit
+  -d "com.example.pulsify://auth-callback?error=test_error" \
+  com.example.pulsify
 
 echo "Tests complete!"
 ```

@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flowfit/main.dart';
+import 'package:pulsify/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flowfit/secrets.dart';
+import 'package:pulsify/secrets.dart';
 
 /// Integration tests for login flows.
 /// 
@@ -30,10 +30,10 @@ void main() {
       (WidgetTester tester) async {
         // Note: This test requires a pre-existing user with completed profile
         // You'll need to create this user manually or in a setup script
-        const testEmail = 'complete_user@flowfit.test';
+        const testEmail = 'complete_user@Pulsify.test';
         const testPassword = 'TestPassword123!';
 
-        await tester.pumpWidget(const ProviderScope(child: FlowFitPhoneApp()));
+        await tester.pumpWidget(const ProviderScope(child: PulsifyPhoneApp()));
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         // Should be on welcome screen
@@ -79,10 +79,10 @@ void main() {
       'INTEGRATION: Login with incomplete profile navigates to survey',
       (WidgetTester tester) async {
         // Note: This test requires a pre-existing user WITHOUT completed profile
-        const testEmail = 'incomplete_user@flowfit.test';
+        const testEmail = 'incomplete_user@Pulsify.test';
         const testPassword = 'TestPassword123!';
 
-        await tester.pumpWidget(const ProviderScope(child: FlowFitPhoneApp()));
+        await tester.pumpWidget(const ProviderScope(child: PulsifyPhoneApp()));
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         // Navigate to login
@@ -123,10 +123,10 @@ void main() {
     testWidgets(
       'INTEGRATION: Login with invalid credentials shows error',
       (WidgetTester tester) async {
-        const testEmail = 'nonexistent@flowfit.test';
+        const testEmail = 'nonexistent@Pulsify.test';
         const testPassword = 'WrongPassword123!';
 
-        await tester.pumpWidget(const ProviderScope(child: FlowFitPhoneApp()));
+        await tester.pumpWidget(const ProviderScope(child: PulsifyPhoneApp()));
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         // Navigate to login
@@ -169,11 +169,11 @@ void main() {
         // Note: Requires a valid session to be present
         
         // First, create a session by logging in
-        const testEmail = 'session_test@flowfit.test';
+        const testEmail = 'session_test@Pulsify.test';
         const testPassword = 'TestPassword123!';
 
         // Initial app launch and login
-        await tester.pumpWidget(const ProviderScope(child: FlowFitPhoneApp()));
+        await tester.pumpWidget(const ProviderScope(child: PulsifyPhoneApp()));
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         // Navigate to login
@@ -200,7 +200,7 @@ void main() {
         }
 
         // Now simulate app restart by creating a new app instance
-        await tester.pumpWidget(const ProviderScope(child: FlowFitPhoneApp()));
+        await tester.pumpWidget(const ProviderScope(child: PulsifyPhoneApp()));
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
         // Should automatically navigate to dashboard or survey
@@ -223,7 +223,7 @@ void main() {
     testWidgets(
       'INTEGRATION: Google Sign-In button navigates to dashboard',
       (WidgetTester tester) async {
-        await tester.pumpWidget(const ProviderScope(child: FlowFitPhoneApp()));
+        await tester.pumpWidget(const ProviderScope(child: PulsifyPhoneApp()));
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         // Navigate to login screen
@@ -249,7 +249,7 @@ void main() {
     testWidgets(
       'INTEGRATION: Apple Sign-In button navigates to dashboard',
       (WidgetTester tester) async {
-        await tester.pumpWidget(const ProviderScope(child: FlowFitPhoneApp()));
+        await tester.pumpWidget(const ProviderScope(child: PulsifyPhoneApp()));
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         // Navigate to login screen
@@ -275,7 +275,7 @@ void main() {
     testWidgets(
       'INTEGRATION: Social sign-in does not create auth session',
       (WidgetTester tester) async {
-        await tester.pumpWidget(const ProviderScope(child: FlowFitPhoneApp()));
+        await tester.pumpWidget(const ProviderScope(child: PulsifyPhoneApp()));
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         // Navigate to login screen

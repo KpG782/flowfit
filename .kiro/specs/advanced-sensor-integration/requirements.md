@@ -1,12 +1,12 @@
-# Requirements Document
+﻿# Requirements Document
 
 ## Introduction
 
-This specification defines the integration of advanced sensor capabilities into FlowFit to enhance activity detection, environmental awareness, and watch face integration. The system will leverage WearOS Sensors library for comprehensive activity tracking, Android SensorManager for environmental sensors (barometer, light), and Complications API for seamless watch face integration on Galaxy Watch 6.
+This specification defines the integration of advanced sensor capabilities into Pulsify to enhance activity detection, environmental awareness, and watch face integration. The system will leverage WearOS Sensors library for comprehensive activity tracking, Android SensorManager for environmental sensors (barometer, light), and Complications API for seamless watch face integration on Galaxy Watch 6.
 
 ## Glossary
 
-- **FlowFit**: The health and fitness tracking application for Galaxy Watch 6 and companion phone
+- **Pulsify**: The health and fitness tracking application for Galaxy Watch 6 and companion phone
 - **WearOS Sensors Library**: Third-party library providing unified access to IMU sensors, GPS, and concurrent sensor data collection
 - **SensorManager**: Android's native sensor framework for accessing device hardware sensors
 - **Complications API**: WearOS API that allows apps to display data on watch faces
@@ -21,7 +21,7 @@ This specification defines the integration of advanced sensor capabilities into 
 
 ### Requirement 1
 
-**User Story:** As a fitness enthusiast, I want FlowFit to automatically detect my activity type and intensity, so that I can get accurate tracking without manually starting workouts.
+**User Story:** As a fitness enthusiast, I want Pulsify to automatically detect my activity type and intensity, so that I can get accurate tracking without manually starting workouts.
 
 #### Acceptance Criteria
 
@@ -33,7 +33,7 @@ This specification defines the integration of advanced sensor capabilities into 
 
 ### Requirement 2
 
-**User Story:** As a hiker and outdoor enthusiast, I want FlowFit to track my elevation changes and GPS location during activities, so that I can analyze my route and altitude gains.
+**User Story:** As a hiker and outdoor enthusiast, I want Pulsify to track my elevation changes and GPS location during activities, so that I can analyze my route and altitude gains.
 
 #### Acceptance Criteria
 
@@ -45,7 +45,7 @@ This specification defines the integration of advanced sensor capabilities into 
 
 ### Requirement 3
 
-**User Story:** As a user concerned about battery life, I want FlowFit to optimize sensor usage based on ambient conditions, so that my watch battery lasts throughout the day.
+**User Story:** As a user concerned about battery life, I want Pulsify to optimize sensor usage based on ambient conditions, so that my watch battery lasts throughout the day.
 
 #### Acceptance Criteria
 
@@ -81,7 +81,7 @@ This specification defines the integration of advanced sensor capabilities into 
 
 ### Requirement 6
 
-**User Story:** As a user, I want to grant or deny permissions for different sensors, so that I have control over what data FlowFit can access.
+**User Story:** As a user, I want to grant or deny permissions for different sensors, so that I have control over what data Pulsify can access.
 
 #### Acceptance Criteria
 
@@ -93,7 +93,7 @@ This specification defines the integration of advanced sensor capabilities into 
 
 ### Requirement 7
 
-**User Story:** As a developer maintaining FlowFit, I want comprehensive error handling for sensor failures, so that the app remains stable when sensors malfunction or become unavailable.
+**User Story:** As a developer maintaining Pulsify, I want comprehensive error handling for sensor failures, so that the app remains stable when sensors malfunction or become unavailable.
 
 #### Acceptance Criteria
 

@@ -8,6 +8,7 @@ import '../services/timer_service.dart';
 import '../services/heart_rate_service.dart';
 import '../services/calorie_calculator_service.dart';
 import '../services/workout_session_service.dart';
+import '../models/workout_session.dart';
 import 'running_session_provider.dart';
 
 /// Provider for countdown timer service (rest periods)

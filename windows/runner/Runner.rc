@@ -1,4 +1,4 @@
-// Microsoft Visual C++ generated resource script.
+﻿// Microsoft Visual C++ generated resource script.
 //
 #pragma code_page(65001)
 #include "resource.h"
@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "flowfit" "\0"
+            VALUE "FileDescription", "Pulsify" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "flowfit" "\0"
+            VALUE "InternalName", "Pulsify" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "flowfit.exe" "\0"
-            VALUE "ProductName", "flowfit" "\0"
+            VALUE "OriginalFilename", "Pulsify.exe" "\0"
+            VALUE "ProductName", "Pulsify" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

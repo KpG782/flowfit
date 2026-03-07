@@ -1,4 +1,4 @@
-# Troubleshooting Guide
+﻿# Troubleshooting Guide
 
 ## Current Error: Table 'user_profiles' Not Found
 
@@ -114,7 +114,7 @@ Enable verbose logging to see detailed error messages:
 // In lib/main.dart
 void main() async {
   // Add this for debugging
-  debugPrint('Starting FlowFit app...');
+  debugPrint('Starting Pulsify app...');
   
   // ... rest of main
 }

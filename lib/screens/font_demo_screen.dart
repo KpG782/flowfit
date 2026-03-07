@@ -1,4 +1,4 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +9,7 @@ class FontDemoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Font Demo — FlowFit')),
+      appBar: AppBar(title: const Text('Font Demo — Pulsify')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

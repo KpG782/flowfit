@@ -1,21 +1,21 @@
-package com.example.flowfit
+﻿package com.example.pulsify
 
 import android.app.Application
 import android.util.Log
 
 /**
- * Custom Application class for FlowFit
+ * Custom Application class for Pulsify
  * Provides application-level initialization and context
  */
-class FlowFitApp : Application() {
+class PulsifyApp : Application() {
     companion object {
-        private const val TAG = "FlowFitApp"
+        private const val TAG = "PulsifyApp"
         
         /**
          * Global application instance
          * Useful for accessing application context from anywhere
          */
-        lateinit var instance: FlowFitApp
+        lateinit var instance: PulsifyApp
             private set
     }
     
@@ -23,7 +23,7 @@ class FlowFitApp : Application() {
         super.onCreate()
         instance = this
         
-        Log.i(TAG, "✅ FlowFit Application initialized")
+        Log.i(TAG, "✅ Pulsify Application initialized")
         Log.i(TAG, "📱 Application context available: ${applicationContext.javaClass.simpleName}")
     }
 }

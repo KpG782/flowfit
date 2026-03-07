@@ -1,6 +1,6 @@
-# Core Architecture Setup Complete ✅
+﻿# Core Architecture Setup Complete ✅
 
-This document confirms that the core architecture and folder structure for FlowFit has been successfully set up.
+This document confirms that the core architecture and folder structure for Pulsify has been successfully set up.
 
 ## What Was Completed
 

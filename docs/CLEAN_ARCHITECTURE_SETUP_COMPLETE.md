@@ -1,8 +1,8 @@
-# Clean Architecture Setup - Complete ✅
+﻿# Clean Architecture Setup - Complete ✅
 
 ## What Was Implemented
 
-FlowFit now has a complete **Clean Architecture** setup with **Riverpod** state management.
+Pulsify now has a complete **Clean Architecture** setup with **Riverpod** state management.
 
 ## Files Created
 
@@ -136,7 +136,7 @@ ref.read(heartRateTrackingStateProvider.notifier).stopTracking();
 void main() {
   runApp(
     const ProviderScope(  // ✅ Added ProviderScope
-      child: FlowFitPhoneApp(),
+      child: PulsifyPhoneApp(),
     ),
   );
 }

@@ -1,5 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flowfit/secrets.dart';
+﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:pulsify/secrets.dart';
 
 void main() {
   group('Supabase Configuration', () {

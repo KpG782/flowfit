@@ -1,4 +1,4 @@
-# FlowFit
+﻿# Pulsify
 
 A comprehensive health and fitness tracking application for Wear OS (Galaxy Watch) with companion phone app support. Built with Flutter and integrated with Samsung Health Sensor SDK.
 
@@ -11,7 +11,7 @@ flutter run -d 6ece264d -t lib/main.dart
 
 ## 🎯 Overview
 
-FlowFit is a dual-platform fitness app that runs on:
+Pulsify is a dual-platform fitness app that runs on:
 - **Galaxy Watch (Wear OS)** - Primary device for real-time health tracking
 - **Android Phone** - Companion app for data visualization and management
 
@@ -90,7 +90,7 @@ FlowFit is a dual-platform fitness app that runs on:
 1. **Clone and setup**
    ```bash
    git clone <repository-url>
-   cd flowfit
+   cd Pulsify
    flutter pub get
    ```
 
@@ -130,7 +130,7 @@ The app uses Samsung Health Sensor SDK for real-time heart rate monitoring. See 
 ### Usage Example
 
 ```dart
-import 'package:flowfit/services/watch_bridge.dart';
+import 'package:pulsify/services/watch_bridge.dart';
 
 final watchBridge = WatchBridgeService();
 
@@ -239,12 +239,12 @@ await supabase.from('heart_rates').insert({
 ## 🗂️ Project Structure
 
 ```
-flowfit/
+Pulsify/
 ├── android/
 │   ├── app/
 │   │   ├── libs/
 │   │   │   └── samsung-health-sensor-api-1.4.1.aar
-│   │   └── src/main/kotlin/com/example/flowfit/
+│   │   └── src/main/kotlin/com/example/Pulsify/
 │   │       ├── MainActivity.kt
 │   │       └── HealthTrackingManager.kt
 │   └── build.gradle.kts
@@ -310,7 +310,7 @@ flutter run -d <device-id>
 - Restart watch and try again
 
 **"Permission Denied"**
-- Go to Settings → Apps → FlowFit → Permissions
+- Go to Settings → Apps → Pulsify → Permissions
 - Enable "Body sensors" permission
 
 **No Heart Rate Data**
@@ -439,13 +439,13 @@ flutter run -d 6ece264d -t lib/main.dart
 ### Troubleshooting
 ```bash
 # View logs
-adb -s 6ece264d logcat | findstr "FlowFit"
+adb -s 6ece264d logcat | findstr "Pulsify"
 
 # Check devices
 adb devices
 
 # Uninstall
-adb -s 6ece264d uninstall com.example.flowfit
+adb -s 6ece264d uninstall com.example.pulsify
 ```
 
 ---

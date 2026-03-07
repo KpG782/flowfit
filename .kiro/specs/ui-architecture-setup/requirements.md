@@ -1,12 +1,12 @@
-# Requirements Document
+﻿# Requirements Document
 
 ## Introduction
 
-This document specifies the requirements for implementing a comprehensive UI-only architecture for FlowFit, a health and fitness tracking application. The system shall provide complete navigation flows, mock data repositories, and clean architecture patterns while preserving existing watch-to-phone heart rate streaming functionality. The architecture must be backend-ready but shall not implement actual backend calls during this phase.
+This document specifies the requirements for implementing a comprehensive UI-only architecture for Pulsify, a health and fitness tracking application. The system shall provide complete navigation flows, mock data repositories, and clean architecture patterns while preserving existing watch-to-phone heart rate streaming functionality. The architecture must be backend-ready but shall not implement actual backend calls during this phase.
 
 ## Glossary
 
-- **FlowFit**: The health and fitness tracking application system
+- **Pulsify**: The health and fitness tracking application system
 - **Watch App**: The Galaxy Watch (Wear OS) application component
 - **Phone App**: The Android companion application component
 - **Mock Repository**: A data repository implementation that returns simulated data without backend calls

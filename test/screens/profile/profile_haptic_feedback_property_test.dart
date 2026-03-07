@@ -1,16 +1,16 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flowfit/screens/profile/profile_screen.dart';
-import 'package:flowfit/presentation/providers/providers.dart';
-import 'package:flowfit/presentation/notifiers/auth_notifier.dart';
-import 'package:flowfit/presentation/notifiers/profile_notifier.dart';
-import 'package:flowfit/domain/repositories/i_auth_repository.dart';
-import 'package:flowfit/domain/entities/user.dart';
-import 'package:flowfit/domain/entities/auth_state.dart' as domain;
-import 'package:flowfit/core/domain/entities/user_profile.dart';
-import 'package:flowfit/core/domain/repositories/profile_repository.dart';
+import 'package:pulsify/screens/profile/profile_screen.dart';
+import 'package:pulsify/presentation/providers/providers.dart';
+import 'package:pulsify/presentation/notifiers/auth_notifier.dart';
+import 'package:pulsify/presentation/notifiers/profile_notifier.dart';
+import 'package:pulsify/domain/repositories/i_auth_repository.dart';
+import 'package:pulsify/domain/entities/user.dart';
+import 'package:pulsify/domain/entities/auth_state.dart' as domain;
+import 'package:pulsify/core/domain/entities/user_profile.dart';
+import 'package:pulsify/core/domain/repositories/profile_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Stub providers for sync status (not yet implemented in main code)

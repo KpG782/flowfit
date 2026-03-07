@@ -1,6 +1,6 @@
-# FlowFit Wear OS Setup
+﻿# Pulsify Wear OS Setup
 
-This document outlines the Wear OS implementation for FlowFit, following best practices from Very Good Ventures' comprehensive Wear OS guide and official Flutter documentation.
+This document outlines the Wear OS implementation for Pulsify, following best practices from Very Good Ventures' comprehensive Wear OS guide and official Flutter documentation.
 
 ## Device Compatibility
 

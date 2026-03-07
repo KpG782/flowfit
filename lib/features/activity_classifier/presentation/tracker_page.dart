@@ -1,9 +1,8 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
-import 'package:flowfit/services/phone_data_listener.dart';
-import 'package:flowfit/models/sensor_batch.dart';
+import 'package:pulsify/services/phone_data_listener.dart';
 import 'package:provider/provider.dart';
 
 import 'providers.dart';
@@ -14,7 +13,7 @@ enum BpmSource { Simulation, Plugin, Watch }
 enum AccelSource { Phone, Simulation, Watch }
 
 class TrackerPage extends StatefulWidget {
-  const TrackerPage({Key? key}) : super(key: key);
+  const TrackerPage({super.key});
 
   @override
   _TrackerPageState createState() => _TrackerPageState();
@@ -34,7 +33,6 @@ class _TrackerPageState extends State<TrackerPage> {
   StreamSubscription? _sensorBatchSub;
   Timer? _accelTimer;
   int _accelSimTick = 0;
-  bool _simulateAccel = false; // Use synthetic accelerometer data
   double _accelAmplitude = 1.0; // Synthetic amplitude
   double _accelFreqHz = 1.0; // Tones per second in simulation
   AccelSource _accelSource = AccelSource.Phone;

@@ -1,14 +1,14 @@
-# Folder Reorganization Summary
+﻿# Folder Reorganization Summary
 
 ## ✅ Completed Reorganization
 
-The FlowFit project structure has been cleaned up and organized for better maintainability.
+The Pulsify project structure has been cleaned up and organized for better maintainability.
 
 ## 📁 New Structure
 
 ### Before (Messy Root)
 ```
-flowfit/
+Pulsify/
 ├── BUILD_FIXES_APPLIED.md
 ├── HEART_RATE_DATA_FLOW.md
 ├── IMPLEMENTATION_CHECKLIST.md
@@ -29,7 +29,7 @@ flowfit/
 
 ### After (Clean & Organized)
 ```
-flowfit/
+Pulsify/
 ├── docs/                    # 📚 All documentation
 │   ├── README.md
 │   ├── QUICK_START.md

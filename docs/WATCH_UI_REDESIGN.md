@@ -1,4 +1,4 @@
-# Watch UI Redesign - Before & After
+﻿# Watch UI Redesign - Before & After
 
 ## The Problem
 - Watch UI was cluttered with too many options
@@ -67,7 +67,7 @@ adb -s SM_R930 logcat | findstr "WatchToPhoneSync"
 - `lib/screens/wear/wear_heart_rate_screen.dart` - Redesigned
 
 ### Connection Files
-- `android/app/src/main/kotlin/com/example/flowfit/WatchToPhoneSyncManager.kt` - Enhanced
+- `android/app/src/main/kotlin/com/example/Pulsify/WatchToPhoneSyncManager.kt` - Enhanced
 
 ### Documentation
 - `docs/WATCH_CONNECTION_GUIDE.md` - New

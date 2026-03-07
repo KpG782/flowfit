@@ -1,4 +1,4 @@
-# FlowFit Data Management Guide
+﻿# Pulsify Data Management Guide
 
 ## Overview
 Complete guide for managing heart rate, IBI, and HRV data from Galaxy Watch to Flutter app with local database storage and backend sync.

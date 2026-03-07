@@ -1,8 +1,8 @@
-# Requirements Document
+﻿# Requirements Document
 
 ## Introduction
 
-This document outlines the requirements for implementing a complete authentication and onboarding flow for the FlowFit application using Supabase as the backend. The system will handle user account creation, login, survey data collection, and data persistence while maintaining existing social authentication options (Google and Apple Sign-In).
+This document outlines the requirements for implementing a complete authentication and onboarding flow for the Pulsify application using Supabase as the backend. The system will handle user account creation, login, survey data collection, and data persistence while maintaining existing social authentication options (Google and Apple Sign-In).
 
 ## Glossary
 
@@ -16,7 +16,7 @@ This document outlines the requirements for implementing a complete authenticati
 
 ### Requirement 1
 
-**User Story:** As a new user, I want to create an account with email and password, so that I can access the FlowFit application with my credentials.
+**User Story:** As a new user, I want to create an account with email and password, so that I can access the Pulsify application with my credentials.
 
 #### Acceptance Criteria
 
@@ -28,7 +28,7 @@ This document outlines the requirements for implementing a complete authenticati
 
 ### Requirement 2
 
-**User Story:** As a registered user, I want to log in with my email and password, so that I can access my personalized FlowFit data.
+**User Story:** As a registered user, I want to log in with my email and password, so that I can access my personalized Pulsify data.
 
 #### Acceptance Criteria
 

@@ -1,8 +1,8 @@
-# Design Document - Unified Workout Flow
+﻿# Design Document - Unified Workout Flow
 
 ## Overview
 
-The Unified Workout Flow redesigns FlowFit's Track Tab to eliminate decision paralysis by consolidating four separate workout entry points into a single, intelligent "START WORKOUT" button. The system guides users through a streamlined flow: quick mood check → workout type selection → specialized workout experience → post-workout mood check → summary with mood improvement display.
+The Unified Workout Flow redesigns Pulsify's Track Tab to eliminate decision paralysis by consolidating four separate workout entry points into a single, intelligent "START WORKOUT" button. The system guides users through a streamlined flow: quick mood check → workout type selection → specialized workout experience → post-workout mood check → summary with mood improvement display.
 
 This design integrates mood tracking as a core motivational feature, showing users the emotional ROI of their workouts. Each workout type (Running, Walking, Resistance Training) receives a specialized UI optimized for its specific use case, while maintaining consistent design patterns and leveraging OpenRouteService for GPS visualization.
 
@@ -1597,7 +1597,7 @@ class OpenRouteService {
 
 ## Summary
 
-This design provides a comprehensive blueprint for implementing the Unified Workout Flow in FlowFit. The key innovations are:
+This design provides a comprehensive blueprint for implementing the Unified Workout Flow in Pulsify. The key innovations are:
 
 1. **Single Entry Point**: Eliminates decision paralysis with one "START WORKOUT" button
 2. **Mood Tracking Integration**: Creates motivational feedback loops by showing emotional ROI

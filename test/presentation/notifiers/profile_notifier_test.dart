@@ -1,9 +1,9 @@
-import 'package:flutter_test/flutter_test.dart';
+﻿import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flowfit/presentation/notifiers/profile_notifier.dart';
-import 'package:flowfit/core/domain/entities/user_profile.dart';
-import 'package:flowfit/core/domain/repositories/profile_repository.dart';
-import 'package:flowfit/core/exceptions/profile_exceptions.dart';
+import 'package:pulsify/presentation/notifiers/profile_notifier.dart';
+import 'package:pulsify/core/domain/entities/user_profile.dart';
+import 'package:pulsify/core/domain/repositories/profile_repository.dart';
+import 'package:pulsify/core/exceptions/profile_exceptions.dart';
 
 /// Mock ProfileRepository for testing
 class MockProfileRepository implements ProfileRepository {

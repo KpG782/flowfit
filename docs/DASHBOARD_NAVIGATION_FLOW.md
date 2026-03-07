@@ -1,7 +1,7 @@
-# FlowFit Dashboard & Navigation Flow Documentation
+﻿# Pulsify Dashboard & Navigation Flow Documentation
 
 ## Overview
-This document outlines the current user flow, UI structure, and styling for the FlowFit main dashboard and navigation system. Use this to identify areas for improvement and enhancement.
+This document outlines the current user flow, UI structure, and styling for the Pulsify main dashboard and navigation system. Use this to identify areas for improvement and enhancement.
 
 ---
 
@@ -18,7 +18,7 @@ LoadingScreen (3s) → WelcomeScreen → SignUp/Login → Onboarding → Dashboa
 - **Visual Elements**:
   - Gradient background (Primary Blue → Light Blue)
   - Animated logo (Heart Pulse icon in white circle)
-  - App name "FlowFit" with tagline
+  - App name "Pulsify" with tagline
   - Loading spinner with "Initializing..." text
   - Footer: "Connect your Galaxy Watch"
 - **Animations**: Fade-in and scale animations (1.5s duration)

@@ -1,6 +1,6 @@
-# FlowFit Architecture
+﻿# Pulsify Architecture
 
-This document describes the clean architecture structure of the FlowFit application.
+This document describes the clean architecture structure of the Pulsify application.
 
 ## Directory Structure
 

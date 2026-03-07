@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data_sources/watch_data_source_provider.dart';
-import '../../../models/connection_state.dart' as conn;
 
 /// Watch connection state provider
 /// 

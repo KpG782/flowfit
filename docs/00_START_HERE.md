@@ -1,11 +1,11 @@
-# 🚀 START HERE - FlowFit Documentation
+﻿# 🚀 START HERE - Pulsify Documentation
 
-Welcome to the FlowFit documentation! This guide will help you navigate the documentation and get started quickly.
+Welcome to the Pulsify documentation! This guide will help you navigate the documentation and get started quickly.
 
 ## 📍 You Are Here
 
 ```
-flowfit/
+Pulsify/
 ├── README.md              ← Project overview (start here for high-level info)
 └── docs/
     ├── 00_START_HERE.md   ← YOU ARE HERE! 👈

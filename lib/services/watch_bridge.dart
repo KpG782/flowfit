@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
@@ -13,11 +13,11 @@ import '../models/connection_state.dart' as conn;
 /// via native Android code through Method Channel
 class WatchBridgeService {
   static const MethodChannel _methodChannel =
-      MethodChannel('com.flowfit.watch/data');
+      MethodChannel('com.pulsify.watch/data');
   static const MethodChannel _syncChannel =
-      MethodChannel('com.flowfit.watch/sync');
+      MethodChannel('com.pulsify.watch/sync');
   static const EventChannel _heartRateEventChannel =
-      EventChannel('com.flowfit.watch/heartrate');
+      EventChannel('com.pulsify.watch/heartrate');
 
   // Logger instance for debugging
   final Logger _logger = Logger(

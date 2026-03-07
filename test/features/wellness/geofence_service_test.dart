@@ -1,10 +1,10 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:flowfit/features/wellness/data/geofence_repository.dart';
-import 'package:flowfit/features/wellness/data/geofence_repository.dart' show InMemoryGeofenceRepository;
-import 'package:flowfit/features/wellness/domain/geofence_mission.dart';
-import 'package:flowfit/features/wellness/services/geofence_service.dart';
+import 'package:pulsify/features/wellness/data/geofence_repository.dart';
+import 'package:pulsify/features/wellness/data/geofence_repository.dart' show InMemoryGeofenceRepository;
+import 'package:pulsify/features/wellness/domain/geofence_mission.dart';
+import 'package:pulsify/features/wellness/services/geofence_service.dart';
 
 Position _p(double lat, double lon) => Position(
       latitude: lat,

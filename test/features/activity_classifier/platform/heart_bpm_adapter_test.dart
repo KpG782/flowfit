@@ -1,6 +1,6 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flowfit/features/activity_classifier/platform/heart_bpm_adapter.dart';
+import 'package:pulsify/features/activity_classifier/platform/heart_bpm_adapter.dart';
 
 void main() {
   group('HeartBpmAdapter', () {

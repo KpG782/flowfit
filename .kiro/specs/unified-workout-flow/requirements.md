@@ -1,12 +1,12 @@
-# Requirements Document - Unified Workout Flow
+﻿# Requirements Document - Unified Workout Flow
 
 ## Introduction
 
-The Unified Workout Flow redesigns FlowFit's Track Tab to provide a streamlined, user-centric workout experience. The current implementation has multiple confusing entry points (Start Workout, Log Run, Record Walk, Map Missions) that create decision paralysis. This feature consolidates all workout types into a single, intelligent entry point with mood tracking integration, providing users with specialized experiences for running, walking, and resistance training while maintaining consistent UI patterns and leveraging GPS tracking via OpenRouteService API.
+The Unified Workout Flow redesigns Pulsify's Track Tab to provide a streamlined, user-centric workout experience. The current implementation has multiple confusing entry points (Start Workout, Log Run, Record Walk, Map Missions) that create decision paralysis. This feature consolidates all workout types into a single, intelligent entry point with mood tracking integration, providing users with specialized experiences for running, walking, and resistance training while maintaining consistent UI patterns and leveraging GPS tracking via OpenRouteService API.
 
 ## Glossary
 
-- **Track Tab**: The main fitness tracking screen in FlowFit where users view daily stats and start workouts
+- **Track Tab**: The main fitness tracking screen in Pulsify where users view daily stats and start workouts
 - **Workout Session**: A timed fitness activity with pre/post mood tracking and real-time metrics
 - **Mood Tracking**: Emotional state capture before and after workouts using a 5-point emoji scale
 - **OpenRouteService**: Third-party API service for GPS route visualization and mapping (API Key: 5b3ce35978511000001cf62248)
@@ -15,13 +15,13 @@ The Unified Workout Flow redesigns FlowFit's Track Tab to provide a streamlined,
 - **Resistance Training**: Strength workout with upper/lower body split and set/rep tracking
 - **GPS Tracking**: Real-time location recording during running and walking workouts
 - **Session Timer**: Continuous elapsed time display during active workout sessions
-- **Solar Icons**: Icon library used throughout FlowFit for consistent visual design
+- **Solar Icons**: Icon library used throughout Pulsify for consistent visual design
 
 ## Requirements
 
 ### Requirement 1: Unified Workout Entry Point
 
-**User Story:** As a FlowFit user, I want a single clear button to start any workout, so that I can quickly begin exercising without decision paralysis.
+**User Story:** As a Pulsify user, I want a single clear button to start any workout, so that I can quickly begin exercising without decision paralysis.
 
 #### Acceptance Criteria
 

@@ -1,6 +1,6 @@
-# Heart Rate Data Flow: Galaxy Watch 6 to Phone
+﻿# Heart Rate Data Flow: Galaxy Watch 6 to Phone
 
-This document explains how live heart rate data flows from the Galaxy Watch 6 to the FlowFit phone app using the Samsung Health Sensor API.
+This document explains how live heart rate data flows from the Galaxy Watch 6 to the Pulsify phone app using the Samsung Health Sensor API.
 
 ## Overview
 
@@ -178,7 +178,7 @@ tracker = null
 
 ## Communication Channels
 
-### MethodChannel: `com.flowfit.watch/data`
+### MethodChannel: `com.pulsify.watch/data`
 
 Handles request-response operations:
 - `requestPermission` → Returns permission granted status
@@ -190,7 +190,7 @@ Handles request-response operations:
 - `stopHeartRate` → Stops heart rate tracking
 - `getCurrentHeartRate` → Gets last known heart rate value
 
-### EventChannel: `com.flowfit.watch/heartrate`
+### EventChannel: `com.pulsify.watch/heartrate`
 
 Streams continuous heart rate data:
 - Emits `HeartRateData` objects as they arrive from the sensor

@@ -1,6 +1,6 @@
-# Supabase Database Setup Instructions
+﻿# Supabase Database Setup Instructions
 
-This guide will help you set up the database schema for the FlowFit authentication and onboarding system.
+This guide will help you set up the database schema for the Pulsify authentication and onboarding system.
 
 ## Prerequisites
 
@@ -12,7 +12,7 @@ This guide will help you set up the database schema for the FlowFit authenticati
 ### Step 1: Access Supabase SQL Editor
 
 1. Go to https://app.supabase.com
-2. Select your FlowFit project
+2. Select your Pulsify project
 3. Click on "SQL Editor" in the left sidebar
 
 ### Step 2: Run the Migration
@@ -167,7 +167,7 @@ After successfully setting up the database:
 1. ✅ Database schema is ready
 2. ✅ Row Level Security is configured
 3. ✅ Automatic timestamp updates are enabled
-4. 🚀 You can now run the FlowFit app and test the authentication flow
+4. 🚀 You can now run the Pulsify app and test the authentication flow
 
 The app will automatically use this database schema when users:
 - Sign up for an account

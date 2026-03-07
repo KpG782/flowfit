@@ -1,4 +1,4 @@
-# Touch Target Accessibility Verification
+﻿# Touch Target Accessibility Verification
 
 ## Task 6.5: Ensure touch target sizes meet accessibility standards
 
@@ -70,7 +70,7 @@ To verify these changes meet accessibility standards:
    - Enable "Accessibility Scanner"
 
 3. **Test the WearHeartRateScreen**
-   - Launch FlowFit on your Galaxy Watch
+   - Launch Pulsify on your Galaxy Watch
    - Navigate to the Heart Rate screen
    - Tap the floating Accessibility Scanner button
    - Select "Scan this screen"

@@ -1,6 +1,6 @@
-# Very Good Ventures Best Practices - Implementation Summary
+﻿# Very Good Ventures Best Practices - Implementation Summary
 
-This document summarizes the improvements made to FlowFit's Wear OS app based on Very Good Ventures' comprehensive guide.
+This document summarizes the improvements made to Pulsify's Wear OS app based on Very Good Ventures' comprehensive guide.
 
 ## Key Improvements Implemented
 
@@ -74,7 +74,7 @@ override fun onGenericMotionEvent(event: MotionEvent?): Boolean {
 - Works with both bezel and crown inputs
 
 ### 4. Transparent Background for Round Screens ✅
-**Location**: `android/app/src/main/kotlin/com/example/flowfit/MainActivity.kt`
+**Location**: `android/app/src/main/kotlin/com/example/Pulsify/MainActivity.kt`
 
 ```kotlin
 override fun onCreate(savedInstanceState: Bundle?) {

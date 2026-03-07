@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-/// FlowFit App Theme
+/// Pulsify App Theme
 ///
 /// NOTE: This project uses a custom font family "GeneralSans" in the ThemeData.
 /// To use a custom font you must add the font files under `assets/fonts/GeneralSans/`
 /// and register them in `pubspec.yaml` (see `docs/ADD_CUSTOM_FONTS.md`).
-/// Based on FlowFit Style Guide:
+/// Based on Pulsify Style Guide:
 /// - Font: General Sans
 /// - Icons: Iconify/Solar
 /// - Colors: Black, White, Blue (#3B82F6), Light Blue (#5DADE2), Cyan (#5DD9E2)

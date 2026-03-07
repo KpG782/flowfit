@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flowfit/screens/workout/workout_type_selection_screen.dart';
-import 'package:flowfit/models/workout_session.dart';
+import 'package:pulsify/screens/workout/workout_type_selection_screen.dart';
+import 'package:pulsify/models/workout_session.dart';
 
 void main() {
   group('WorkoutTypeSelectionScreen', () {

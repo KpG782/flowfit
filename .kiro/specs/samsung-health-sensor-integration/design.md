@@ -1,8 +1,8 @@
-# Design Document: Samsung Health Sensor Integration
+﻿# Design Document: Samsung Health Sensor Integration
 
 ## Overview
 
-This design document outlines the technical architecture for integrating Samsung Health Sensor API into the FlowFit Flutter application for Galaxy Watch 6 (Wear OS). The integration follows a layered architecture with clear separation between Flutter (Dart) and native Android (Kotlin) code, connected via Flutter's Method Channel mechanism.
+This design document outlines the technical architecture for integrating Samsung Health Sensor API into the Pulsify Flutter application for Galaxy Watch 6 (Wear OS). The integration follows a layered architecture with clear separation between Flutter (Dart) and native Android (Kotlin) code, connected via Flutter's Method Channel mechanism.
 
 The solution enables real-time biometric data collection from Samsung Galaxy Watch sensors, with proper permission handling, lifecycle management, and error handling throughout the stack.
 
@@ -110,7 +110,7 @@ Primary service class for managing watch sensor communication from Flutter.
 
 ```dart
 class WatchBridgeService {
-  static const MethodChannel _channel = MethodChannel('com.flowfit.watch/data');
+  static const MethodChannel _channel = MethodChannel('com.pulsify.watch/data');
   
   // Permission management
   Future<bool> requestBodySensorPermission();
@@ -180,7 +180,7 @@ Enhanced to handle Method Channel calls and route to HealthTrackingManager and W
 
 ```kotlin
 class MainActivity: FlutterActivity() {
-    private val CHANNEL = "com.flowfit.watch/data"
+    private val CHANNEL = "com.pulsify.watch/data"
     private lateinit var healthManager: SamsungHealthManager
     
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -338,7 +338,7 @@ Handles EventChannel setup for receiving watch data in Flutter.
 class MainActivity: FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         // Set up EventChannel for phone data listener
-        EventChannel(flutterEngine.dartExecutor.binaryMessenger, "com.flowfit.phone/heartrate")
+        EventChannel(flutterEngine.dartExecutor.binaryMessenger, "com.pulsify.phone/heartrate")
             .setStreamHandler(object : EventChannel.StreamHandler {
                 override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
                     PhoneDataListenerService.eventSink = events
@@ -355,7 +355,7 @@ class MainActivity: FlutterActivity() {
 
 #### Method Calls (Flutter → Android) - Watch Side
 
-**Channel:** `com.flowfit.watch/data`
+**Channel:** `com.pulsify.watch/data`
 
 | Method | Arguments | Return Type | Description |
 |--------|-----------|-------------|-------------|
@@ -367,7 +367,7 @@ class MainActivity: FlutterActivity() {
 | `stopHeartRate` | None | `void` | Stop heart rate tracking |
 | `getCurrentHeartRate` | None | `Map` | Get latest heart rate data |
 
-**Channel:** `com.flowfit.watch/sync`
+**Channel:** `com.pulsify.watch/sync`
 
 | Method | Arguments | Return Type | Description |
 |--------|-----------|-------------|-------------|
@@ -382,13 +382,13 @@ class MainActivity: FlutterActivity() {
 
 | Channel | Data Type | Description |
 |---------|-----------|-------------|
-| `com.flowfit.watch/heartrate` | `Map<String, dynamic>` | Stream of heart rate updates from sensor |
+| `com.pulsify.watch/heartrate` | `Map<String, dynamic>` | Stream of heart rate updates from sensor |
 
 **Phone Side:**
 
 | Channel | Data Type | Description |
 |---------|-----------|-------------|
-| `com.flowfit.phone/heartrate` | `String` (JSON) | Stream of heart rate data received from watch |
+| `com.pulsify.phone/heartrate` | `String` (JSON) | Stream of heart rate data received from watch |
 
 ## Data Models
 
@@ -723,7 +723,7 @@ Watch App
 
 1. **Wait for Connection Success**: The watch must wait for `onConnectionSuccess()` callback before checking capabilities or starting tracking. Accessing the service before connection completes will result in null binder errors.
 
-2. **Use CapabilityClient for Node Discovery**: Never hardcode node IDs. Always use CapabilityClient to discover phone nodes with the `flowfit_phone_app` or `heart_rate_receiver` capability.
+2. **Use CapabilityClient for Node Discovery**: Never hardcode node IDs. Always use CapabilityClient to discover phone nodes with the `pulsify_phone_app` or `heart_rate_receiver` capability.
 
 3. **Consistent Message Paths**: The message path must be exactly `/heart_rate` on both watch (send) and phone (receive). Any mismatch will cause messages to be ignored.
 
@@ -796,7 +796,7 @@ PhoneDataListenerService declaration:
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="android_wear_capabilities">
-        <item>flowfit_phone_app</item>
+        <item>pulsify_phone_app</item>
         <item>heart_rate_receiver</item>
     </string-array>
 </resources>

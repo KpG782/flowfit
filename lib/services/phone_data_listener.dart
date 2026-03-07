@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/services.dart';
 import '../models/heart_rate_data.dart';
 import '../models/sensor_batch.dart';
@@ -9,16 +9,16 @@ import 'package:logger/logger.dart';
 /// Service for receiving heart rate data from Galaxy Watch
 /// Uses Wearable Data Layer API to listen for messages from watch
 /// 
-/// This service listens to the EventChannel "com.flowfit.phone/heartrate"
+/// This service listens to the EventChannel "com.pulsify.phone/heartrate"
 /// which receives data from PhoneDataListenerService on the native Android side.
 /// The data is transmitted from the watch via Wearable Data Layer API.
 class PhoneDataListener {
   static const MethodChannel _methodChannel =
-      MethodChannel('com.flowfit.phone/data');
+      MethodChannel('com.pulsify.phone/data');
   static const EventChannel _heartRateEventChannel =
-      EventChannel('com.flowfit.phone/heartrate');
+      EventChannel('com.pulsify.phone/heartrate');
   static const EventChannel _sensorBatchEventChannel =
-      EventChannel('com.flowfit.phone/sensor_data');
+      EventChannel('com.pulsify.phone/sensor_data');
 
   final Logger _logger = Logger(
     printer: PrettyPrinter(

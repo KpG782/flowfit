@@ -1,4 +1,4 @@
-# Track Tab - Usage Documentation
+﻿# Track Tab - Usage Documentation
 
 ## Overview
 The **Track Tab** is the central hub for monitoring your daily fitness activities and starting new workouts. It provides real-time statistics, quick action buttons, and a history of your recent activities. This page is designed to give you a complete overview of your fitness journey at a glance.
@@ -218,7 +218,7 @@ Track Tab
 ## Header Section
 
 ### App Branding
-- **Title**: "FlowFit" displayed in bold
+- **Title**: "Pulsify" displayed in bold
 - **Position**: Top-left of the screen
 
 ### Notification Bell

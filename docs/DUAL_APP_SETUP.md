@@ -1,8 +1,8 @@
-# Dual App Setup - Watch & Phone
+﻿# Dual App Setup - Watch & Phone
 
 ## 🎯 Problem Solved
 
-FlowFit has TWO separate apps:
+Pulsify has TWO separate apps:
 1. **Watch App** - Runs on Galaxy Watch (Wear OS)
 2. **Phone App** - Runs on Android Phone
 
@@ -56,7 +56,7 @@ flutter build apk --debug -t lib/main_wear.dart
 ### Watch App (main_wear.dart)
 ```
 ┌─────────────┐
-│   FlowFit   │  ← Round screen
+│   Pulsify   │  ← Round screen
 │             │
 │    ❤️ 72    │  ← Large BPM
 │     BPM     │
@@ -70,7 +70,7 @@ flutter build apk --debug -t lib/main_wear.dart
 ### Phone App (main.dart)
 ```
 ┌─────────────────────┐
-│ FlowFit      [Watch]│  ← Standard app bar
+│ Pulsify      [Watch]│  ← Standard app bar
 ├─────────────────────┤
 │  ❤️ Current HR      │
 │       72 BPM        │
@@ -114,10 +114,10 @@ class WearApp extends StatelessWidget {
 ### lib/main.dart
 ```dart
 void main() {
-  runApp(const FlowFitPhoneApp());
+  runApp(const PulsifyPhoneApp());
 }
 
-class FlowFitPhoneApp extends StatelessWidget {
+class PulsifyPhoneApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -167,7 +167,7 @@ flutter run -d adb-RFAX21TD0NA-FFYRNh._adb-tls-connect._tcp -t lib/main.dart
 adb -s 6ece264d logcat | findstr "WearApp\|WearDashboard"
 
 # Phone logs
-adb -s adb-RFAX21TD0NA-FFYRNh._adb-tls-connect._tcp logcat | findstr "FlowFitPhoneApp\|PhoneHomePage"
+adb -s adb-RFAX21TD0NA-FFYRNh._adb-tls-connect._tcp logcat | findstr "PulsifyPhoneApp\|PhoneHomePage"
 ```
 
 ## 📊 Device Mapping

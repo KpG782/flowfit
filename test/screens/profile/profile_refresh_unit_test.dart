@@ -1,11 +1,11 @@
-import 'package:flutter_test/flutter_test.dart';
+﻿import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
-import 'package:flowfit/core/domain/entities/user_profile.dart';
-import 'package:flowfit/core/domain/repositories/profile_repository.dart';
-import 'package:flowfit/presentation/notifiers/profile_notifier.dart';
-import 'package:flowfit/presentation/providers/profile_providers.dart';
+import 'package:pulsify/core/domain/entities/user_profile.dart';
+import 'package:pulsify/core/domain/repositories/profile_repository.dart';
+import 'package:pulsify/presentation/notifiers/profile_notifier.dart';
+import 'package:pulsify/presentation/providers/profile_providers.dart';
 
 @GenerateMocks([ProfileRepository, ProfileNotifier])
 import 'profile_refresh_unit_test.mocks.dart';

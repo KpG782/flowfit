@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/recent_activity.dart';
 import '../models/workout_session.dart';
-import '../services/workout_session_service.dart';
 import 'running_session_provider.dart';
 
 /// Provider for fetching recent workout activities with mood data

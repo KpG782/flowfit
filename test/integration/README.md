@@ -1,6 +1,6 @@
-# Integration Testing Guide
+﻿# Integration Testing Guide
 
-This directory contains integration tests for the FlowFit authentication and onboarding flows.
+This directory contains integration tests for the Pulsify authentication and onboarding flows.
 
 ## Overview
 
@@ -53,22 +53,22 @@ Some tests are marked with `skip: true` because they require manual setup:
 Before running the full test suite, create these test users in Supabase:
 
 #### User with Complete Profile
-- Email: `complete_user@flowfit.test`
+- Email: `complete_user@Pulsify.test`
 - Password: `TestPassword123!`
 - Profile: Complete all survey fields
 
 #### User with Incomplete Profile
-- Email: `incomplete_user@flowfit.test`
+- Email: `incomplete_user@Pulsify.test`
 - Password: `TestPassword123!`
 - Profile: Do NOT complete survey
 
 #### User for Session Testing
-- Email: `session_test@flowfit.test`
+- Email: `session_test@Pulsify.test`
 - Password: `TestPassword123!`
 - Profile: Complete all survey fields
 
 #### Existing User for Duplicate Email Test
-- Email: `existing@flowfit.test`
+- Email: `existing@Pulsify.test`
 - Password: `TestPassword123!`
 
 ### 2. Enable Tests
@@ -204,9 +204,9 @@ After running tests, clean up test data:
 
 ```sql
 -- Delete test users from Supabase
-DELETE FROM auth.users WHERE email LIKE '%@flowfit.test';
+DELETE FROM auth.users WHERE email LIKE '%@Pulsify.test';
 DELETE FROM user_profiles WHERE user_id IN (
-  SELECT id FROM auth.users WHERE email LIKE '%@flowfit.test'
+  SELECT id FROM auth.users WHERE email LIKE '%@Pulsify.test'
 );
 ```
 

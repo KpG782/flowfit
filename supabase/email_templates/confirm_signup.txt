@@ -1,8 +1,8 @@
-⚡ FlowFit - Confirm Your Signup
+﻿⚡ Pulsify - Confirm Your Signup
 
 Hi there! 👋
 
-Welcome to FlowFit! We're excited to have you on board.
+Welcome to Pulsify! We're excited to have you on board.
 
 To get started with your personalized fitness journey, please confirm your email address by clicking the link below:
 
@@ -11,11 +11,11 @@ To get started with your personalized fitness journey, please confirm your email
 🔒 Why verify?
 Email verification helps us keep your account secure and ensures you receive important updates about your fitness progress.
 
-If you didn't create a FlowFit account, you can safely ignore this email.
+If you didn't create a Pulsify account, you can safely ignore this email.
 
 ---
-FlowFit - Your Personal Fitness Companion
-Questions? Contact us at support@flowfit.app
+Pulsify - Your Personal Fitness Companion
+Questions? Contact us at support@pulsify.app
 
-Privacy Policy: https://flowfit.app/privacy
-Terms of Service: https://flowfit.app/terms
+Privacy Policy: https://pulsify.app/privacy
+Terms of Service: https://pulsify.app/terms

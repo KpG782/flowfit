@@ -1,4 +1,4 @@
-# FlowFit Documentation Index
+﻿# Pulsify Documentation Index
 
 ## 📚 Documentation Structure
 
@@ -235,7 +235,7 @@ Build and deployment scripts:
 
 ### Folder Structure:
 ```
-flowfit/
+Pulsify/
 ├── README.md                    # Main readme
 ├── QUICK_START.md              # Quick start guide
 ├── TROUBLESHOOTING.md          # Troubleshooting

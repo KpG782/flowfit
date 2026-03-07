@@ -1,4 +1,4 @@
-# Mood-Responsive Map Page - Functional Specification
+﻿# Mood-Responsive Map Page - Functional Specification
 
 ## 1. Executive Summary
 
@@ -700,7 +700,7 @@ class CalmingRouteService {
 - **Multi-User**: Compare wellness patterns with friends
 - **Workplace Integration**: Team wellness dashboard
 - **Insurance Integration**: Share wellness data for premium discounts
-- **Voice Assistant**: "Hey FlowFit, how's my stress today?"
+- **Voice Assistant**: "Hey Pulsify, how's my stress today?"
 
 ---
 

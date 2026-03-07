@@ -1,11 +1,11 @@
-# Samsung Health Service Connection Timeout - FIXED ✅
+﻿# Samsung Health Service Connection Timeout - FIXED ✅
 
 ## 🐛 The Problem
 
 Your logs showed:
 ```
 I/HealthTrackingManager(21345): 🔄 Attempting to connect to Health Tracking Service
-I/HealthTrackingManager(21345): 📱 Using context type: FlowFitApp
+I/HealthTrackingManager(21345): 📱 Using context type: PulsifyApp
 I/HealthTrackingManager(21345): ⏳ Waiting for connection callback...
 [10 seconds pass - NO CALLBACKS FIRED]
 I/flutter (21345): TimeoutException after 0:00:10.000000: Future not completed
@@ -37,7 +37,7 @@ healthTrackingService?.connectService()  // ✅ THIS WAS MISSING!
 
 ## 📋 The Fix Applied
 
-**File:** `android/app/src/main/kotlin/com/example/flowfit/HealthTrackingManager.kt`
+**File:** `android/app/src/main/kotlin/com/example/Pulsify/HealthTrackingManager.kt`
 
 **Before:**
 ```kotlin
@@ -94,13 +94,13 @@ fun connect(callback: (Boolean, String?) -> Unit) {
 ### New Log Sequence:
 ```
 I/HealthTrackingManager: 🔄 Attempting to connect to Health Tracking Service
-I/HealthTrackingManager: 📱 Using context type: FlowFitApp
+I/HealthTrackingManager: 📱 Using context type: PulsifyApp
 I/HealthTrackingManager: 📡 Calling connectService() to initiate binding...
 I/HealthTrackingManager: ⏳ Waiting for connection callback...
 I/HealthTrackingConnector: Starting Service connection
 I/HealthTrackingConnector: Connecting to Service
 I/HealthTrackingConnector: Binding Service
-I/HealthTrackingConnector: Tracker Service Connected with appID: com.example.flowfit
+I/HealthTrackingConnector: Tracker Service Connected with appID: com.example.pulsify
 I/HealthTrackingManager: ✅ Health Tracking Service connected successfully
 I/HealthTrackerCapability: supported List: [HEART_RATE_CONTINUOUS, ...]
 ```
@@ -143,7 +143,7 @@ adb logcat | grep -E "HealthTrackingManager|HealthTrackingConnector|onConnection
 
 The working native Kotlin example from `SMARTWATCH_TO_PHONE_DATA_FLOW.md` also calls `connectService()`:
 
-**From:** `wear/src/main/java/com/flowfit/data/HealthTrackingServiceConnection.kt`
+**From:** `wear/src/main/java/com/Pulsify/data/HealthTrackingServiceConnection.kt`
 ```kotlin
 init {
     healthTrackingService = HealthTrackingService(connectionListener, context)

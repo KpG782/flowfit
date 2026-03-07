@@ -1,4 +1,4 @@
-package com.example.flowfit
+﻿package com.example.pulsify
 
 import kotlinx.serialization.Serializable
 

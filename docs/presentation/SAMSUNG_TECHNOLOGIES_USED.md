@@ -1,8 +1,8 @@
-# Samsung Technologies Used in FlowFit
+﻿# Samsung Technologies Used in Pulsify
 
 ## 🎯 Overview
 
-FlowFit leverages **Samsung Health SDK** and **Samsung Wearable technologies** to provide real-time fitness tracking and AI-powered activity classification.
+Pulsify leverages **Samsung Health SDK** and **Samsung Wearable technologies** to provide real-time fitness tracking and AI-powered activity classification.
 
 ---
 
@@ -31,7 +31,7 @@ import com.samsung.android.service.health.tracking.data.ValueKey
 ```
 
 **Implementation Location:**
-- `android/app/src/main/kotlin/com/example/flowfit/HealthTrackingManager.kt`
+- `android/app/src/main/kotlin/com/example/Pulsify/HealthTrackingManager.kt`
 
 **Features Implemented:**
 - Connection management to Samsung Health Tracking Service
@@ -52,7 +52,7 @@ import com.samsung.android.service.health.tracking.data.ValueKey
 - ✅ AI activity classification input
 
 **Implementation Location:**
-- `android/app/src/main/kotlin/com/example/flowfit/WatchSensorService.kt`
+- `android/app/src/main/kotlin/com/example/Pulsify/WatchSensorService.kt`
 
 **Features Implemented:**
 - 32 Hz sampling rate for high-resolution movement data
@@ -84,8 +84,8 @@ import com.google.android.gms.wearable.CapabilityClient
 ```
 
 **Implementation Locations:**
-- `android/app/src/main/kotlin/com/example/flowfit/WatchToPhoneSyncManager.kt`
-- `android/app/src/main/kotlin/com/example/flowfit/PhoneDataListenerService.kt`
+- `android/app/src/main/kotlin/com/example/Pulsify/WatchToPhoneSyncManager.kt`
+- `android/app/src/main/kotlin/com/example/Pulsify/PhoneDataListenerService.kt`
 
 **Features Implemented:**
 - Message-based data transmission
@@ -353,7 +353,7 @@ messageClient.sendMessage(
 
 ## 🎯 Key Takeaway for Presentation
 
-**"FlowFit is built on Samsung's professional-grade Health Tracking SDK, giving us access to the same sensor technology used by Samsung Health. This ensures medical-grade accuracy for heart rate monitoring and high-precision motion detection from the Galaxy Watch accelerometer. Combined with Google's Wearable Data Layer for seamless communication, we deliver a robust, production-ready fitness tracking experience."**
+**"Pulsify is built on Samsung's professional-grade Health Tracking SDK, giving us access to the same sensor technology used by Samsung Health. This ensures medical-grade accuracy for heart rate monitoring and high-precision motion detection from the Galaxy Watch accelerometer. Combined with Google's Wearable Data Layer for seamless communication, we deliver a robust, production-ready fitness tracking experience."**
 
 ---
 

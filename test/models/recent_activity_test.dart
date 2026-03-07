@@ -1,5 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flowfit/models/recent_activity.dart';
+﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:pulsify/models/recent_activity.dart';
 
 void main() {
   group('RecentActivity', () {

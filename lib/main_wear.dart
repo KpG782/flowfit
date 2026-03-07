@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:wear_plus/wear_plus.dart';
 import 'screens/wear/wear_dashboard.dart';
 
@@ -17,7 +17,7 @@ class WearApp extends StatelessWidget {
             final isAmbient = mode == WearMode.ambient;
             
             return MaterialApp(
-              title: 'FlowFit Wear',
+              title: 'Pulsify Wear',
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
                 useMaterial3: true, // Use Material 3 (VGV recommendation)

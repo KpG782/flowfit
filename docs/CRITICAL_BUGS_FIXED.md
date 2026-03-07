@@ -1,8 +1,8 @@
-# Critical Bugs Fixed - FlowFit Samsung Health Integration
+﻿# Critical Bugs Fixed - Pulsify Samsung Health Integration
 
 ## Date: November 25, 2025
 
-This document details the 5 critical production bugs that were blocking the FlowFit app from functioning, and the fixes applied.
+This document details the 5 critical production bugs that were blocking the Pulsify app from functioning, and the fixes applied.
 
 ---
 
@@ -19,7 +19,7 @@ E/HealthTrackingManager: Failed to connect after 3 attempts
 The code was checking `hasHeartRateCapability()` **before** the Samsung Health service connection completed. This created a race condition where the capability check happened while `client binder is null`.
 
 ### Fix Applied
-**File:** `android/app/src/main/kotlin/com/example/flowfit/HealthTrackingManager.kt`
+**File:** `android/app/src/main/kotlin/com/example/Pulsify/HealthTrackingManager.kt`
 
 **Changes:**
 1. Removed synchronous `waitForConnection()` polling logic
@@ -59,7 +59,7 @@ override fun onConnectionSuccess() {
 
 ### Problem
 ```
-E/flutter: MissingPluginException(No implementation found for method startListening on channel com.flowfit.phone/data)
+E/flutter: MissingPluginException(No implementation found for method startListening on channel com.pulsify.phone/data)
 ```
 
 ### Status
@@ -90,7 +90,7 @@ Created wear.xml capability declaration file:
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="android_wear_capabilities">
-        <item>flowfit_phone_app</item>
+        <item>pulsify_phone_app</item>
         <item>heart_rate_receiver</item>
     </string-array>
 </resources>
@@ -175,8 +175,8 @@ After these fixes, verify the following:
 
 ## Files Modified
 
-1. `android/app/src/main/kotlin/com/example/flowfit/HealthTrackingManager.kt` - Fixed connection lifecycle
-2. `android/app/src/main/kotlin/com/example/flowfit/MainActivity.kt` - Updated to use callback-based connect
+1. `android/app/src/main/kotlin/com/example/Pulsify/HealthTrackingManager.kt` - Fixed connection lifecycle
+2. `android/app/src/main/kotlin/com/example/Pulsify/MainActivity.kt` - Updated to use callback-based connect
 3. `android/app/src/main/res/values/wear.xml` - NEW FILE - Added capability declaration
 4. `android/app/src/main/AndroidManifest.xml` - Disabled Impeller rendering
 

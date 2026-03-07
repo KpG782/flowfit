@@ -1,8 +1,8 @@
-# Clean Architecture with Riverpod - FlowFit
+﻿# Clean Architecture with Riverpod - Pulsify
 
 ## Overview
 
-FlowFit uses **Clean Architecture** with **Riverpod** for state management. This provides:
+Pulsify uses **Clean Architecture** with **Riverpod** for state management. This provides:
 - Clear separation of concerns
 - Testable business logic
 - Independent layers

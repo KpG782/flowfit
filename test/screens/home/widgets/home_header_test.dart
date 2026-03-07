@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flowfit/screens/home/widgets/home_header.dart';
-import 'package:flowfit/providers/dashboard_providers.dart';
+import 'package:pulsify/screens/home/widgets/home_header.dart';
+import 'package:pulsify/providers/dashboard_providers.dart';
 
 void main() {
   group('HomeHeader', () {
@@ -17,7 +17,7 @@ void main() {
         ),
       );
 
-      expect(find.text('FlowFit'), findsOneWidget);
+      expect(find.text('Pulsify'), findsOneWidget);
     });
 
     testWidgets('displays notification icon', (WidgetTester tester) async {

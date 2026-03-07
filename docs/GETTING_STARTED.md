@@ -1,10 +1,10 @@
-# Getting Started with FlowFit
+﻿# Getting Started with Pulsify
 
-Quick guide to get you up and running with FlowFit development.
+Quick guide to get you up and running with Pulsify development.
 
-## 🎯 What is FlowFit?
+## 🎯 What is Pulsify?
 
-FlowFit is a health and fitness tracking app that runs on:
+Pulsify is a health and fitness tracking app that runs on:
 - **Galaxy Watch** (Wear OS) - Primary device for real-time tracking
 - **Android Phone** - Companion app for data visualization
 
@@ -27,7 +27,7 @@ FlowFit is a health and fitness tracking app that runs on:
 ```bash
 # Clone repository
 git clone <repository-url>
-cd flowfit
+cd Pulsify
 
 # Install dependencies
 flutter pub get
@@ -96,7 +96,7 @@ scripts\run_phone.bat
 
 **View logs**:
 ```bash
-adb -s 6ece264d logcat | findstr "FlowFit"
+adb -s 6ece264d logcat | findstr "Pulsify"
 ```
 
 **Clean build**:
@@ -119,7 +119,7 @@ flutter pub get
 ## 🗂️ Project Organization
 
 ```
-flowfit/
+Pulsify/
 ├── docs/        # 📚 All documentation
 ├── scripts/     # 🔧 Build and run scripts
 ├── lib/         # Flutter source code
@@ -136,7 +136,7 @@ flowfit/
 1. **Make changes** in `lib/` folder
 2. **Run on watch**: `scripts\run_watch.bat`
 3. **Use hot reload**: Press `r` in terminal
-4. **View logs**: `adb -s 6ece264d logcat | findstr "FlowFit"`
+4. **View logs**: `adb -s 6ece264d logcat | findstr "Pulsify"`
 
 ### After Major Changes
 
@@ -251,7 +251,7 @@ See [docs/README.md](docs/README.md) for complete documentation index.
 
 ## 🎉 You're Ready!
 
-You now have everything you need to start developing with FlowFit.
+You now have everything you need to start developing with Pulsify.
 
 **Next command to run**:
 ```bash

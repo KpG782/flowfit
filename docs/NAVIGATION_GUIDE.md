@@ -1,4 +1,4 @@
-# FlowFit Navigation Guide
+﻿# Pulsify Navigation Guide
 
 ## 🗺️ App Navigation Flow
 
@@ -69,7 +69,7 @@
 ┌─────────────────────────────────────────────────────────────────┐
 │                  LIVE HEART RATE SCREEN                         │
 │                                                                 │
-│  FlowFit                                    [2 buffered] 🟢     │
+│  Pulsify                                    [2 buffered] 🟢     │
 │                                                                 │
 │  ┌─────────────────────────────────────────────────────────┐   │
 │  │              Current Heart Rate ❤️                      │   │

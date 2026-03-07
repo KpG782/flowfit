@@ -1,4 +1,4 @@
-# Build Fixes Applied
+﻿# Build Fixes Applied
 
 ## Issues Fixed
 
@@ -45,15 +45,15 @@ healthTrackingService = HealthTrackingService(connectionListener, context)
 ```
 
 **Files Modified**:
-- `android/app/src/main/kotlin/com/example/flowfit/HealthTrackingManager.kt` - Fixed ConnectionListener implementation
-- `android/app/src/main/kotlin/com/example/flowfit/MainActivity.kt` - Updated connectWatch() method
+- `android/app/src/main/kotlin/com/example/Pulsify/HealthTrackingManager.kt` - Fixed ConnectionListener implementation
+- `android/app/src/main/kotlin/com/example/Pulsify/MainActivity.kt` - Updated connectWatch() method
 
 ### 2. Missing Wearable Library ✅
 
 **Problem**:
 ```
 INSTALL_FAILED_MISSING_SHARED_LIBRARY: 
-Package com.example.flowfit requires unavailable shared library 
+Package com.example.pulsify requires unavailable shared library 
 com.google.android.wearable; failing!
 ```
 
@@ -201,20 +201,20 @@ flutter run -d 6ece264d
 
 ### Step 3: Approve on Watch
 **IMPORTANT**: When you see the installation prompt on your watch:
-1. Watch will show "Install app? FlowFit"
+1. Watch will show "Install app? Pulsify"
 2. Tap "Install" button
 3. Must approve within 30 seconds
 
 ### Step 4: Verify
 ```bash
 # Check app is installed
-adb -s 6ece264d shell pm list packages | findstr flowfit
+adb -s 6ece264d shell pm list packages | findstr Pulsify
 
 # Launch app
-adb -s 6ece264d shell am start -n com.example.flowfit/.MainActivity
+adb -s 6ece264d shell am start -n com.example.pulsify/.MainActivity
 
 # View logs
-adb -s 6ece264d logcat | findstr "FlowFit MainActivity HealthTrackingManager"
+adb -s 6ece264d logcat | findstr "Pulsify MainActivity HealthTrackingManager"
 ```
 
 ## Expected Behavior After Fixes
@@ -276,8 +276,8 @@ If you still encounter issues:
 
 ## Files Modified
 
-- ✅ `android/app/src/main/kotlin/com/example/flowfit/HealthTrackingManager.kt` - Simplified
-- ✅ `android/app/src/main/kotlin/com/example/flowfit/MainActivity.kt` - Updated
+- ✅ `android/app/src/main/kotlin/com/example/Pulsify/HealthTrackingManager.kt` - Simplified
+- ✅ `android/app/src/main/kotlin/com/example/Pulsify/MainActivity.kt` - Updated
 - ✅ `android/app/src/main/AndroidManifest.xml` - Made wearable library optional
 - ✅ `README.md` - Updated with comprehensive documentation
 

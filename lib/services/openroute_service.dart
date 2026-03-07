@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import '../secrets.dart';
 
 /// Service for OpenRouteService API integration
 class OpenRouteService {
-  static const String apiKey = '5b3ce35978511000001cf62248';
+  static const String apiKey = OpenRouteConfig.apiKey;
   static const String baseUrl = 'https://api.openrouteservice.org';
   
   final _cacheManager = DefaultCacheManager();

@@ -1,8 +1,8 @@
-# Design Document: Supabase Authentication and Onboarding
+﻿# Design Document: Supabase Authentication and Onboarding
 
 ## Overview
 
-This design document outlines the implementation of a complete authentication and onboarding system for FlowFit using Supabase as the backend. The system will handle user registration, login, session management, and survey-based profile creation with data persistence. The architecture follows clean architecture principles with clear separation between UI, business logic, and data layers using Riverpod for state management.
+This design document outlines the implementation of a complete authentication and onboarding system for Pulsify using Supabase as the backend. The system will handle user registration, login, session management, and survey-based profile creation with data persistence. The architecture follows clean architecture principles with clear separation between UI, business logic, and data layers using Riverpod for state management.
 
 ### Key Features
 

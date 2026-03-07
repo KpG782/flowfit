@@ -1,4 +1,4 @@
-# Wake Lock Fix - Screen Off Tracking
+﻿# Wake Lock Fix - Screen Off Tracking
 
 ## Problem Fixed ✅
 **Issue:** Heart rate tracking stopped when Galaxy Watch screen turned off
@@ -18,7 +18,7 @@ private fun initializeWakeLock() {
     val powerManager = getSystemService(POWER_SERVICE) as PowerManager
     wakeLock = powerManager.newWakeLock(
         PowerManager.PARTIAL_WAKE_LOCK,  // CPU on, screen can be off
-        "FlowFit::HeartRateTracking"
+        "Pulsify::HeartRateTracking"
     )
 }
 ```
@@ -76,7 +76,7 @@ Start tracking → Acquire wake lock → Screen off → CPU stays on → ✅ Tra
 
 ## Changes Made
 
-### File: `android/app/src/main/kotlin/com/example/flowfit/MainActivity.kt`
+### File: `android/app/src/main/kotlin/com/example/Pulsify/MainActivity.kt`
 
 **Added:**
 1. Wake lock initialization
@@ -119,10 +119,10 @@ adb logcat | grep "Heart rate data"
 ### 3. Verify Wake Lock
 ```bash
 # Check wake lock status
-adb shell dumpsys power | grep "FlowFit"
+adb shell dumpsys power | grep "Pulsify"
 
 # Expected output:
-# PARTIAL_WAKE_LOCK 'FlowFit::HeartRateTracking'
+# PARTIAL_WAKE_LOCK 'Pulsify::HeartRateTracking'
 ```
 
 ---
@@ -209,12 +209,12 @@ private var isTrackingActive = false
 
 1. **Check Battery Optimization:**
    ```
-   Settings → Apps → FlowFit → Battery → Unrestricted
+   Settings → Apps → Pulsify → Battery → Unrestricted
    ```
 
 2. **Verify Wake Lock:**
    ```bash
-   adb shell dumpsys power | grep "FlowFit"
+   adb shell dumpsys power | grep "Pulsify"
    ```
 
 3. **Check Logs:**

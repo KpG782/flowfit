@@ -1,8 +1,8 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flowfit/services/survey_completion_handler.dart';
-import 'package:flowfit/core/domain/entities/user_profile.dart';
-import 'package:flowfit/core/domain/repositories/profile_repository.dart';
-import 'package:flowfit/core/exceptions/profile_exceptions.dart';
+﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:pulsify/services/survey_completion_handler.dart';
+import 'package:pulsify/core/domain/entities/user_profile.dart';
+import 'package:pulsify/core/domain/repositories/profile_repository.dart';
+import 'package:pulsify/core/exceptions/profile_exceptions.dart';
 
 /// Mock implementation of ProfileRepository for testing
 class MockProfileRepository implements ProfileRepository {
@@ -56,6 +56,11 @@ class MockProfileRepository implements ProfileRepository {
   @override
   Stream<SyncStatus> watchSyncStatus(String userId) {
     return Stream.value(SyncStatus.synced);
+  }
+
+  @override
+  Future<bool> hasCompletedSurvey(String userId) async {
+    return _localProfile != null;
   }
 }
 

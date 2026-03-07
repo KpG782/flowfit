@@ -42,7 +42,6 @@ class RunningSessionNotifier extends StateNotifier<RunningSession?> {
   final TimerService _timerService;
   final HeartRateService _hrService;
   final CalorieCalculatorService _calorieService;
-  final WorkoutSessionService _sessionService;
   final PhoneStepCounterService _phoneStepCounterService;
   final PhoneDataListener _phoneDataListener;
 
@@ -57,14 +56,12 @@ class RunningSessionNotifier extends StateNotifier<RunningSession?> {
     required TimerService timerService,
     required HeartRateService hrService,
     required CalorieCalculatorService calorieService,
-    required WorkoutSessionService sessionService,
     required PhoneStepCounterService phoneStepCounterService,
     required PhoneDataListener phoneDataListener,
   })  : _gpsService = gpsService,
         _timerService = timerService,
         _hrService = hrService,
         _calorieService = calorieService,
-        _sessionService = sessionService,
         _phoneStepCounterService = phoneStepCounterService,
         _phoneDataListener = phoneDataListener,
         super(null);
@@ -317,7 +314,6 @@ final runningSessionProvider = StateNotifierProvider<RunningSessionNotifier, Run
     timerService: ref.watch(timerServiceProvider),
     hrService: ref.watch(heartRateServiceProvider),
     calorieService: ref.watch(calorieCalculatorServiceProvider),
-    sessionService: ref.watch(workoutSessionServiceProvider),
     phoneStepCounterService: ref.watch(phoneStepCounterServiceProvider),
     phoneDataListener: ref.watch(phoneDataListenerProvider),
   ),

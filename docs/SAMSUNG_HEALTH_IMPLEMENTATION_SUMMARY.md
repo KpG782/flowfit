@@ -1,8 +1,8 @@
-# Samsung Health Sensor Implementation Summary
+﻿# Samsung Health Sensor Implementation Summary
 
 ## ✅ What Was Implemented
 
-I've successfully implemented the Samsung Health Sensor SDK integration for your FlowFit Wear OS app, based on the Samsung tutorial you provided. Here's what's now ready to use:
+I've successfully implemented the Samsung Health Sensor SDK integration for your Pulsify Wear OS app, based on the Samsung tutorial you provided. Here's what's now ready to use:
 
 ### 1. Kotlin Backend (Native Android)
 
@@ -171,7 +171,7 @@ await watchBridge.stopHeartRateTracking();
 - Service unavailable → Restart watch
 
 **"Permission Denied"**
-- Go to Settings → Apps → FlowFit → Permissions
+- Go to Settings → Apps → Pulsify → Permissions
 - Enable "Body sensors"
 
 **No Heart Rate Data**
@@ -230,12 +230,12 @@ double calculateRMSSD(List<int> ibiValues) {
 ## 📚 Files Modified/Created
 
 ### Modified
-- `android/app/src/main/kotlin/com/example/flowfit/MainActivity.kt`
+- `android/app/src/main/kotlin/com/example/Pulsify/MainActivity.kt`
 - `android/app/build.gradle.kts`
 - `lib/models/heart_rate_data.dart`
 
 ### Created
-- `android/app/src/main/kotlin/com/example/flowfit/HealthTrackingManager.kt`
+- `android/app/src/main/kotlin/com/example/Pulsify/HealthTrackingManager.kt`
 - `SAMSUNG_HEALTH_SETUP_GUIDE.md`
 - `IMPLEMENTATION_CHECKLIST.md`
 - `SAMSUNG_HEALTH_IMPLEMENTATION_SUMMARY.md`

@@ -1,8 +1,8 @@
-# IBI (Inter-Beat Interval) Data Collection Guide
+﻿# IBI (Inter-Beat Interval) Data Collection Guide
 ## Samsung Health SDK → Kotlin Wear OS → Flutter Phone App
 
 **Date:** November 25, 2025  
-**Project:** FlowFit HR Data Transfer  
+**Project:** Pulsify HR Data Transfer  
 **Purpose:** Document how IBI data flows from Samsung Galaxy Watch 6 to Flutter app
 
 ---
@@ -96,7 +96,7 @@ override fun onDataReceived(dataPoints: MutableList<DataPoint>) {
 
 ```kotlin
 // Referenced in TrackingRepositoryImpl.kt line 7
-import com.flowfit.data.IBIDataParsing.Companion.getValidIbiList
+import com.Pulsify.data.IBIDataParsing.Companion.getValidIbiList
 ```
 
 ### Validation Logic
@@ -201,7 +201,7 @@ private fun calculateHRV(ibiList: ArrayList<Int>): Double {
 
 ## 4️⃣ Data Model: TrackedData
 
-### Location: `common/src/main/java/com/flowfit/data/TrackedData.kt`
+### Location: `common/src/main/java/com/Pulsify/data/TrackedData.kt`
 
 ```kotlin
 @Serializable

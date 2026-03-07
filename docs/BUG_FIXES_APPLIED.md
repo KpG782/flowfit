@@ -1,7 +1,7 @@
-# Bug Fixes Applied - November 25, 2025
+﻿# Bug Fixes Applied - November 25, 2025
 
 ## Overview
-Fixed 4 critical bugs blocking the FlowFit Samsung Health integration.
+Fixed 4 critical bugs blocking the Pulsify Samsung Health integration.
 
 ---
 
@@ -24,7 +24,7 @@ The HealthTrackingService connection was being checked immediately after creatio
 - Proper error handling with descriptive messages
 
 **Files Modified:**
-- `android/app/src/main/kotlin/com/example/flowfit/HealthTrackingManager.kt`
+- `android/app/src/main/kotlin/com/example/Pulsify/HealthTrackingManager.kt`
 
 **Key Changes:**
 ```kotlin
@@ -156,13 +156,13 @@ I/WatchToPhoneSync: Phone connection check: false
 - `android/app/src/main/res/values/wear.xml`
 
 **Files Modified:**
-- `android/app/src/main/kotlin/com/example/flowfit/WatchToPhoneSyncManager.kt`
+- `android/app/src/main/kotlin/com/example/Pulsify/WatchToPhoneSyncManager.kt`
 
 **Key Changes:**
 ```xml
 <!-- wear.xml - NEW FILE -->
 <string-array name="android_wear_capabilities">
-    <item>flowfit_phone_app</item>
+    <item>pulsify_phone_app</item>
     <item>heart_rate_receiver</item>
 </string-array>
 ```
@@ -229,7 +229,7 @@ flutter build apk --target lib/main_wear.dart
 - **Status text:** 10sp (down from 11sp)
 
 ### Capability Discovery
-- **Primary method:** Capability-based (`flowfit_phone_app`)
+- **Primary method:** Capability-based (`pulsify_phone_app`)
 - **Fallback method:** All connected nodes
 - **Filter:** `FILTER_REACHABLE` (only nearby devices)
 
@@ -237,10 +237,10 @@ flutter build apk --target lib/main_wear.dart
 
 ## Files Modified Summary
 
-1. `android/app/src/main/kotlin/com/example/flowfit/HealthTrackingManager.kt` - Connection retry logic
+1. `android/app/src/main/kotlin/com/example/Pulsify/HealthTrackingManager.kt` - Connection retry logic
 2. `lib/screens/phone_home.dart` - Type-safe data handling
 3. `lib/screens/wear/wear_heart_rate_screen.dart` - UI overflow fixes
-4. `android/app/src/main/kotlin/com/example/flowfit/WatchToPhoneSyncManager.kt` - Capability discovery
+4. `android/app/src/main/kotlin/com/example/Pulsify/WatchToPhoneSyncManager.kt` - Capability discovery
 5. `android/app/src/main/res/values/wear.xml` - NEW FILE - Capability declaration
 
 ---

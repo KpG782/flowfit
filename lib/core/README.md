@@ -1,6 +1,6 @@
-# Core - Clean Architecture with Riverpod
+﻿# Core - Clean Architecture with Riverpod
 
-This folder contains the core infrastructure for FlowFit's clean architecture implementation.
+This folder contains the core infrastructure for Pulsify's clean architecture implementation.
 
 ## Structure
 
@@ -18,7 +18,7 @@ core/
 
 ### 1. Import providers in your screen
 ```dart
-import 'package:flowfit/core/providers/providers.dart';
+import 'package:pulsify/core/providers/providers.dart';
 ```
 
 ### 2. Use ConsumerWidget

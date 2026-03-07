@@ -1,8 +1,8 @@
-# Permission Status Widget
+﻿# Permission Status Widget
 
 ## Overview
 
-The `PermissionStatusWidget` provides a reusable UI component for displaying and managing body sensor permissions in the FlowFit application.
+The `PermissionStatusWidget` provides a reusable UI component for displaying and managing body sensor permissions in the Pulsify application.
 
 ## Features
 
@@ -18,8 +18,8 @@ The `PermissionStatusWidget` provides a reusable UI component for displaying and
 ### Basic Usage
 
 ```dart
-import 'package:flowfit/widgets/permission_status_widget.dart';
-import 'package:flowfit/services/watch_bridge.dart';
+import 'package:pulsify/widgets/permission_status_widget.dart';
+import 'package:pulsify/services/watch_bridge.dart';
 
 class MyScreen extends StatefulWidget {
   @override

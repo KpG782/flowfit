@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Handles deep link authentication callbacks from Supabase
@@ -83,8 +83,8 @@ class DeepLinkHandler {
   /// Get the appropriate redirect URL based on environment
   static String getRedirectUrl({bool isDevelopment = false}) {
     if (isDevelopment) {
-      return 'com.example.flowfit.dev://auth-callback';
+      return 'com.example.pulsify.dev://auth-callback';
     }
-    return 'com.example.flowfit://auth-callback';
+    return 'com.example.pulsify://auth-callback';
   }
 }

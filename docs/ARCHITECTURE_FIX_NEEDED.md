@@ -1,4 +1,4 @@
-# Architecture Fix Required - Flutter vs Kotlin Comparison
+﻿# Architecture Fix Required - Flutter vs Kotlin Comparison
 
 ## Problem Identified
 
@@ -22,15 +22,15 @@ class TheApp : Application() {
 
 **Your Flutter needs**:
 ```kotlin
-// android/app/src/main/kotlin/com/example/flowfit/FlowFitApp.kt
-package com.example.flowfit
+// android/app/src/main/kotlin/com/example/Pulsify/PulsifyApp.kt
+package com.example.pulsify
 
 import android.app.Application
 import android.util.Log
 
-class FlowFitApp : Application() {
+class PulsifyApp : Application() {
     companion object {
-        private const val TAG = "FlowFitApp"
+        private const val TAG = "PulsifyApp"
     }
     
     override fun onCreate() {
@@ -44,8 +44,8 @@ class FlowFitApp : Application() {
 **Update AndroidManifest.xml**:
 ```xml
 <application
-    android:name=".FlowFitApp"  <!-- ADD THIS -->
-    android:label="FlowFit"
+    android:name=".PulsifyApp"  <!-- ADD THIS -->
+    android:label="Pulsify"
     ...
 ```
 
@@ -175,7 +175,7 @@ class MainActivity: FlutterActivity() {
 
 | Aspect | Working Kotlin | Your Flutter | Fix Needed |
 |--------|---------------|--------------|------------|
-| **Application Class** | ✅ Custom `TheApp` | ❌ Default Flutter | Add `FlowFitApp.kt` |
+| **Application Class** | ✅ Custom `TheApp` | ❌ Default Flutter | Add `PulsifyApp.kt` |
 | **Context Type** | ✅ Application context | ❌ Activity context | Use `applicationContext` |
 | **DI Framework** | ✅ Hilt | ❌ Manual | Not required, but helpful |
 | **Connection Wrapper** | ✅ Dedicated class | ⚠️ Direct in manager | Refactor recommended |
@@ -187,26 +187,26 @@ class MainActivity: FlutterActivity() {
 
 ```bash
 # Create file
-android/app/src/main/kotlin/com/example/flowfit/FlowFitApp.kt
+android/app/src/main/kotlin/com/example/Pulsify/PulsifyApp.kt
 ```
 
 ```kotlin
-package com.example.flowfit
+package com.example.pulsify
 
 import android.app.Application
 import android.util.Log
 
-class FlowFitApp : Application() {
+class PulsifyApp : Application() {
     companion object {
-        private const val TAG = "FlowFitApp"
-        lateinit var instance: FlowFitApp
+        private const val TAG = "PulsifyApp"
+        lateinit var instance: PulsifyApp
             private set
     }
     
     override fun onCreate() {
         super.onCreate()
         instance = this
-        Log.i(TAG, "✅ FlowFit Application initialized")
+        Log.i(TAG, "✅ Pulsify Application initialized")
     }
 }
 ```
@@ -215,8 +215,8 @@ class FlowFitApp : Application() {
 
 ```xml
 <application
-    android:name=".FlowFitApp"
-    android:label="FlowFit"
+    android:name=".PulsifyApp"
+    android:label="Pulsify"
     ...
 ```
 
@@ -254,7 +254,7 @@ private fun initializeHealthTracking() {
 After these changes, you should see:
 
 ```
-I/FlowFitApp: ✅ FlowFit Application initialized
+I/PulsifyApp: ✅ Pulsify Application initialized
 I/MainActivity: Initializing health tracking
 I/HealthTrackingManager: Using context: Application
 I/HealthTrackingManager: 🔄 Attempting to connect to Health Tracking Service

@@ -1,4 +1,4 @@
-# Design Document
+﻿# Design Document
 
 ## Overview
 
@@ -74,7 +74,7 @@ The architecture follows a layered approach:
 
 **Purpose**: Manages accelerometer sensor collection, buffering, and transmission coordination.
 
-**Location**: `android/app/src/main/kotlin/com/example/flowfit/WatchSensorService.kt`
+**Location**: `android/app/src/main/kotlin/com/example/Pulsify/WatchSensorService.kt`
 
 **Key Responsibilities**:
 - Register/unregister accelerometer sensor listener
@@ -108,7 +108,7 @@ class WatchSensorService(private val context: Context) {
 
 **Purpose**: Existing heart rate tracking manager, enhanced to coordinate with accelerometer service.
 
-**Location**: `android/app/src/main/kotlin/com/example/flowfit/HealthTrackingManager.kt`
+**Location**: `android/app/src/main/kotlin/com/example/Pulsify/HealthTrackingManager.kt`
 
 **Enhancements**:
 - Add reference to WatchSensorService

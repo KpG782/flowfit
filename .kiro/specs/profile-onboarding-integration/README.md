@@ -1,8 +1,8 @@
-# Profile Onboarding Integration - Specification
+﻿# Profile Onboarding Integration - Specification
 
 ## Overview
 
-This specification defines the integration between the onboarding survey and user profile system in the FlowFit app. The implementation follows an offline-first architecture with local storage as the primary data source and Supabase as the backend sync target.
+This specification defines the integration between the onboarding survey and user profile system in the Pulsify app. The implementation follows an offline-first architecture with local storage as the primary data source and Supabase as the backend sync target.
 
 ## Status
 

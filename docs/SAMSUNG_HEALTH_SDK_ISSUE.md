@@ -1,4 +1,4 @@
-# Samsung Health SDK Connection Issue - Diagnosis
+﻿# Samsung Health SDK Connection Issue - Diagnosis
 
 ## Problem Summary
 
@@ -139,7 +139,7 @@ After installing/fixing the service:
 
 1. **Uninstall app**:
    ```bash
-   adb uninstall com.example.flowfit
+   adb uninstall com.example.pulsify
    ```
 
 2. **Rebuild and install**:

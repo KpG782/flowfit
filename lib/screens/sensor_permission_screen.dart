@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../services/watch_bridge.dart';
 import '../widgets/permission_status_widget.dart';
 
@@ -52,7 +52,7 @@ class _SensorPermissionScreenState extends State<SensorPermissionScreen> {
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                'FlowFit needs access to your body sensors to track heart rate and other health metrics from your Galaxy Watch.',
+                'Pulsify needs access to your body sensors to track heart rate and other health metrics from your Galaxy Watch.',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey,

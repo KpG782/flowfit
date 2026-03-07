@@ -1,6 +1,6 @@
-# FlowFit Documentation
+﻿# Pulsify Documentation
 
-Complete documentation for the FlowFit health and fitness tracking application.
+Complete documentation for the Pulsify health and fitness tracking application.
 
 ## 📖 Table of Contents
 
@@ -138,19 +138,19 @@ flutter build apk --debug
 adb -s 6ece264d install -r build\app\outputs\flutter-apk\app-debug.apk
 
 # Uninstall
-adb -s 6ece264d uninstall com.example.flowfit
+adb -s 6ece264d uninstall com.example.pulsify
 ```
 
 ### Debugging
 ```bash
 # View logs
-adb -s 6ece264d logcat | findstr "FlowFit MainActivity HealthTrackingManager"
+adb -s 6ece264d logcat | findstr "Pulsify MainActivity HealthTrackingManager"
 
 # Check devices
 adb devices
 
 # Check installed packages
-adb -s 6ece264d shell pm list packages | findstr flowfit
+adb -s 6ece264d shell pm list packages | findstr Pulsify
 ```
 
 ## 📚 Additional Resources

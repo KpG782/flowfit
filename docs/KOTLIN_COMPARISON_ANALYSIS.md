@@ -1,4 +1,4 @@
-# Kotlin Implementation Comparison: Working Native vs Your Flutter Bridge
+﻿# Kotlin Implementation Comparison: Working Native vs Your Flutter Bridge
 
 ## 🎯 Executive Summary
 
@@ -477,7 +477,7 @@ Check if Flutter is receiving the heart rate data:
 
 ```dart
 // In your Flutter code
-EventChannel('com.flowfit.watch/heartrate')
+EventChannel('com.pulsify.watch/heartrate')
     .receiveBroadcastStream()
     .listen((data) {
       print('📊 Received HR data: $data');

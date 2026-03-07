@@ -1,9 +1,9 @@
-# Quick Start Guide - Integration Testing
+﻿# Quick Start Guide - Integration Testing
 
 ## For QA Testers (Manual Testing)
 
 ### What You Need
-- FlowFit app installed on Android device or emulator
+- Pulsify app installed on Android device or emulator
 - Access to Supabase dashboard
 - This testing guide
 
@@ -79,9 +79,9 @@ flutter test test/integration/ --verbose
 ### Test Setup (For Unskipped Tests)
 
 1. **Create Test Users in Supabase**:
-   - `complete_user@flowfit.test` with completed profile
-   - `incomplete_user@flowfit.test` without profile
-   - `existing@flowfit.test` for duplicate email test
+   - `complete_user@Pulsify.test` with completed profile
+   - `incomplete_user@Pulsify.test` without profile
+   - `existing@Pulsify.test` for duplicate email test
 
 2. **Enable Tests**:
    - Remove `skip: true` from relevant tests
@@ -98,9 +98,9 @@ After testing, clean up test users:
 
 ```sql
 -- Run in Supabase SQL Editor
-DELETE FROM auth.users WHERE email LIKE '%@flowfit.test';
+DELETE FROM auth.users WHERE email LIKE '%@Pulsify.test';
 DELETE FROM user_profiles WHERE user_id IN (
-  SELECT id FROM auth.users WHERE email LIKE '%@flowfit.test'
+  SELECT id FROM auth.users WHERE email LIKE '%@Pulsify.test'
 );
 ```
 

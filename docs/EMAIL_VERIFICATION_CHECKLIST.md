@@ -1,4 +1,4 @@
-# Email Verification Setup Checklist
+﻿# Email Verification Setup Checklist
 
 Use this checklist to ensure everything is configured correctly.
 
@@ -15,10 +15,10 @@ Use this checklist to ensure everything is configured correctly.
 
 Go to: https://supabase.com/dashboard/project/dnasghxxqwibwqnljvxr/auth/url-configuration
 
-- [ ] Set **Site URL** to: `com.example.flowfit://auth-callback`
+- [ ] Set **Site URL** to: `com.example.pulsify://auth-callback`
 - [ ] Add to **Redirect URLs**:
-  - [ ] `com.example.flowfit://auth-callback`
-  - [ ] `com.example.flowfit.dev://auth-callback`
+  - [ ] `com.example.pulsify://auth-callback`
+  - [ ] `com.example.pulsify.dev://auth-callback`
   - [ ] `http://localhost:3000/**`
 
 ### 2. Email Templates
@@ -47,8 +47,8 @@ flutter run -d <device-id>
 
 # 2. Test deep link opens app
 adb shell am start -W -a android.intent.action.VIEW \
-  -d "com.example.flowfit://auth-callback" \
-  com.example.flowfit
+  -d "com.example.pulsify://auth-callback" \
+  com.example.pulsify
 ```
 
 **Expected**: App should open
@@ -85,8 +85,8 @@ adb logcat | grep -i "deep link\|auth\|flutter"
 **Test**:
 ```bash
 adb shell am start -W -a android.intent.action.VIEW \
-  -d "com.example.flowfit://auth-callback" \
-  com.example.flowfit
+  -d "com.example.pulsify://auth-callback" \
+  com.example.pulsify
 ```
 
 ### Issue: Email not sending
@@ -130,7 +130,7 @@ Test on:
 
 ## 🚀 Before Production
 
-- [ ] Update package name from `com.example.flowfit` to production
+- [ ] Update package name from `com.example.pulsify` to production
 - [ ] Update deep link schemes to match production package
 - [ ] Remove development deep link schemes
 - [ ] Update Supabase redirect URLs for production

@@ -1,8 +1,8 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flowfit/services/watch_bridge.dart';
-import 'package:flowfit/models/heart_rate_data.dart' as hr_model;
+import 'package:pulsify/services/watch_bridge.dart';
+import 'package:pulsify/models/heart_rate_data.dart' as hr_model;
 import 'package:geolocator/geolocator.dart';
 import '../data/geofence_repository.dart';
 import '../services/geofence_service.dart';

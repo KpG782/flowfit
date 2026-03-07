@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solar_icons/solar_icons.dart';
 
@@ -34,7 +34,7 @@ class AboutUsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // FlowFit Logo/Header
+            // Pulsify Logo/Header
             Container(
               padding: const EdgeInsets.all(32),
               decoration: BoxDecoration(
@@ -49,7 +49,7 @@ class AboutUsScreen extends StatelessWidget {
               child: Column(
                 children: [
                   SvgPicture.asset(
-                    'assets/flowfit_logo_header.svg',
+                    'assets/pulsify_logo_header.svg',
                     height: 48,
                     colorFilter: ColorFilter.mode(
                       theme.colorScheme.onPrimary,
@@ -82,7 +82,7 @@ class AboutUsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Meet the team behind FlowFit',
+              'Meet the team behind Pulsify',
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -202,7 +202,7 @@ class AboutUsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'support@flowfit.com',
+                    'support@pulsify.com',
                     style: theme.textTheme.bodyLarge?.copyWith(
                       color: theme.colorScheme.primary,
                       fontWeight: FontWeight.w600,
@@ -217,7 +217,7 @@ class AboutUsScreen extends StatelessWidget {
             // Copyright
             Center(
               child: Text(
-                '© 2025 FlowFit. All rights reserved.',
+                '© 2025 Pulsify. All rights reserved.',
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),

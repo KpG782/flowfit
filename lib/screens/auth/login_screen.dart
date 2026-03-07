@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:solar_icons/solar_icons.dart';
@@ -118,7 +118,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 // Logo
                 Center(
                   child: SvgPicture.asset(
-                    'assets/flowfit_logo_header.svg',
+                    'assets/pulsify_logo_header.svg',
                     height: 32,
                   ),
                 ),

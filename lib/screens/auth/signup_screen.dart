@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:solar_icons/solar_icons.dart';
@@ -123,7 +123,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 // Logo
                 Center(
                   child: SvgPicture.asset(
-                    'assets/flowfit_logo_header.svg',
+                    'assets/pulsify_logo_header.svg',
                     height: 32,
                   ),
                 ),
@@ -143,7 +143,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 const SizedBox(height: 8),
 
                 Text(
-                  'Join FlowFit and start your journey today.',
+                  'Join Pulsify and start your journey today.',
                   style: Theme.of(
                     context,
                   ).textTheme.bodyLarge?.copyWith(color: AppTheme.text),
@@ -393,7 +393,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 _buildCheckbox(
                   value: _termsAccepted,
                   onChanged: (value) => setState(() => _termsAccepted = value ?? false),
-                  label: 'I agree to FlowFit\'s Terms of Service and Privacy Policy',
+                  label: 'I agree to Pulsify\'s Terms of Service and Privacy Policy',
                   required: true,
                   links: ['Read Terms', 'Read Policy'],
                 ),

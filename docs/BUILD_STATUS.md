@@ -1,4 +1,4 @@
-# Build Status
+﻿# Build Status
 
 ## ✅ Latest Build Status: READY
 
@@ -63,8 +63,8 @@ flutter analyze
 ### Check Kotlin Files
 ```bash
 # No errors in:
-# - android/app/src/main/kotlin/com/example/flowfit/MainActivity.kt
-# - android/app/src/main/kotlin/com/example/flowfit/HealthTrackingManager.kt
+# - android/app/src/main/kotlin/com/example/Pulsify/MainActivity.kt
+# - android/app/src/main/kotlin/com/example/Pulsify/HealthTrackingManager.kt
 ```
 
 ### Expected Output
@@ -107,7 +107,7 @@ See [docs/INSTALLATION_TROUBLESHOOTING.md](docs/INSTALLATION_TROUBLESHOOTING.md)
 ### Runtime Errors
 ```bash
 # View logs
-adb -s 6ece264d logcat | findstr "FlowFit MainActivity HealthTrackingManager"
+adb -s 6ece264d logcat | findstr "Pulsify MainActivity HealthTrackingManager"
 ```
 
 ## 📝 Build History

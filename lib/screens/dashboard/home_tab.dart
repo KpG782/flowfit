@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart' as provider_pkg;
 import 'package:solar_icons/solar_icons.dart';
 import '../../core/providers/providers.dart' as core_providers;
 import '../../providers/dashboard_providers.dart';
-import 'package:flowfit/features/activity_classifier/presentation/providers.dart' as ac_providers;
+import 'package:pulsify/features/activity_classifier/presentation/providers.dart' as ac_providers;
 
 class HomeTab extends ConsumerWidget {
   const HomeTab({super.key});

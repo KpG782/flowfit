@@ -1,4 +1,4 @@
-# 🎯 FlowFit Smartwatch-to-Phone Data Flow Implementation Plan
+﻿# 🎯 Pulsify Smartwatch-to-Phone Data Flow Implementation Plan
 
 ## 📊 Current Status Analysis
 
@@ -79,7 +79,7 @@
 
 **Files to Modify:**
 - `android/app/src/main/AndroidManifest.xml`
-- `android/app/src/main/kotlin/com/example/flowfit/MainActivity.kt`
+- `android/app/src/main/kotlin/com/example/Pulsify/MainActivity.kt`
 
 ---
 
@@ -105,11 +105,11 @@
    - Keep backward compatibility with existing `HeartRateData`
 
 **Files to Create:**
-- `android/app/src/main/kotlin/com/example/flowfit/TrackedData.kt`
+- `android/app/src/main/kotlin/com/example/Pulsify/TrackedData.kt`
 - `lib/models/tracked_data.dart`
 
 **Files to Modify:**
-- `android/app/src/main/kotlin/com/example/flowfit/HealthTrackingManager.kt`
+- `android/app/src/main/kotlin/com/example/Pulsify/HealthTrackingManager.kt`
 - `lib/services/watch_bridge.dart`
 
 ---
@@ -140,8 +140,8 @@
    - Ensure proper JSON encoding
 
 **Files to Modify:**
-- `android/app/src/main/kotlin/com/example/flowfit/HealthTrackingManager.kt`
-- `android/app/src/main/kotlin/com/example/flowfit/MainActivity.kt`
+- `android/app/src/main/kotlin/com/example/Pulsify/HealthTrackingManager.kt`
+- `android/app/src/main/kotlin/com/example/Pulsify/MainActivity.kt`
 - `lib/services/watch_bridge.dart`
 
 ---
@@ -154,7 +154,7 @@
 
 1. **Create Phone Heart Rate Screen (Flutter)**
    - Create `lib/screens/phone/phone_heart_rate_screen.dart`
-   - Listen to `com.flowfit.phone/heartrate` event channel
+   - Listen to `com.pulsify.phone/heartrate` event channel
    - Display received HR and IBI data
    - Show connection status
 
@@ -176,7 +176,7 @@
 
 **Files to Modify:**
 - `lib/screens/dashboard.dart`
-- `android/app/src/main/kotlin/com/example/flowfit/MainActivity.kt`
+- `android/app/src/main/kotlin/com/example/Pulsify/MainActivity.kt`
 
 ---
 
@@ -256,7 +256,7 @@
 ### **2. TrackedData.kt (NEW FILE)**
 
 ```kotlin
-package com.example.flowfit
+package com.example.pulsify
 
 import kotlinx.serialization.Serializable
 
@@ -401,7 +401,7 @@ class PhoneHeartRateScreen extends StatefulWidget {
 }
 
 class _PhoneHeartRateScreenState extends State<PhoneHeartRateScreen> {
-  static const eventChannel = EventChannel('com.flowfit.phone/heartrate');
+  static const eventChannel = EventChannel('com.pulsify.phone/heartrate');
   
   List<TrackedData> _receivedData = [];
   

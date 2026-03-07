@@ -1,8 +1,8 @@
-# Flutter Map with OpenStreetMap (OSM) Implementation Guide
+﻿# Flutter Map with OpenStreetMap (OSM) Implementation Guide
 
 ## 🗺️ Overview
 
-This guide explains how Flutter Map with OpenStreetMap tiles was implemented in the FlowFit app, specifically in the Mission Creation screen for walking workouts.
+This guide explains how Flutter Map with OpenStreetMap tiles was implemented in the Pulsify app, specifically in the Mission Creation screen for walking workouts.
 
 ---
 
@@ -99,7 +99,7 @@ FlutterMap(
     // 1. Tile Layer (OSM tiles)
     TileLayer(
       urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-      userAgentPackageName: 'com.flowfit.app',
+      userAgentPackageName: 'com.pulsify.app',
     ),
     
     // 2. Marker Layer (pins on map)
@@ -130,7 +130,7 @@ This is the actual map imagery from OpenStreetMap:
 ```dart
 TileLayer(
   urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-  userAgentPackageName: 'com.flowfit.app',  // Required by OSM
+  userAgentPackageName: 'com.pulsify.app',  // Required by OSM
 )
 ```
 
@@ -341,7 +341,7 @@ class _MissionCreationScreenState extends State<MissionCreationScreen> {
             // OSM Tiles
             TileLayer(
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              userAgentPackageName: 'com.flowfit.app',
+              userAgentPackageName: 'com.pulsify.app',
             ),
             
             // Markers
@@ -732,7 +732,7 @@ TileLayer(
 ```dart
 TileLayer(
   urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-  userAgentPackageName: 'com.flowfit.app',
+  userAgentPackageName: 'com.pulsify.app',
 )
 ```
 
@@ -786,7 +786,7 @@ TileLayer(
 
 ## 🎯 Summary
 
-The Flutter Map with OSM implementation in FlowFit:
+The Flutter Map with OSM implementation in Pulsify:
 
 1. ✅ Uses `flutter_map` package for map rendering
 2. ✅ Uses OpenStreetMap tiles (free, no API key needed)

@@ -1,20 +1,20 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flowfit/core/domain/entities/user_profile.dart';
-import 'package:flowfit/core/domain/repositories/profile_repository.dart';
-import 'package:flowfit/presentation/providers/profile_providers.dart'
+import 'package:pulsify/core/domain/entities/user_profile.dart';
+import 'package:pulsify/core/domain/repositories/profile_repository.dart';
+import 'package:pulsify/presentation/providers/profile_providers.dart'
     as profile_providers;
-import 'package:flowfit/presentation/providers/providers.dart';
-import 'package:flowfit/screens/onboarding/survey_intro_screen.dart';
-import 'package:flowfit/screens/onboarding/survey_basic_info_screen.dart';
-import 'package:flowfit/screens/onboarding/survey_body_measurements_screen.dart';
-import 'package:flowfit/screens/onboarding/survey_activity_goals_screen.dart';
-import 'package:flowfit/screens/onboarding/survey_daily_targets_screen.dart';
-import 'package:flowfit/screens/profile/profile_view.dart';
-import 'package:flowfit/secrets.dart';
+import 'package:pulsify/presentation/providers/providers.dart';
+import 'package:pulsify/screens/onboarding/survey_intro_screen.dart';
+import 'package:pulsify/screens/onboarding/survey_basic_info_screen.dart';
+import 'package:pulsify/screens/onboarding/survey_body_measurements_screen.dart';
+import 'package:pulsify/screens/onboarding/survey_activity_goals_screen.dart';
+import 'package:pulsify/screens/onboarding/survey_daily_targets_screen.dart';
+import 'package:pulsify/screens/profile/profile_view.dart';
+import 'package:pulsify/secrets.dart';
 
 /// Integration tests for profile-onboarding integration.
 ///

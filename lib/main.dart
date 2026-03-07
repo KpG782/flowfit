@@ -1,11 +1,11 @@
-import 'package:flowfit/features/activity_classifier/data/tflite_activity_repository.dart';
-import 'package:flowfit/features/activity_classifier/domain/classify_activity_usecase.dart';
-import 'package:flowfit/features/activity_classifier/platform/tflite_activity_classifier.dart';
-import 'package:flowfit/features/activity_classifier/platform/heart_bpm_adapter.dart';
-import 'package:flowfit/features/activity_classifier/presentation/tracker_page.dart';
-import 'package:flowfit/features/wellness/presentation/maps_page_wrapper.dart';
-import 'package:flowfit/services/phone_data_listener.dart';
-import 'package:flowfit/features/activity_classifier/presentation/providers.dart';
+﻿import 'package:pulsify/features/activity_classifier/data/tflite_activity_repository.dart';
+import 'package:pulsify/features/activity_classifier/domain/classify_activity_usecase.dart';
+import 'package:pulsify/features/activity_classifier/platform/tflite_activity_classifier.dart';
+import 'package:pulsify/features/activity_classifier/platform/heart_bpm_adapter.dart';
+import 'package:pulsify/features/activity_classifier/presentation/tracker_page.dart';
+import 'package:pulsify/features/wellness/presentation/maps_page_wrapper.dart';
+import 'package:pulsify/services/phone_data_listener.dart';
+import 'package:pulsify/features/activity_classifier/presentation/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' hide Provider;
@@ -62,7 +62,6 @@ import 'screens/workout/resistance/resistance_summary_screen.dart';
 import 'screens/wellness/wellness_tracker_page.dart';
 import 'screens/wellness/wellness_onboarding_screen.dart';
 import 'screens/wellness/wellness_settings_screen.dart';
-import 'widgets/debug_route_menu.dart';
 
 Future<void> main() async {
   // Ensure Flutter bindings are initialized before async operations
@@ -88,13 +87,13 @@ Future<void> main() async {
       overrides: [
         sharedPreferencesProvider.overrideWithValue(sharedPreferences),
       ],
-      child: const FlowFitPhoneApp(),
+      child: const PulsifyPhoneApp(),
     ),
   );
 }
 
-class FlowFitPhoneApp extends StatelessWidget {
-  const FlowFitPhoneApp({super.key});
+class PulsifyPhoneApp extends StatelessWidget {
+  const PulsifyPhoneApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +152,7 @@ class FlowFitPhoneApp extends StatelessWidget {
             // const DebugRouteMenu(),
           ],
         ),
-        title: 'FlowFit',
+        title: 'Pulsify',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -70,9 +70,9 @@
 
 check this wearos setup preorely and tr to cmparethe diferene witth the native kotlin lyae rfo rh te smarwtach 
 
-package com.flowfit.domain
+package com.Pulsify.domain
 
-import com.flowfit.data.TrackingRepository
+import com.Pulsify.data.TrackingRepository
 import javax.inject.Inject
 
 class AreTrackingCapabilitiesAvailableUseCase @Inject constructor(
@@ -83,10 +83,10 @@ class AreTrackingCapabilitiesAvailableUseCase @Inject constructor(
     }
 }
 
-package com.flowfit.domain
+package com.Pulsify.domain
 
 import com.google.android.gms.wearable.Node
-import com.flowfit.data.CapabilityRepository
+import com.Pulsify.data.CapabilityRepository
 import javax.inject.Inject
 
 private const val CAPABILITY = "wear"
@@ -102,10 +102,10 @@ class GetCapableNodes @Inject constructor(
     }
 }
 
-package com.flowfit.domain
+package com.Pulsify.domain
 
-import com.flowfit.data.ConnectionMessage
-import com.flowfit.data.HealthTrackingServiceConnection
+import com.Pulsify.data.ConnectionMessage
+import com.Pulsify.data.HealthTrackingServiceConnection
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -121,12 +121,12 @@ class MakeConnectionToHealthTrackingServiceUseCase @OptIn(ExperimentalCoroutines
 }
 
 
-package com.flowfit.domain
+package com.Pulsify.domain
 
 import android.util.Log
-import com.flowfit.data.TrackedData
-import com.flowfit.data.MessageRepository
-import com.flowfit.data.TrackingRepository
+import com.Pulsify.data.TrackedData
+import com.Pulsify.data.MessageRepository
+import com.Pulsify.data.TrackingRepository
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
@@ -163,9 +163,9 @@ class SendMessageUseCase @Inject constructor(
         return Json.encodeToString(trackedData)
     }
 }
-package com.flowfit.domain
+package com.Pulsify.domain
 
-import com.flowfit.data.TrackingRepository
+import com.Pulsify.data.TrackingRepository
 import javax.inject.Inject
 
 class StopTrackingUseCase @Inject constructor(
@@ -176,10 +176,10 @@ class StopTrackingUseCase @Inject constructor(
     }
 }
 
-package com.flowfit.domain
+package com.Pulsify.domain
 
-import com.flowfit.data.TrackerMessage
-import com.flowfit.data.TrackingRepository
+import com.Pulsify.data.TrackerMessage
+import com.Pulsify.data.TrackingRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -190,7 +190,7 @@ class TrackHeartRateUseCase
     suspend operator fun invoke(): Flow<TrackerMessage> = trackingRepository.track()
 }
 
-package com.flowfit.presentation.ui
+package com.Pulsify.presentation.ui
 
 import android.util.Log
 import android.widget.Toast
@@ -222,8 +222,8 @@ import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.CircularProgressIndicator
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
-import com.flowfit.R
-import com.flowfit.presentation.theme.HRDataTransferTheme
+import com.Pulsify.R
+import com.Pulsify.presentation.theme.HRDataTransferTheme
 
 private const val TAG = "MainScreen"
 
@@ -379,7 +379,7 @@ fun ShowConnectionMessage(
 fun ShowToast(message: String) {
     makeText(LocalContext.current, message, Toast.LENGTH_SHORT).show()
 }
-package com.flowfit.presentation.ui
+package com.Pulsify.presentation.ui
 
 import android.health.connect.HealthPermissions
 import android.os.Build
@@ -402,7 +402,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.wear.compose.material.Text
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.flowfit.R
+import com.Pulsify.R
 
 
 private const val TAG = "Permission"
@@ -462,7 +462,7 @@ fun Permission(
     }
 }
 
-package com.flowfit.presentation
+package com.Pulsify.presentation
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -475,9 +475,9 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.flowfit.R
-import com.flowfit.presentation.ui.MainScreen
-import com.flowfit.presentation.ui.Permission
+import com.Pulsify.R
+import com.Pulsify.presentation.ui.MainScreen
+import com.Pulsify.presentation.ui.Permission
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "MainActivity"
@@ -541,7 +541,7 @@ class MainActivity : ComponentActivity() {
 }
 
 it has this common bfodler too
-package com.flowfit.data
+package com.Pulsify.data
 
 import kotlinx.serialization.Serializable
 
@@ -557,13 +557,13 @@ data class TrackedData(
     tools:ignore="LockedOrientationActivity">
 
     <application
-        android:name="com.flowfit.mobile.MobileApp"
+        android:name="com.Pulsify.mobile.MobileApp"
         android:allowBackup="true"
         android:fullBackupOnly="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name">
         <service
-            android:name="com.flowfit.mobile.data.DataListenerService"
+            android:name="com.Pulsify.mobile.data.DataListenerService"
             android:exported="true">
 
             <intent-filter>
@@ -580,7 +580,7 @@ data class TrackedData(
             </intent-filter>
         </service>
         <activity
-            android:name="com.flowfit.mobile.presentation.MainActivity"
+            android:name="com.Pulsify.mobile.presentation.MainActivity"
             android:configChanges="orientation|keyboardHidden"
             android:exported="true"
             android:launchMode="singleTask"
@@ -598,9 +598,9 @@ data class TrackedData(
 
 and this is the mobiel setup 
 
-package com.flowfit.presentation
+package com.Pulsify.presentation
 
-import com.flowfit.data.TrackedData
+import com.Pulsify.data.TrackedData
 import kotlinx.serialization.json.Json
 
 class HelpFunctions {
@@ -613,7 +613,7 @@ class HelpFunctions {
     }
 }
 
-package com.flowfit.presentation
+package com.Pulsify.presentation
 
 import android.content.Intent
 import android.os.Bundle
@@ -621,7 +621,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
-import com.flowfit.presentation.ui.MainScreen
+import com.Pulsify.presentation.ui.MainScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "MainActivity"
@@ -654,13 +654,13 @@ fun TheApp(intent: Intent?) {
         MainScreen(measurementResults)
     }
 }
-package com.flowfit.mobile.data
+package com.Pulsify.mobile.data
 
 import android.content.Intent
 import android.util.Log
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.WearableListenerService
-import com.flowfit.mobile.presentation.MainActivity
+import com.Pulsify.mobile.presentation.MainActivity
 
 private const val TAG = "DataListenerService"
 private const val MESSAGE_PATH = "/msg"

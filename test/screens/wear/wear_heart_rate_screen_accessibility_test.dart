@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flowfit/screens/wear/wear_heart_rate_screen.dart';
+import 'package:pulsify/screens/wear/wear_heart_rate_screen.dart';
 import 'package:wear_plus/wear_plus.dart';
 
 /// Tests for WCAG 2.1 Level AA accessibility compliance

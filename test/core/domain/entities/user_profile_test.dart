@@ -1,5 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flowfit/core/domain/entities/user_profile.dart';
+﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:pulsify/core/domain/entities/user_profile.dart';
 
 void main() {
   group('UserProfile', () {

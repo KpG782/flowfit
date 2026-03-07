@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:solar_icons/solar_icons.dart';
 
 class HelpSupportScreen extends StatelessWidget {
@@ -100,7 +100,7 @@ class HelpSupportScreen extends StatelessWidget {
                     () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('Opening email: support@flowfit.com'),
+                          content: Text('Opening email: support@pulsify.com'),
                           duration: Duration(seconds: 2),
                         ),
                       );
@@ -126,7 +126,7 @@ class HelpSupportScreen extends StatelessWidget {
                   _buildActionItem(
                     context,
                     'Report a Bug',
-                    'Help us improve FlowFit',
+                    'Help us improve Pulsify',
                     SolarIconsOutline.bug,
                     Colors.orange,
                     () {
@@ -167,13 +167,13 @@ class HelpSupportScreen extends StatelessWidget {
                   _buildFAQItem(
                     context,
                     'How do I track my workouts?',
-                    'Navigate to the Track tab and select the activity you want to track. FlowFit will automatically record your workout data.',
+                    'Navigate to the Track tab and select the activity you want to track. Pulsify will automatically record your workout data.',
                   ),
                   _buildDivider(theme),
                   _buildFAQItem(
                     context,
                     'How do I sync with other apps?',
-                    'Go to Settings > App Integration to connect FlowFit with your favorite health and fitness apps.',
+                    'Go to Settings > App Integration to connect Pulsify with your favorite health and fitness apps.',
                   ),
                   _buildDivider(theme),
                   _buildFAQItem(
@@ -219,14 +219,14 @@ class HelpSupportScreen extends StatelessWidget {
                     context,
                     SolarIconsOutline.letter,
                     'Email',
-                    'support@flowfit.com',
+                    'support@pulsify.com',
                   ),
                   const SizedBox(height: 16),
                   _buildContactRow(
                     context,
                     SolarIconsOutline.globus,
                     'Website',
-                    'www.flowfit.com',
+                    'www.pulsify.com',
                   ),
                   const SizedBox(height: 16),
                   _buildContactRow(

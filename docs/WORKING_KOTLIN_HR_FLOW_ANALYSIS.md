@@ -1,4 +1,4 @@
-# WORKING_KOTLIN_HR_FLOW_ANALYSIS.md
+﻿# WORKING_KOTLIN_HR_FLOW_ANALYSIS.md
 
 ---
 
@@ -395,7 +395,7 @@ Watch App
 
 ---
 
-> **Use this document to compare your FlowFit Flutter app and identify missing or different components.**
+> **Use this document to compare your Pulsify Flutter app and identify missing or different components.**
 
 ---
 

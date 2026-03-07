@@ -1,4 +1,4 @@
-import 'dart:io';
+﻿import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -70,13 +70,13 @@ class _ShareAchievementScreenState extends State<ShareAchievementScreen> {
 
       // Save to temporary file
       final tempDir = await getTemporaryDirectory();
-      final file = File('${tempDir.path}/flowfit_achievement.png');
+      final file = File('${tempDir.path}/pulsify_achievement.png');
       await file.writeAsBytes(pngBytes);
 
       // Share the image
       await Share.shareXFiles(
         [XFile(file.path)],
-        text: '🏃 Just completed a ${_formatDistance(widget.session.currentDistance)} km run with FlowFit! #FlowFit #Running',
+        text: '🏃 Just completed a ${_formatDistance(widget.session.currentDistance)} km run with Pulsify! #Pulsify #Running',
       );
 
       if (mounted) {
@@ -211,11 +211,11 @@ class _ShareAchievementScreenState extends State<ShareAchievementScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // FlowFit logo at top
+                // Pulsify logo at top
                 Row(
                   children: [
                     SvgPicture.asset(
-                      'assets/flowfit_logo.svg',
+                      'assets/pulsify_logo.svg',
                       height: 48,
                       colorFilter: const ColorFilter.mode(
                         Colors.white,
@@ -224,7 +224,7 @@ class _ShareAchievementScreenState extends State<ShareAchievementScreen> {
                     ),
                     const SizedBox(width: 12),
                     const Text(
-                      'FlowFit',
+                      'Pulsify',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 36,

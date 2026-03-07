@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flowfit/screens/dashboard_screen.dart' as ds;
-import 'package:flowfit/models/daily_mood.dart';
-import 'package:flowfit/core/providers/providers.dart' as core_providers;
-import 'package:flowfit/providers/dashboard_providers.dart' as dashboard_providers;
+import 'package:pulsify/screens/dashboard_screen.dart' as ds;
+import 'package:pulsify/models/daily_mood.dart';
+import 'package:pulsify/core/providers/providers.dart' as core_providers;
+import 'package:pulsify/providers/dashboard_providers.dart' as dashboard_providers;
 
 void main() {
   testWidgets('AI Activity shows connect message when watch disconnected', (tester) async {

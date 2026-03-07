@@ -1,7 +1,7 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flowfit/features/activity_classifier/data/activity_dto.dart';
-import 'package:flowfit/features/activity_classifier/data/tflite_activity_repository.dart';
-import 'package:flowfit/features/activity_classifier/platform/tflite_activity_classifier.dart';
+﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:pulsify/features/activity_classifier/data/activity_dto.dart';
+import 'package:pulsify/features/activity_classifier/data/tflite_activity_repository.dart';
+import 'package:pulsify/features/activity_classifier/platform/tflite_activity_classifier.dart';
 
 /// Simple test double for TFLiteActivityClassifier
 class FakeTFLiteActivityClassifier implements TFLiteActivityClassifier {

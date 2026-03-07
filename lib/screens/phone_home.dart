@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:solar_icons/solar_icons.dart';
 import '../models/heart_rate_data.dart';
@@ -148,7 +148,7 @@ class _PhoneHomePageState extends State<PhoneHomePage> {
           slivers: [
             // App Bar
             SliverAppBar.large(
-              title: const Text('FlowFit'),
+              title: const Text('Pulsify'),
               actions: [
                 // Test Mode / Sensor Data button
                 IconButton(

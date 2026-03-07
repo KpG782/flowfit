@@ -1,8 +1,8 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+﻿import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/daily_stats.dart';
 import '../models/recent_activity.dart';
 import '../models/daily_mood.dart';
-import 'package:flowfit/core/providers/repositories/heart_rate_repository_provider.dart' as core_hrp;
+import 'package:pulsify/core/providers/repositories/heart_rate_repository_provider.dart' as core_hrp;
 
 /// Provider for fetching daily fitness statistics
 /// 

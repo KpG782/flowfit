@@ -1,11 +1,11 @@
-# FlowFit Project Structure
+﻿# Pulsify Project Structure
 
-Clean and organized project structure for the FlowFit health and fitness tracking application.
+Clean and organized project structure for the Pulsify health and fitness tracking application.
 
 ## 📁 Root Directory
 
 ```
-flowfit/
+Pulsify/
 ├── android/              # Android native code
 ├── ios/                  # iOS native code (future)
 ├── lib/                  # Flutter/Dart source code
@@ -88,7 +88,7 @@ lib/
 android/
 ├── app/
 │   ├── src/main/
-│   │   ├── kotlin/com/example/flowfit/
+│   │   ├── kotlin/com/example/Pulsify/
 │   │   │   ├── MainActivity.kt           # Main activity
 │   │   │   └── HealthTrackingManager.kt  # Samsung Health SDK manager
 │   │   └── AndroidManifest.xml           # App manifest

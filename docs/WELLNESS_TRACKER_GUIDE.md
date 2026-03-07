@@ -1,9 +1,9 @@
-# Wellness Tracker - User Guide
+﻿# Wellness Tracker - User Guide
 
 ## Quick Start
 
 ### Accessing the Wellness Tracker
-1. Open the FlowFit app
+1. Open the Pulsify app
 2. Navigate to the **Track Tab** (bottom navigation)
 3. Tap the **"Wellness Tracker"** button
 
@@ -135,7 +135,7 @@ Access settings by tapping the ⚙️ icon in the app bar.
 ### "Permission denied" Error
 
 **Solutions:**
-1. Go to Settings → Apps → FlowFit → Permissions
+1. Go to Settings → Apps → Pulsify → Permissions
 2. Enable "Body Sensors" permission
 3. Restart the app
 4. Try accessing wellness tracker again
@@ -145,7 +145,7 @@ Access settings by tapping the ⚙️ icon in the app bar.
 **Solutions:**
 1. Check your internet connection
 2. Enable location services
-3. Grant location permission to FlowFit
+3. Grant location permission to Pulsify
 4. Try again in a few moments
 
 ### Battery draining quickly

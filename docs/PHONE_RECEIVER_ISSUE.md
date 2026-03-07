@@ -1,4 +1,4 @@
-# Phone Not Receiving Data - Issue Found! 🔍
+﻿# Phone Not Receiving Data - Issue Found! 🔍
 
 ## 🎉 Good News: Watch is Working Perfectly!
 
@@ -15,7 +15,7 @@ I/flutter: 💡 Auto-sync to phone successful
 ## ❌ The Problem: Phone Not Receiving
 
 The issue is that **you're running the WATCH app on both devices**. The phone needs to:
-1. Have the FlowFit app installed
+1. Have the Pulsify app installed
 2. Have the `PhoneDataListenerService` running
 3. Be listening for messages on the `/heart_rate` path
 
@@ -28,11 +28,11 @@ On your phone (Marcus), run:
 # Get phone device ID
 adb devices
 
-# Check if FlowFit is installed on phone
-adb -s [PHONE_DEVICE_ID] shell pm list packages | grep flowfit
+# Check if Pulsify is installed on phone
+adb -s [PHONE_DEVICE_ID] shell pm list packages | grep Pulsify
 
 # Check if service is registered
-adb -s [PHONE_DEVICE_ID] shell dumpsys package com.example.flowfit | grep PhoneDataListenerService
+adb -s [PHONE_DEVICE_ID] shell dumpsys package com.example.pulsify | grep PhoneDataListenerService
 ```
 
 ### Step 2: Check Phone Logs
@@ -94,12 +94,12 @@ The phone needs to declare the capability so the watch can find it.
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="android_wear_capabilities">
-        <item>flowfit_phone_app</item>
+        <item>pulsify_phone_app</item>
     </string-array>
 </resources>
 ```
 
-This tells the watch "I'm a phone that can receive FlowFit data!"
+This tells the watch "I'm a phone that can receive Pulsify data!"
 
 ## 📱 Phone vs Watch App Configuration
 
@@ -126,7 +126,7 @@ Watch App:
 Phone App:
   - Has PhoneDataListenerService ✅
   - Service running in background ✅
-  - Declares "flowfit_phone_app" capability ✅
+  - Declares "pulsify_phone_app" capability ✅
   - Receives messages ✅
 ```
 
@@ -140,7 +140,7 @@ Create `android/app/src/main/res/values/wear.xml`:
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="android_wear_capabilities">
-        <item>flowfit_phone_app</item>
+        <item>pulsify_phone_app</item>
     </string-array>
 </resources>
 ```
@@ -182,7 +182,7 @@ adb -s [PHONE_DEVICE_ID] install build/app/outputs/flutter-apk/app-debug.apk
 
 ```bash
 # Launch the app on phone
-adb -s [PHONE_DEVICE_ID] shell am start -n com.example.flowfit/.MainActivity
+adb -s [PHONE_DEVICE_ID] shell am start -n com.example.pulsify/.MainActivity
 ```
 
 ### 5. Watch Phone Logs

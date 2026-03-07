@@ -1,18 +1,18 @@
-import 'package:flutter/services.dart';
+﻿import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flowfit/services/watch_bridge.dart';
-import 'package:flowfit/models/heart_rate_data.dart';
-import 'package:flowfit/models/permission_status.dart';
-import 'package:flowfit/models/sensor_error.dart';
-import 'package:flowfit/models/sensor_error_code.dart';
-import 'package:flowfit/models/sensor_status.dart';
+import 'package:pulsify/services/watch_bridge.dart';
+import 'package:pulsify/models/heart_rate_data.dart';
+import 'package:pulsify/models/permission_status.dart';
+import 'package:pulsify/models/sensor_error.dart';
+import 'package:pulsify/models/sensor_error_code.dart';
+import 'package:pulsify/models/sensor_status.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('WatchBridgeService', () {
     late WatchBridgeService service;
-    const methodChannel = MethodChannel('com.flowfit.watch/data');
+    const methodChannel = MethodChannel('com.pulsify.watch/data');
 
     setUp(() {
       service = WatchBridgeService();
@@ -30,7 +30,6 @@ void main() {
           if (methodCall.method == 'connectWatch') {
             return true;
           }
-          return null;
         });
 
         final result = await service.connectToWatch();
@@ -43,7 +42,6 @@ void main() {
           if (methodCall.method == 'connectWatch') {
             return false;
           }
-          return null;
         });
 
         final result = await service.connectToWatch();
@@ -59,7 +57,6 @@ void main() {
               message: 'Unable to connect',
             );
           }
-          return null;
         });
 
         expect(
@@ -78,9 +75,7 @@ void main() {
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .setMockMethodCallHandler(methodChannel, (MethodCall methodCall) async {
           if (methodCall.method == 'disconnectWatch') {
-            return null;
           }
-          return null;
         });
 
         await expectLater(service.disconnectFromWatch(), completes);
@@ -95,7 +90,6 @@ void main() {
               message: 'Disconnect failed',
             );
           }
-          return null;
         });
 
         expect(
@@ -112,7 +106,6 @@ void main() {
           if (methodCall.method == 'isWatchConnected') {
             return true;
           }
-          return null;
         });
 
         final result = await service.isWatchConnected();
@@ -125,7 +118,6 @@ void main() {
           if (methodCall.method == 'isWatchConnected') {
             return false;
           }
-          return null;
         });
 
         final result = await service.isWatchConnected();
@@ -140,7 +132,6 @@ void main() {
           if (methodCall.method == 'startHeartRate') {
             return true;
           }
-          return null;
         });
 
         final result = await service.startHeartRateTracking();
@@ -153,7 +144,6 @@ void main() {
           if (methodCall.method == 'startHeartRate') {
             return false;
           }
-          return null;
         });
 
         final result = await service.startHeartRateTracking();
@@ -169,7 +159,6 @@ void main() {
               message: 'Sensor not available',
             );
           }
-          return null;
         });
 
         expect(
@@ -188,9 +177,7 @@ void main() {
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .setMockMethodCallHandler(methodChannel, (MethodCall methodCall) async {
           if (methodCall.method == 'stopHeartRate') {
-            return null;
           }
-          return null;
         });
 
         await expectLater(service.stopHeartRateTracking(), completes);
@@ -205,7 +192,6 @@ void main() {
               message: 'Stop failed',
             );
           }
-          return null;
         });
 
         expect(
@@ -226,7 +212,6 @@ void main() {
               'status': 'active',
             };
           }
-          return null;
         });
 
         final result = await service.getCurrentHeartRate();
@@ -239,9 +224,7 @@ void main() {
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .setMockMethodCallHandler(methodChannel, (MethodCall methodCall) async {
           if (methodCall.method == 'getCurrentHeartRate') {
-            return null;
           }
-          return null;
         });
 
         final result = await service.getCurrentHeartRate();
@@ -257,7 +240,6 @@ void main() {
               message: 'Cannot read heart rate',
             );
           }
-          return null;
         });
 
         expect(
@@ -374,7 +356,7 @@ void main() {
     });
 
     group('watch-to-phone sync', () {
-      const syncChannel = MethodChannel('com.flowfit.watch/sync');
+      const syncChannel = MethodChannel('com.pulsify.watch/sync');
 
       tearDown(() {
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
@@ -388,7 +370,6 @@ void main() {
             expect(methodCall.arguments['data'], isNotNull);
             return true;
           }
-          return null;
         });
 
         final heartRateData = HeartRateData(
@@ -407,7 +388,6 @@ void main() {
           if (methodCall.method == 'sendHeartRateToPhone') {
             return false;
           }
-          return null;
         });
 
         final heartRateData = HeartRateData(
@@ -426,7 +406,6 @@ void main() {
           if (methodCall.method == 'checkPhoneConnection') {
             return true;
           }
-          return null;
         });
 
         final result = await service.checkPhoneConnection();
@@ -439,7 +418,6 @@ void main() {
           if (methodCall.method == 'checkPhoneConnection') {
             return false;
           }
-          return null;
         });
 
         final result = await service.checkPhoneConnection();
@@ -452,7 +430,6 @@ void main() {
           if (methodCall.method == 'checkPhoneConnection') {
             throw PlatformException(code: 'ERROR', message: 'Connection check failed');
           }
-          return null;
         });
 
         final result = await service.checkPhoneConnection();
@@ -465,7 +442,6 @@ void main() {
           if (methodCall.method == 'getConnectedNodesCount') {
             return 2;
           }
-          return null;
         });
 
         final result = await service.getConnectedNodesCount();
@@ -478,7 +454,6 @@ void main() {
           if (methodCall.method == 'getConnectedNodesCount') {
             return 0;
           }
-          return null;
         });
 
         final result = await service.getConnectedNodesCount();
@@ -491,7 +466,6 @@ void main() {
           if (methodCall.method == 'getConnectedNodesCount') {
             throw PlatformException(code: 'ERROR', message: 'Failed to get count');
           }
-          return null;
         });
 
         final result = await service.getConnectedNodesCount();
@@ -500,7 +474,7 @@ void main() {
     });
 
     group('heartRateStream', () {
-      const eventChannel = EventChannel('com.flowfit.watch/heartrate');
+      const eventChannel = EventChannel('com.pulsify.watch/heartrate');
 
       tearDown(() {
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
@@ -520,7 +494,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success(testData);
-              return null;
             },
           ),
         );
@@ -551,7 +524,6 @@ void main() {
             onListen: (arguments, events) {
               events.success(testData1);
               events.success(testData2);
-              return null;
             },
           ),
         );
@@ -571,7 +543,6 @@ void main() {
           MockStreamHandler.inline(
             onListen: (arguments, events) {
               events.success({'invalid': 'data'});
-              return null;
             },
           ),
         );
@@ -592,11 +563,9 @@ void main() {
           eventChannel,
           MockStreamHandler.inline(
             onListen: (arguments, events) {
-              return null;
             },
             onCancel: (arguments) {
               cancelCalled = true;
-              return null;
             },
           ),
         );

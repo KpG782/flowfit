@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flowfit/presentation/providers/providers.dart';
-import 'package:flowfit/screens/onboarding/survey_intro_screen.dart';
-import 'package:flowfit/screens/onboarding/survey_basic_info_screen.dart';
-import 'package:flowfit/screens/onboarding/survey_body_measurements_screen.dart';
-import 'package:flowfit/screens/onboarding/survey_activity_goals_screen.dart';
-import 'package:flowfit/screens/onboarding/survey_daily_targets_screen.dart';
+import 'package:pulsify/presentation/providers/providers.dart';
+import 'package:pulsify/screens/onboarding/survey_intro_screen.dart';
+import 'package:pulsify/screens/onboarding/survey_basic_info_screen.dart';
+import 'package:pulsify/screens/onboarding/survey_body_measurements_screen.dart';
+import 'package:pulsify/screens/onboarding/survey_activity_goals_screen.dart';
+import 'package:pulsify/screens/onboarding/survey_daily_targets_screen.dart';
 
 /// Integration tests for survey back button navigation.
 ///

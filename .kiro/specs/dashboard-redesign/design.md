@@ -1,8 +1,8 @@
-# Design Document
+﻿# Design Document
 
 ## Overview
 
-The FlowFit Dashboard Redesign implements a modern, reactive home screen using Flutter's Material 3 design system, Riverpod state management, and the Solar Icons library. The architecture follows a modular widget-based approach with clear separation of concerns between UI components, state management, and data models.
+The Pulsify Dashboard Redesign implements a modern, reactive home screen using Flutter's Material 3 design system, Riverpod state management, and the Solar Icons library. The architecture follows a modular widget-based approach with clear separation of concerns between UI components, state management, and data models.
 
 The dashboard consists of four main sections:
 1. **Header** - App branding and notification indicator
@@ -224,7 +224,7 @@ final unreadNotificationsProvider = StateProvider<int>((ref) => 0);
 #### HomeHeader Widget
 - **Type**: ConsumerWidget
 - **Responsibilities**:
-  - Display app branding ("FlowFit")
+  - Display app branding ("Pulsify")
   - Show notification bell icon
   - Display notification badge with count
 - **State Dependencies**: unreadNotificationsProvider
@@ -860,7 +860,7 @@ lib/
 ### Internationalization (i18n)
 
 **Localizable Strings:**
-- "FlowFit" (app name)
+- "Pulsify" (app name)
 - "Track Your Activity"
 - "Ready to move?"
 - "Your Recent Activity"
@@ -989,4 +989,4 @@ lib/
 
 ## Conclusion
 
-This design provides a comprehensive blueprint for implementing the FlowFit Dashboard Redesign. The modular architecture, clear component boundaries, and robust state management ensure the dashboard will be maintainable, testable, and performant. The use of Riverpod for state management and adherence to the existing AppTheme system ensures consistency with the rest of the application while providing a modern, reactive user experience.
+This design provides a comprehensive blueprint for implementing the Pulsify Dashboard Redesign. The modular architecture, clear component boundaries, and robust state management ensure the dashboard will be maintainable, testable, and performant. The use of Riverpod for state management and adherence to the existing AppTheme system ensures consistency with the rest of the application while providing a modern, reactive user experience.

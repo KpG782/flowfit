@@ -1,4 +1,4 @@
-package com.example.flowfit
+﻿package com.example.pulsify
 
 import android.content.Context
 import android.content.pm.PackageManager
@@ -264,7 +264,7 @@ class HealthTrackingManager(
         isConnecting = false
         Log.i(TAG, "🔌 Disconnected from Health Tracking Service")
     }
-}package com.example.flowfit
+}package com.example.pulsify
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -278,8 +278,8 @@ import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
-    private val CHANNEL = "com.example.flowfit/health_tracking"
-    private val EVENT_CHANNEL = "com.example.flowfit/heart_rate_stream"
+    private val CHANNEL = "com.example.pulsify/health_tracking"
+    private val EVENT_CHANNEL = "com.example.pulsify/heart_rate_stream"
     
     private var healthTrackingManager: HealthTrackingManager? = null
     private var heartRateStreamHandler: HeartRateStreamHandler? = null
@@ -425,8 +425,8 @@ import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 
 class WatchBridgeService {
-  static const MethodChannel _channel = MethodChannel('com.example.flowfit/health_tracking');
-  static const EventChannel _eventChannel = EventChannel('com.example.flowfit/heart_rate_stream');
+  static const MethodChannel _channel = MethodChannel('com.example.pulsify/health_tracking');
+  static const EventChannel _eventChannel = EventChannel('com.example.pulsify/heart_rate_stream');
   
   final Logger _logger = Logger();
   
@@ -1099,7 +1099,7 @@ class _WearHeartRateScreenState extends State<WearHeartRateScreen> {
     _watchBridge.dispose();
     super.dispose();
   }
-}package com.example.flowfit
+}package com.example.pulsify
 
 import android.content.Context
 import android.content.pm.PackageManager

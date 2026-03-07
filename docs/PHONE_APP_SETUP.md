@@ -1,8 +1,8 @@
-# Phone App Setup Guide
+﻿# Phone App Setup Guide
 
 ## 📱 Material 3 Phone App
 
-The FlowFit phone app has been updated with a modern Material 3 design to receive and display heart rate data from your Galaxy Watch.
+The Pulsify phone app has been updated with a modern Material 3 design to receive and display heart rate data from your Galaxy Watch.
 
 ## ✨ Features
 
@@ -66,7 +66,7 @@ flutter run -d adb-RFAX21TD0NA-FFYRNh._adb-tls-connect._tcp
 ### What You'll See
 
 1. **App Bar**
-   - "FlowFit" title
+   - "Pulsify" title
    - Watch connection icon (green when connected)
 
 2. **Current Heart Rate**
@@ -116,7 +116,7 @@ Galaxy Watch                    Android Phone
 ### Files Created
 
 1. **`lib/main.dart`** - Updated with Material 3 theme
-   - FlowFitPhoneApp widget
+   - PulsifyPhoneApp widget
    - Material 3 color scheme
    - Light/dark theme support
 
@@ -166,7 +166,7 @@ _dataListener.heartRateStream.listen((heartRateData) {
 ### Light Mode
 ```
 ┌─────────────────────────────┐
-│ FlowFit              [Watch]│
+│ Pulsify              [Watch]│
 ├─────────────────────────────┤
 │                             │
 │  ❤️ Current Heart Rate      │
@@ -247,7 +247,7 @@ adb -s 6ece264d logcat | findstr "MessageClient"
 **Solution**:
 ```bash
 # View phone logs
-adb -s adb-RFAX21TD0NA-FFYRNh._adb-tls-connect._tcp logcat | findstr "FlowFit"
+adb -s adb-RFAX21TD0NA-FFYRNh._adb-tls-connect._tcp logcat | findstr "Pulsify"
 ```
 
 ## 📚 Related Documentation

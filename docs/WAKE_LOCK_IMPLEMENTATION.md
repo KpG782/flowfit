@@ -1,4 +1,4 @@
-# Wake Lock Implementation for Continuous Heart Rate Tracking
+﻿# Wake Lock Implementation for Continuous Heart Rate Tracking
 
 ## Problem
 When the Galaxy Watch screen turns off, the MainActivity goes into the background and heart rate tracking stops. This prevents continuous monitoring during workouts or sleep tracking.
@@ -20,7 +20,7 @@ private fun initializeWakeLock() {
     val powerManager = getSystemService(POWER_SERVICE) as PowerManager
     wakeLock = powerManager.newWakeLock(
         PowerManager.PARTIAL_WAKE_LOCK,  // CPU stays on, screen can turn off
-        "FlowFit::HeartRateTracking"
+        "Pulsify::HeartRateTracking"
     ).apply {
         setReferenceCounted(false)  // Manual control
     }
@@ -206,11 +206,11 @@ I/MainActivity: Wake lock released
 ### 4. Check Wake Lock Status
 ```bash
 # Check if wake lock is held
-adb shell dumpsys power | grep "FlowFit"
+adb shell dumpsys power | grep "Pulsify"
 
 # Expected when tracking:
 Wake Locks: size=1
-  PARTIAL_WAKE_LOCK              'FlowFit::HeartRateTracking' (uid=10XXX, pid=XXXX)
+  PARTIAL_WAKE_LOCK              'Pulsify::HeartRateTracking' (uid=10XXX, pid=XXXX)
 ```
 
 ---
@@ -276,18 +276,18 @@ PowerManager.SCREEN_DIM_WAKE_LOCK  // Drains battery
 
 1. **Check Battery Optimization:**
    ```
-   Settings → Apps → FlowFit → Battery → Unrestricted
+   Settings → Apps → Pulsify → Battery → Unrestricted
    ```
 
 2. **Check Doze Mode:**
    ```bash
    # Disable doze for testing
-   adb shell dumpsys deviceidle whitelist +com.example.flowfit
+   adb shell dumpsys deviceidle whitelist +com.example.pulsify
    ```
 
 3. **Check Wake Lock Status:**
    ```bash
-   adb shell dumpsys power | grep "FlowFit"
+   adb shell dumpsys power | grep "Pulsify"
    ```
 
 ### Issue 2: Battery Drains Too Fast
@@ -335,7 +335,7 @@ PowerManager.SCREEN_DIM_WAKE_LOCK  // Drains battery
 2. **Force Release:**
    ```bash
    # Kill app to force release
-   adb shell am force-stop com.example.flowfit
+   adb shell am force-stop com.example.pulsify
    ```
 
 ---
@@ -347,18 +347,18 @@ PowerManager.SCREEN_DIM_WAKE_LOCK  // Drains battery
 # List all wake locks
 adb shell dumpsys power | grep "Wake Locks"
 
-# Check FlowFit wake lock
-adb shell dumpsys power | grep "FlowFit"
+# Check Pulsify wake lock
+adb shell dumpsys power | grep "Pulsify"
 
 # Check battery stats
-adb shell dumpsys batterystats | grep "FlowFit"
+adb shell dumpsys batterystats | grep "Pulsify"
 ```
 
 ### Expected Output (Tracking Active)
 ```
 Wake Locks: size=1
-  PARTIAL_WAKE_LOCK              'FlowFit::HeartRateTracking' (uid=10123, pid=5678)
-    tag=FlowFit::HeartRateTracking
+  PARTIAL_WAKE_LOCK              'Pulsify::HeartRateTracking' (uid=10123, pid=5678)
+    tag=Pulsify::HeartRateTracking
     flags=0x1
     activated=true
 ```

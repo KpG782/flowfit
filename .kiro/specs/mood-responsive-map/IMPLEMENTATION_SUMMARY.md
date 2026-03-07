@@ -1,4 +1,4 @@
-# Mood-Responsive Map - Implementation Summary
+﻿# Mood-Responsive Map - Implementation Summary
 
 ## Overview
 This document summarizes the tasks.md creation for the mood-responsive-map (Wellness Tracker) feature and confirms GPS integration patterns across the application.
@@ -114,7 +114,7 @@ FlutterMap(
   children: [
     TileLayer(
       urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-      userAgentPackageName: 'com.flowfit.app',
+      userAgentPackageName: 'com.pulsify.app',
     ),
     MarkerLayer(
       markers: [

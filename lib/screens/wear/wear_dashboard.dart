@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:wear_plus/wear_plus.dart';
 import 'wear_heart_rate_screen.dart';
 import 'wear_permission_wrapper.dart';
@@ -28,7 +28,7 @@ class WearDashboard extends StatelessWidget {
             const Icon(Icons.favorite, color: Colors.red, size: 48),
             const SizedBox(height: 16),
             const Text(
-              'FlowFit',
+              'Pulsify',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
@@ -99,7 +99,7 @@ class WearDashboard extends StatelessWidget {
             Icon(Icons.favorite, color: Colors.white.withOpacity(0.3), size: 32),
             const SizedBox(height: 8),
             Text(
-              'FlowFit',
+              'Pulsify',
               style: TextStyle(
                 color: Colors.white.withOpacity(0.3),
                 fontSize: 18,

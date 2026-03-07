@@ -1,6 +1,6 @@
-# Manual Testing Guide for Authentication and Onboarding
+﻿# Manual Testing Guide for Authentication and Onboarding
 
-This guide provides step-by-step instructions for manually testing the complete authentication and onboarding flows in FlowFit.
+This guide provides step-by-step instructions for manually testing the complete authentication and onboarding flows in Pulsify.
 
 ## Prerequisites
 
@@ -24,10 +24,10 @@ This guide provides step-by-step instructions for manually testing the complete 
 
 **Fill Signup Form**:
 6. Enter Full Name: "Test User"
-7. Enter Email: `test_${timestamp}@flowfit.test` (use unique email)
+7. Enter Email: `test_${timestamp}@Pulsify.test` (use unique email)
 8. Enter Password: "TestPassword123!"
 9. Enter Confirm Password: "TestPassword123!"
-10. Check "I agree to FlowFit's Terms of Service and Privacy Policy"
+10. Check "I agree to Pulsify's Terms of Service and Privacy Policy"
 11. Check "I consent to health data collection from my Galaxy Watch"
 12. Optionally check "Send me tips & updates"
 
@@ -41,7 +41,7 @@ This guide provides step-by-step instructions for manually testing the complete 
 **Survey Flow**:
 16. Verify Survey Intro shows:
     - "Quick Setup (2 Minutes)" heading
-    - "Let's personalize FlowFit for you, Test User!"
+    - "Let's personalize Pulsify for you, Test User!"
     - 4 progress dots
 17. Tap "LET'S PERSONALIZE" button
 
@@ -98,12 +98,12 @@ _______________________________________________________________________
 
 **Requirements Tested**: 1.2
 
-**Prerequisites**: Create a user with email `existing@flowfit.test`
+**Prerequisites**: Create a user with email `existing@Pulsify.test`
 
 **Steps**:
 1. Launch app and navigate to Signup screen
 2. Enter Full Name: "Duplicate User"
-3. Enter Email: "existing@flowfit.test"
+3. Enter Email: "existing@Pulsify.test"
 4. Enter Password: "TestPassword123!"
 5. Enter Confirm Password: "TestPassword123!"
 6. Check required consents
@@ -155,7 +155,7 @@ _______________________________________________________________________
 **Steps**:
 1. Navigate to Signup screen
 2. Enter Full Name: "Test User"
-3. Enter Email: "test@flowfit.test"
+3. Enter Email: "test@Pulsify.test"
 4. Enter Password: "short" (less than 8 characters)
 5. Enter Confirm Password: "short"
 6. Check required consents
@@ -202,7 +202,7 @@ _______________________________________________________________________
 ### Test 2.1: Login with Complete Profile → Dashboard
 
 **Prerequisites**: Create user with completed profile:
-- Email: `complete_user@flowfit.test`
+- Email: `complete_user@Pulsify.test`
 - Password: `TestPassword123!`
 - Profile: All survey fields completed
 
@@ -211,7 +211,7 @@ _______________________________________________________________________
 2. Wait for Welcome screen
 3. Tap "Log In" link at bottom
 4. Verify navigation to Login screen with "Welcome Back!" heading
-5. Enter Email: "complete_user@flowfit.test"
+5. Enter Email: "complete_user@Pulsify.test"
 6. Enter Password: "TestPassword123!"
 7. Tap "Log In" button
 8. Verify loading indicator appears
@@ -231,14 +231,14 @@ _______________________________________________________________________
 ### Test 2.2: Login with Incomplete Profile → Survey
 
 **Prerequisites**: Create user WITHOUT completed profile:
-- Email: `incomplete_user@flowfit.test`
+- Email: `incomplete_user@Pulsify.test`
 - Password: `TestPassword123!`
 - Profile: No survey data
 
 **Steps**:
 1. Launch app (ensure logged out)
 2. Navigate to Login screen
-3. Enter Email: "incomplete_user@flowfit.test"
+3. Enter Email: "incomplete_user@Pulsify.test"
 4. Enter Password: "TestPassword123!"
 5. Tap "Log In" button
 
@@ -260,7 +260,7 @@ _______________________________________________________________________
 
 **Steps**:
 1. Navigate to Login screen
-2. Enter Email: "nonexistent@flowfit.test"
+2. Enter Email: "nonexistent@Pulsify.test"
 3. Enter Password: "WrongPassword123!"
 4. Tap "Log In" button
 
