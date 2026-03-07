@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:wear_plus/wear_plus.dart';
 import 'dart:async';
 import '../../services/watch_bridge.dart';
-import '../../services/watch_to_phone_sync.dart';
 import '../../models/heart_rate_data.dart';
 import 'sensor_permission_rationale_screen.dart';
 
@@ -55,13 +54,11 @@ class WearHeartRateScreen extends StatefulWidget {
 class _WearHeartRateScreenState extends State<WearHeartRateScreen>
     with TickerProviderStateMixin {
   final WatchBridgeService _watchBridge = WatchBridgeService();
-  final WatchToPhoneSync _phoneSync = WatchToPhoneSync();
-  
+
   HeartRateData? _currentHeartRate;
   bool _isMonitoring = false;
   bool _isConnected = false;
   bool _isSending = false;
-  bool _isPhoneConnected = false;
   String _statusMessage = 'Ready';
   bool _isAccelerometerActive = false;
   String? _errorMessage;
@@ -73,7 +70,6 @@ class _WearHeartRateScreenState extends State<WearHeartRateScreen>
   
   StreamSubscription? _heartRateSubscription;
   StreamSubscription? _transmissionSubscription;
-  Timer? _phoneConnectionCheckTimer;
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
   late AnimationController _transmissionController;
@@ -197,17 +193,10 @@ class _WearHeartRateScreenState extends State<WearHeartRateScreen>
         return;
       }
 
-      // Check phone connection (Requirements: Communication errors)
-      final phoneConnected = await _phoneSync.checkPhoneConnection();
-      
       if (!mounted) return;
       setState(() {
         _isConnected = true;
-        _isPhoneConnected = phoneConnected;
-        _statusMessage = phoneConnected ? 'Ready' : 'Phone disconnected';
-        if (!phoneConnected) {
-          _errorMessage = 'Phone not connected. Data will be collected but not transmitted.';
-        }
+        _statusMessage = 'Ready';
       });
     } catch (e) {
       if (!mounted) return;
@@ -265,9 +254,6 @@ class _WearHeartRateScreenState extends State<WearHeartRateScreen>
         _errorMessage = null;
       });
 
-      // Start periodic phone connection check (Requirements: Communication errors)
-      _startPhoneConnectionCheck();
-
       _heartRateSubscription = _watchBridge.heartRateStream.listen(
         (heartRateData) {
           if (mounted) {
@@ -311,42 +297,10 @@ class _WearHeartRateScreenState extends State<WearHeartRateScreen>
     }
   }
 
-  /// Periodically check phone connection status during monitoring
-  /// Requirements: Communication errors - Handle phone disconnection
-  void _startPhoneConnectionCheck() {
-    _phoneConnectionCheckTimer?.cancel();
-    _phoneConnectionCheckTimer = Timer.periodic(
-      const Duration(seconds: 5),
-      (timer) async {
-        if (!_isMonitoring) {
-          timer.cancel();
-          return;
-        }
-        
-        try {
-          final phoneConnected = await _phoneSync.checkPhoneConnection();
-          if (mounted && _isPhoneConnected != phoneConnected) {
-            setState(() {
-              _isPhoneConnected = phoneConnected;
-              if (!phoneConnected) {
-                _errorMessage = 'Phone disconnected. Continuing data collection.';
-              } else {
-                _errorMessage = null;
-              }
-            });
-          }
-        } catch (e) {
-          debugPrint('Phone connection check error: $e');
-        }
-      },
-    );
-  }
-
   Future<void> _stopMonitoring() async {
     try {
       await _watchBridge.stopHeartRateTracking();
       await _heartRateSubscription?.cancel();
-      _phoneConnectionCheckTimer?.cancel();
       
       setState(() {
         _isMonitoring = false;
@@ -370,7 +324,7 @@ class _WearHeartRateScreenState extends State<WearHeartRateScreen>
     });
 
     try {
-      final success = await _phoneSync.sendHeartRateToPhone(_currentHeartRate!);
+      final success = await _watchBridge.sendHeartRateToPhone(_currentHeartRate!);
 
       if (mounted) {
         setState(() {
@@ -459,7 +413,6 @@ class _WearHeartRateScreenState extends State<WearHeartRateScreen>
   void dispose() {
     _heartRateSubscription?.cancel();
     _transmissionSubscription?.cancel();
-    _phoneConnectionCheckTimer?.cancel();
     _testModeTimer?.cancel();
     _pulseController.dispose();
     _transmissionController.dispose();

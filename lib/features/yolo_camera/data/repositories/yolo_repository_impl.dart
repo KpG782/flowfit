@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ultralytics_yolo/yolo.dart';
 import 'package:image/image.dart' as img;
 import '../../domain/entities/detection_result.dart';

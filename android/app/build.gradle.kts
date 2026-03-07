@@ -14,7 +14,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-        // Enable core library desugaring to support libraries that require newer java APIs
         isCoreLibraryDesugaringEnabled = true
     }
 
@@ -26,22 +25,29 @@ android {
         jvmTarget = "17"
     }
 
+    signingConfigs {
+        create("pacebeats") {
+            storeFile = file("pacebeats-release-v3.jks")
+            storePassword = "d9\$Kf7!pVhLm2@QxR4&Zt1#W"
+            keyAlias = "pacebeats_release_v3"
+            keyPassword = "d9\$Kf7!pVhLm2@QxR4&Zt1#W"
+        }
+    }
+
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.flowfit"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 30  // Required for Wear OS 3.0+ and Samsung Health Sensor API (article recommends 23, but 30 needed for Samsung Health)
+        minSdk = 30
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
     buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("pacebeats")
+        }
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("pacebeats")
         }
     }
 }

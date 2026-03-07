@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:flowfit/services/phone_data_listener.dart';
 import 'package:flowfit/models/sensor_batch.dart';
+import 'package:flowfit/models/heart_rate_data.dart';
 import 'package:provider/provider.dart';
 
 import 'providers.dart';
@@ -49,6 +50,11 @@ class _TrackerPageState extends State<TrackerPage> {
   bool _pluginAvailable = false;
   // plugin availability determined dynamically by adapter connection
 
+  // Always-on watch HR monitor (independent of selected source)
+  int? _watchLiveBpm;
+  bool _watchLiveConnected = false;
+  StreamSubscription<HeartRateData>? _watchLiveSub;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -69,6 +75,9 @@ class _TrackerPageState extends State<TrackerPage> {
       // connect adapter to the selected source (default Simulation)
       _connectToSelectedSource();
 
+      // Always subscribe to watch HR for the persistent banner
+      _subscribeWatchLive();
+
       _initialized = true;
     }
   }
@@ -78,7 +87,26 @@ class _TrackerPageState extends State<TrackerPage> {
     _stopSensorSubscription();
     _bpmSub?.cancel();
     _sensorBatchSub?.cancel();
+    _watchLiveSub?.cancel();
     super.dispose();
+  }
+
+  void _subscribeWatchLive() {
+    final phoneListener = Provider.of<PhoneDataListener>(context, listen: false);
+    phoneListener.startListening();
+    _watchLiveSub = phoneListener.heartRateStream.listen(
+      (HeartRateData data) {
+        if (mounted && data.bpm != null && data.bpm! > 0) {
+          setState(() {
+            _watchLiveBpm = data.bpm;
+            _watchLiveConnected = true;
+          });
+        }
+      },
+      onError: (_) {
+        if (mounted) setState(() => _watchLiveConnected = false);
+      },
+    );
   }
 
   void _startSensorSubscription() {
@@ -274,7 +302,10 @@ class _TrackerPageState extends State<TrackerPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
+            // Always-on watch heart rate banner
+            _buildWatchLiveBanner(),
+            const SizedBox(height: 16),
             // 1. The Result (Big Text)
             Text(
               currentActivity,
@@ -699,6 +730,49 @@ class _TrackerPageState extends State<TrackerPage> {
             const SizedBox(height: 40),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildWatchLiveBanner() {
+    final connected = _watchLiveConnected && _watchLiveBpm != null;
+    final color = connected ? Colors.red : Colors.grey;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withOpacity(0.3)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.watch, color: color, size: 18),
+          const SizedBox(width: 8),
+          Text(
+            'Galaxy Watch: ',
+            style: TextStyle(color: color, fontWeight: FontWeight.w600),
+          ),
+          Text(
+            connected ? '$_watchLiveBpm BPM' : 'Not connected',
+            style: TextStyle(
+              color: color,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Container(
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(
+              color: connected ? Colors.green : Colors.grey,
+              shape: BoxShape.circle,
+            ),
+          ),
+        ],
       ),
     );
   }

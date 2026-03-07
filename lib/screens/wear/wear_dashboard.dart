@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wear_plus/wear_plus.dart';
 import 'wear_heart_rate_screen.dart';
-import 'wear_permission_wrapper.dart';
 
 class WearDashboard extends StatelessWidget {
   final WearShape shape;
@@ -62,10 +61,10 @@ class WearDashboard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => WearPermissionWrapper(
-                child: WearHeartRateScreen(
+              builder: (context) => AmbientMode(
+                builder: (context, liveMode, _) => WearHeartRateScreen(
                   shape: shape,
-                  mode: mode,
+                  mode: liveMode,
                 ),
               ),
             ),
@@ -96,12 +95,12 @@ class WearDashboard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.favorite, color: Colors.white.withOpacity(0.3), size: 32),
+            Icon(Icons.favorite, color: Colors.white.withValues(alpha: 0.3), size: 32),
             const SizedBox(height: 8),
             Text(
               'FlowFit',
               style: TextStyle(
-                color: Colors.white.withOpacity(0.3),
+                color: Colors.white.withValues(alpha: 0.3),
                 fontSize: 18,
               ),
             ),

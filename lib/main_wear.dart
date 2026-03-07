@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:wear_plus/wear_plus.dart';
 import 'screens/wear/wear_dashboard.dart';
 
-void main() => runApp(const WearApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const WearApp());
+}
 
 class WearApp extends StatelessWidget {
   const WearApp({super.key});
@@ -26,7 +29,7 @@ class WearApp extends StatelessWidget {
                     ? const ColorScheme.dark(
                         // Monochromatic for ambient mode (battery saving)
                         primary: Colors.white24,
-                        onBackground: Colors.white10,
+                        surface: Colors.black,
                         onSurface: Colors.white10,
                       )
                     : const ColorScheme.dark(
@@ -34,7 +37,7 @@ class WearApp extends StatelessWidget {
                         primary: Color(0xFF00B5FF),
                         secondary: Colors.blueAccent,
                         surface: Colors.black,
-                        background: Colors.black,
+                        onSurface: Colors.white,
                       ),
                 scaffoldBackgroundColor: Colors.black,
                 elevatedButtonTheme: ElevatedButtonThemeData(

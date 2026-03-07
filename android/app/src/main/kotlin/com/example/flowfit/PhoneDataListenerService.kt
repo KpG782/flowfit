@@ -22,6 +22,7 @@ class PhoneDataListenerService : WearableListenerService() {
         private const val MESSAGE_PATH = "/heart_rate"
         private const val BATCH_PATH = "/heart_rate_batch"
         private const val SENSOR_DATA_PATH = "/sensor_data"
+        private const val MAX_QUEUE_SIZE = 50
 
         // Pending message queues — hold messages that arrive before Flutter has subscribed.
         private val pendingHrMessages = mutableListOf<Map<String, Any?>>()
@@ -48,6 +49,16 @@ class PhoneDataListenerService : WearableListenerService() {
                     pendingSensorMessages.clear()
                 }
             }
+
+        private fun enqueueHr(msg: Map<String, Any?>) {
+            if (pendingHrMessages.size >= MAX_QUEUE_SIZE) pendingHrMessages.removeAt(0)
+            pendingHrMessages.add(msg)
+        }
+
+        private fun enqueueSensor(msg: Map<String, Any?>) {
+            if (pendingSensorMessages.size >= MAX_QUEUE_SIZE) pendingSensorMessages.removeAt(0)
+            pendingSensorMessages.add(msg)
+        }
     }
     
     // Handler for posting to main thread
@@ -92,7 +103,7 @@ class PhoneDataListenerService : WearableListenerService() {
                         Log.i(TAG, "Data sent to Flutter successfully")
                     } else {
                         Log.w(TAG, "eventSink null — queuing HR message (queue size: ${pendingHrMessages.size + 1})")
-                        pendingHrMessages.add(jsonMap)
+                        enqueueHr(jsonMap)
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error sending to Flutter", e)
@@ -116,30 +127,28 @@ class PhoneDataListenerService : WearableListenerService() {
         try {
             val jsonData = String(messageEvent.data, Charsets.UTF_8)
             Log.i(TAG, "Batch data received: $jsonData")
-            
-            // Parse JSON string to Map for Flutter
+
             val jsonMap = parseJsonToMap(jsonData)
-            
-            // Post to main thread for Flutter communication
+
             mainHandler.post {
                 try {
-                    // Send to Flutter via event channel as Map
-                    eventSink?.success(jsonMap)
-                    Log.i(TAG, "Batch data sent to Flutter successfully")
+                    val sink = sensorBatchEventSink
+                    if (sink != null) {
+                        sink.success(jsonMap)
+                        Log.i(TAG, "Batch data sent to Flutter (sensor batch channel) successfully")
+                    } else {
+                        Log.w(TAG, "sensorBatchEventSink null — queuing batch message (queue size: ${pendingSensorMessages.size + 1})")
+                        enqueueSensor(jsonMap)
+                    }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error sending batch to Flutter", e)
-                    eventSink?.error("SEND_ERROR", "Failed to send batch data to Flutter", e.message)
+                    sensorBatchEventSink?.error("SEND_ERROR", "Failed to send batch data to Flutter", e.message)
                 }
-            }
-            
-            // Optionally launch the app if not running
-            if (eventSink == null) {
-                launchMainActivity(jsonData)
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error handling batch data", e)
             mainHandler.post {
-                eventSink?.error("PARSE_ERROR", "Failed to parse batch data", e.message)
+                sensorBatchEventSink?.error("PARSE_ERROR", "Failed to parse batch data", e.message)
             }
         }
     }
@@ -161,7 +170,7 @@ class PhoneDataListenerService : WearableListenerService() {
                         Log.i(TAG, "Sensor batch data sent to Flutter successfully")
                     } else {
                         Log.w(TAG, "sensorBatchEventSink null — queuing sensor message (queue size: ${pendingSensorMessages.size + 1})")
-                        pendingSensorMessages.add(jsonMap)
+                        enqueueSensor(jsonMap)
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error sending sensor batch to Flutter", e)
