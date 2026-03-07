@@ -22,10 +22,32 @@ class PhoneDataListenerService : WearableListenerService() {
         private const val MESSAGE_PATH = "/heart_rate"
         private const val BATCH_PATH = "/heart_rate_batch"
         private const val SENSOR_DATA_PATH = "/sensor_data"
-        
-        // Static event sink for sending data to Flutter
+
+        // Pending message queues — hold messages that arrive before Flutter has subscribed.
+        private val pendingHrMessages = mutableListOf<Map<String, Any?>>()
+        private val pendingSensorMessages = mutableListOf<Map<String, Any?>>()
+
+        // Static event sink for sending data to Flutter.
+        // When a sink is assigned, flush any queued messages immediately.
         var eventSink: EventChannel.EventSink? = null
+            set(value) {
+                field = value
+                if (value != null && pendingHrMessages.isNotEmpty()) {
+                    Log.i(TAG, "Flushing ${pendingHrMessages.size} queued HR messages to Flutter")
+                    pendingHrMessages.forEach { value.success(it) }
+                    pendingHrMessages.clear()
+                }
+            }
+
         var sensorBatchEventSink: EventChannel.EventSink? = null
+            set(value) {
+                field = value
+                if (value != null && pendingSensorMessages.isNotEmpty()) {
+                    Log.i(TAG, "Flushing ${pendingSensorMessages.size} queued sensor messages to Flutter")
+                    pendingSensorMessages.forEach { value.success(it) }
+                    pendingSensorMessages.clear()
+                }
+            }
     }
     
     // Handler for posting to main thread
@@ -64,9 +86,14 @@ class PhoneDataListenerService : WearableListenerService() {
             // Post to main thread for Flutter communication
             mainHandler.post {
                 try {
-                    // Send to Flutter via event channel as Map
-                    eventSink?.success(jsonMap)
-                    Log.i(TAG, "Data sent to Flutter successfully")
+                    val sink = eventSink
+                    if (sink != null) {
+                        sink.success(jsonMap)
+                        Log.i(TAG, "Data sent to Flutter successfully")
+                    } else {
+                        Log.w(TAG, "eventSink null — queuing HR message (queue size: ${pendingHrMessages.size + 1})")
+                        pendingHrMessages.add(jsonMap)
+                    }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error sending to Flutter", e)
                     eventSink?.error("SEND_ERROR", "Failed to send data to Flutter", e.message)
@@ -128,9 +155,14 @@ class PhoneDataListenerService : WearableListenerService() {
             // Post to main thread for Flutter communication
             mainHandler.post {
                 try {
-                    // Send to Flutter via sensor batch event channel as Map
-                    sensorBatchEventSink?.success(jsonMap)
-                    Log.i(TAG, "Sensor batch data sent to Flutter successfully")
+                    val sink = sensorBatchEventSink
+                    if (sink != null) {
+                        sink.success(jsonMap)
+                        Log.i(TAG, "Sensor batch data sent to Flutter successfully")
+                    } else {
+                        Log.w(TAG, "sensorBatchEventSink null — queuing sensor message (queue size: ${pendingSensorMessages.size + 1})")
+                        pendingSensorMessages.add(jsonMap)
+                    }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error sending sensor batch to Flutter", e)
                     sensorBatchEventSink?.error("SEND_ERROR", "Failed to send sensor batch data to Flutter", e.message)

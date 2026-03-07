@@ -12,7 +12,14 @@ import 'package:logger/logger.dart';
 /// This service listens to the EventChannel "com.flowfit.phone/heartrate"
 /// which receives data from PhoneDataListenerService on the native Android side.
 /// The data is transmitted from the watch via Wearable Data Layer API.
+///
+/// Singleton: all parts of the app share one instance so only one subscriber
+/// holds the native EventChannel event sink at a time.
 class PhoneDataListener {
+  static final PhoneDataListener _instance = PhoneDataListener._internal();
+  factory PhoneDataListener() => _instance;
+  PhoneDataListener._internal();
+
   static const MethodChannel _methodChannel =
       MethodChannel('com.flowfit.phone/data');
   static const EventChannel _heartRateEventChannel =

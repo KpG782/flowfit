@@ -54,16 +54,11 @@ class _ActiveRunningScreenState extends ConsumerState<ActiveRunningScreen> {
   void _startContinuousDetection() async {
     final classifier = provider.Provider.of<TFLiteActivityClassifier>(context, listen: false);
     final phoneDataListener = provider.Provider.of<PhoneDataListener>(context, listen: false);
-    
-    // Load model if not loaded
-    if (!classifier.isLoaded) {
-      await classifier.loadModel();
-    }
 
-    // Start listening for watch data
+    // Start listening for watch data FIRST — before model loading
     await phoneDataListener.startListening();
 
-    // Subscribe to real-time heart rate from watch
+    // Subscribe to real-time heart rate from watch immediately (independent of AI model)
     _heartRateSubscription = phoneDataListener.heartRateStream.listen(
       (heartRateData) {
         if (mounted) {
@@ -77,6 +72,16 @@ class _ActiveRunningScreenState extends ConsumerState<ActiveRunningScreen> {
         print('❌ Heart rate stream error: $error');
       },
     );
+
+    // Load AI model — HR display continues even if this fails
+    try {
+      if (!classifier.isLoaded) {
+        await classifier.loadModel();
+      }
+    } catch (e) {
+      print('⚠️ AI model load failed (HR still active): $e');
+      return;
+    }
 
     // Subscribe to sensor batches from watch (includes accelerometer + heart rate)
     _sensorSubscription = phoneDataListener.sensorBatchStream.listen((sensorBatch) {
@@ -472,7 +477,7 @@ class _ActiveRunningScreenState extends ConsumerState<ActiveRunningScreen> {
                 'Speed',
                 _formatPace(session.avgPace),
                 '/km',
-                SolarIconsBold.speedometer,  // Speedometer = speed (intuitive)
+                SolarIconsBold.speedometerMiddle,  // Speedometer = speed (intuitive)
                 const Color(0xFF4CAF50),
               ),
             ],
